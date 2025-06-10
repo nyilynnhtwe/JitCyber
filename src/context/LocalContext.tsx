@@ -10,7 +10,7 @@ type LocaleContextType = {
 };
 
 const LocaleContext = createContext<LocaleContextType>({
-    locale: 'en',
+    locale: 'th',
     changeLocale: () => {},
 });
 

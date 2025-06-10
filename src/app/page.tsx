@@ -89,7 +89,7 @@ export default function Home() {
             <nav className="hidden md:flex space-x-8 items-center">
               {Object.values(t.nav).map((item, index) => (
                 <a 
-                  key={index} 
+                  key={index}
                   href={Object.keys(t.nav)[index]} 
                   className="text-gray-700 hover:text-indigo-600 transition-colors font-medium"
                 >
