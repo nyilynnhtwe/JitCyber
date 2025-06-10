@@ -1,0 +1,87 @@
+{
+  "appName": "JitCyber",
+  "nav": {
+    "home": "Home",
+    "learn": "Learn",
+    "fake_email_checker": "Fake Email Checker",
+    "password_strength_checker": "Password Strength Checker",
+    "resources": "Resources",
+    "about": "About"
+  },
+  "hero": {
+    "title": "Stay Safe Online",
+    "subtitle": "Cybersecurity knowledge for Thai people",
+    "cta1": "Start Learning",
+    "cta2": "Watch Video"
+  },
+  "topics": {
+    "title": "Essential Security Topics",
+    "phishing": {
+      "title": "Phishing Prevention",
+      "desc": "Identify and avoid scam emails and messages"
+    },
+    "password": {
+      "title": "Password Security",
+      "desc": "Create strong passwords and manage them safely"
+    },
+    "social": {
+      "title": "Social Engineering",
+      "desc": "Recognize manipulation tactics"
+    },
+    "mobile": {
+      "title": "Mobile Security",
+      "desc": "Protect your smartphone from threats"
+    },
+    "privacy": {
+      "title": "Online Privacy",
+      "desc": "Control your personal information online"
+    },
+    "scams": {
+      "title": "Common Scams",
+      "desc": "Learn about popular online scams in Thailand"
+    }
+  },
+  "learning": {
+    "title": "Learn About",
+    "tips": "Key Security Tips",
+    "quiz": "Take Quiz"
+  },
+  "testimonials": {
+    "title": "Community Feedback",
+    "items": [
+      {
+        "text": "This app helped me identify a phishing email before I became a victim!",
+        "author": "Somchai Jaidee",
+        "role": "Online Merchant"
+      },
+      {
+        "text": "I finally understand how to create strong passwords that I can remember.",
+        "author": "Nonglak Srisuk",
+        "role": "University Student"
+      },
+      {
+        "text": "The mobile security tips saved me from installing a dangerous app.",
+        "author": "Wichai Thongmee",
+        "role": "Small Business Owner"
+      }
+    ]
+  },
+  "cta": {
+    "title": "Start Protecting Yourself Today!",
+    "subtitle": "Join our community of security-aware users",
+    "button1": "Create Free Account",
+    "button2": "View Learning Path"
+  },
+  "footer": {
+    "company": "JitCyber",
+    "slogan": "Empowering Thais with cybersecurity knowledge",
+    "resources": "Resources",
+    "links": ["Blog", "Infographics", "Checklists", "Help Center"],
+    "legal": "Legal",
+    "legalLinks": ["Privacy Policy", "Terms of Service", "Disclaimer"],
+    "contact": "Contact Us",
+    "email": "help@jitcyber.com",
+    "phone": "02-123-4567",
+    "copyright": "© 2025 JitCyber. All rights reserved."
+  }
+}
