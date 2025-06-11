@@ -10,6 +10,7 @@ import LanguageSwitcher from './components/LanguageSwitcher';
 // Import localization data
 import enData from './data/en.json';
 import thData from './data/th.json';
+import Link from 'next/link';
 
 export default function Home() {
   const { locale } = useLocale();
@@ -339,7 +340,9 @@ export default function Home() {
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-4">
                 <button className="bg-white text-indigo-600 px-8 py-3 rounded-lg font-medium shadow-lg hover:bg-blue-50 transition-colors text-lg">
-                  {t.cta.button1}
+                  <Link href="/signup" className="block w-full h-full">
+                    {t.cta.button1}
+                  </Link>
                 </button>
                 <button className="bg-transparent border-2 border-white px-8 py-3 rounded-lg font-medium hover:bg-white/10 transition-colors text-lg">
                   {t.cta.button2}
