@@ -6,12 +6,7 @@ import Footer from './components/Footer';
 import TopicCard from './components/TopicCard';
 import SecurityTip from './components/SecurityTip';
 import LanguageSwitcher from './components/LanguageSwitcher';
-import { 
-  Lock, Shield, Smartphone, Users, Key, Zap, 
-  ChevronRight, AlertTriangle, Mail, FileText, 
-  MessageSquare, CreditCard, HelpCircle, Star,
-  ChevronDown, ChevronUp, Menu, X
-} from 'lucide-react';
+import {  Lock, Shield, Smartphone, Users, Key, Zap, ChevronRight, AlertTriangle, Mail, HelpCircle, Star, Menu, X } from 'lucide-react';
 
 // Import localization data
 import enData from './data/en.json';
@@ -62,12 +57,12 @@ export default function Home() {
   
   // Topic icons mapping
   const topicIcons = {
-    phishing: <Mail className="w-5 h-5" />,
-    password: <Key className="w-5 h-5" />,
-    social: <Users className="w-5 h-5" />,
-    mobile: <Smartphone className="w-5 h-5" />,
-    privacy: <Shield className="w-5 h-5" />,
-    scams: <AlertTriangle className="w-5 h-5" />
+    phishing: <Mail className="w-5 h-5 text-rose-500" />,
+    password: <Key className="w-5 h-5 text-amber-500" />,
+    social: <Users className="w-5 h-5 text-emerald-500" />,
+    mobile: <Smartphone className="w-5 h-5 text-blue-500" />,
+    privacy: <Shield className="w-5 h-5 text-blue-600" />,
+    scams: <AlertTriangle className="w-5 h-5 text-blue-700" />
   };
   
   // Close menu on resize
@@ -91,27 +86,27 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-indigo-50">
+      <div className="min-h-screen flex flex-col bg-gradient-to-b from-slate-50 to-slate-100">
         {/* Header */}
-        <header className="fixed w-full z-50 bg-white shadow-sm py-3">
+        <header className="fixed w-full z-50 bg-white/90 backdrop-blur-sm shadow-sm py-3 border-b border-slate-200">
           <div className="container mx-auto px-4 flex justify-between items-center">
             <div className="flex items-center">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center mr-3">
-                <Lock className="text-white w-5 h-5" />
+              <img src="/logo.svg" alt="Logo" className="w-10 h-10 mr-3" />
+              <div className="text-xl font-bold bg-gradient-to-r from-blue-700 to-blue-900 bg-clip-text text-transparent">
+                {t.appName}
               </div>
-              <div className="text-xl font-bold text-indigo-800">{t.appName}</div>
             </div>
             
             {/* Desktop Navigation */}
             <nav className="hidden md:flex space-x-8 items-center">
               {Object.values(t.nav).map((item, index) => (
-                <a 
+                <a
                   key={index}
-                  href={Object.keys(t.nav)[index]} 
-                  className="text-gray-700 hover:text-indigo-600 transition-colors font-medium flex items-center group"
+                  href={Object.keys(t.nav)[index]}
+                  className="text-slate-700 hover:text-blue-600 transition-colors font-medium flex items-center group relative"
                 >
                   {item}
-                  <ChevronRight className="w-4 h-4 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
                 </a>
               ))}
               <LanguageSwitcher />
@@ -120,8 +115,8 @@ export default function Home() {
             {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center space-x-4">
               <LanguageSwitcher />
-              <button 
-                className="text-gray-700 hover:text-indigo-600 focus:outline-none"
+              <button
+                className="text-slate-700 hover:text-blue-600 focus:outline-none transition-colors"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 aria-label="Toggle menu"
               >
@@ -136,17 +131,17 @@ export default function Home() {
           
           {/* Mobile Menu */}
           {isMenuOpen && (
-            <div className="md:hidden bg-white py-4 shadow-lg">
+            <div className="md:hidden bg-white/95 backdrop-blur-sm py-4 shadow-lg border-b border-slate-200">
               <nav className="container mx-auto px-4 flex flex-col space-y-3">
                 {Object.values(t.nav).map((item, index) => (
                   <a 
                     key={index} 
                     href="#" 
-                    className="text-gray-700 hover:text-indigo-600 transition-colors py-2 font-medium flex items-center"
+                    className="text-slate-700 hover:text-blue-600 transition-colors py-2 font-medium flex items-center border-b border-slate-100"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {item}
-                    <ChevronRight className="w-4 h-4 ml-2" />
+                    <ChevronRight className="w-4 h-4 ml-2 text-slate-400" />
                   </a>
                 ))}
               </nav>
@@ -155,18 +150,18 @@ export default function Home() {
         </header>
 
         {/* Hero Section */}
-        <section className="pt-24 pb-12 md:pt-32 md:pb-16">
+        <section className="pt-35 pb-12 md:pt-32 md:pb-16">
           <div className="container mx-auto px-4">
             <div className="flex flex-col md:flex-row items-center">
               <div className="md:w-1/2 mb-8 md:mb-0">
-                <h1 className="text-3xl md:text-4xl font-bold mb-4 text-indigo-900 leading-tight">
+                <h1 className="text-3xl md:text-4xl font-bold mb-4 text-slate-800 leading-tight">
                   {t.hero.title}
                 </h1>
-                <p className="text-lg md:text-xl mb-6 text-gray-700 max-w-2xl">
+                <p className="text-lg md:text-xl mb-6 text-slate-600 max-w-2xl">
                   {t.hero.subtitle}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <button className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-lg font-medium shadow-lg hover:from-blue-600 hover:to-indigo-700 transition-all flex items-center justify-center gap-2">
+                  <button className="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-6 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-blue-900 transition-all flex items-center justify-center gap-2">
                     {t.hero.cta1}
                     <Zap className="w-4 h-4" />
                   </button>
@@ -174,23 +169,31 @@ export default function Home() {
               </div>
               <div className="md:w-1/2 flex justify-center">
                 <div className="relative">
-                  <div className="w-64 h-64 md:w-80 md:h-80 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center">
-                    <div className="absolute -top-4 -right-4 w-32 h-32 bg-yellow-400 rounded-full opacity-80"></div>
-                    <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-green-400 rounded-full opacity-80"></div>
-                    <div className="bg-white rounded-2xl p-6 relative z-10 shadow-xl">
+                  <div className="w-64 h-64 md:w-80 md:h-80 bg-gradient-to-br from-blue-200 to-blue-400 rounded-full flex items-center justify-center shadow-xl">
+                    <div className="absolute -top-4 -right-4 w-32 h-32 bg-amber-400 rounded-full opacity-80 mix-blend-multiply animate-float"></div>
+                    <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-emerald-400 rounded-full opacity-80 mix-blend-multiply animate-float-delay"></div>
+                    <div className="bg-white rounded-2xl p-6 relative z-10 shadow-xl border border-slate-200">
                       <div className="flex justify-between mb-4">
-                        <div className="w-8 h-8 bg-blue-200 rounded-full"></div>
-                        <div className="w-8 h-8 bg-red-200 rounded-full"></div>
-                        <div className="w-8 h-8 bg-green-200 rounded-full"></div>
+                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        </div>
+                        <div className="w-8 h-8 bg-rose-100 rounded-full flex items-center justify-center">
+                          <div className="w-2 h-2 bg-rose-500 rounded-full"></div>
+                        </div>
+                        <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+                          <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                        </div>
                       </div>
                       <div className="text-center">
                         <div className="flex justify-center mb-2">
-                          <Lock className="w-10 h-10 text-indigo-600" />
+                          <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                            <Lock className="w-6 h-6 text-blue-600" />
+                          </div>
                         </div>
-                        <h3 className="font-bold text-lg">
+                        <h3 className="font-bold text-lg text-slate-800">
                           {locale === 'th' ? 'ปลอดภัย 100%' : '100% Secure'}
                         </h3>
-                        <p className="text-sm">
+                        <p className="text-sm text-slate-500">
                           {locale === 'th' ? 'ความรู้ด้านความปลอดภัยไซเบอร์' : 'Cybersecurity Knowledge'}
                         </p>
                       </div>
@@ -206,8 +209,8 @@ export default function Home() {
         <section className="py-12 md:py-16 bg-white">
           <div className="container mx-auto px-4">
             <div className="text-center max-w-2xl mx-auto mb-10">
-              <h2 className="text-2xl md:text-3xl font-bold mb-4 text-indigo-900">{t.topics.title}</h2>
-              <p className="text-gray-600">
+              <h2 className="text-2xl md:text-3xl font-bold mb-4 text-slate-800">{t.topics.title}</h2>
+              <p className="text-slate-600">
                 {locale === 'th' 
                   ? 'เรียนรู้หัวข้อสำคัญด้านความปลอดภัยไซเบอร์ด้วยวิธีที่เข้าใจง่าย' 
                   : 'Learn essential cybersecurity topics in an easy-to-understand way'}
@@ -223,7 +226,7 @@ export default function Home() {
                   }
                 )
                 .map(([key, topic]) => (
-                  <TopicCard 
+                  <TopicCard
                     key={key}
                     id={key}
                     title={topic.title}
@@ -238,39 +241,39 @@ export default function Home() {
         </section>
 
         {/* Learning Section */}
-        <section className="py-12 md:py-16 bg-gradient-to-b from-indigo-50 to-blue-50">
+        <section className="py-12 md:py-16 bg-gradient-to-b from-slate-50 to-slate-100">
           <div className="container mx-auto px-4">
-            <div className="flex flex-col md:flex-row">
-              <div className="md:w-2/5 mb-8 md:mb-0">
-                <h2 className="text-2xl md:text-3xl font-bold mb-6 text-indigo-900">
+            <div className="flex flex-col md:flex-row gap-8">
+              <div className="md:w-2/5">
+                <h2 className="text-2xl md:text-3xl font-bold mb-6 text-slate-800">
                   {t.learning.title} <span className="text-blue-600">{t.topics[activeTopic].title}</span>
                 </h2>
-                <div className="bg-white p-6 rounded-xl shadow-md">
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
                   {t.topics[activeTopic].desc && (
-                    <p className="mb-4 text-gray-700">{t.topics[activeTopic].desc}</p>
+                    <p className="mb-4 text-slate-600">{t.topics[activeTopic].desc}</p>
                   )}
                   <div className="space-y-3">
                     {securityTips[activeTopic].map((tip, index) => (
-                      <SecurityTip 
-                        key={index} 
-                        number={index + 1} 
-                        text={tip} 
+                      <SecurityTip
+                        key={index}
+                        number={index + 1}
+                        text={tip}
                       />
                     ))}
                   </div>
                 </div>
               </div>
-              <div className="md:w-3/5 md:pl-12">
-                <div className="bg-white rounded-xl shadow-md p-6">
+              <div className="md:w-3/5">
+                <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 h-full">
                   <div className="flex items-center mb-6">
-                    <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mr-4">
+                    <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center text-blue-600 mr-4">
                       <HelpCircle className="w-8 h-8" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-indigo-800">
+                      <h3 className="text-xl font-bold text-slate-800">
                         {t.learning.tips}
                       </h3>
-                      <p className="text-gray-600">
+                      <p className="text-slate-500">
                         {locale === 'th' 
                           ? 'นำไปใช้ได้ในชีวิตประจำวัน' 
                           : 'Practical tips for daily life'}
@@ -280,25 +283,25 @@ export default function Home() {
                   
                   <div className="space-y-4">
                     {securityTips[activeTopic].map((tip, index) => (
-                      <div key={index} className="flex items-start">
-                        <div className="flex-shrink-0 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-600 mt-1 mr-3">
+                      <div key={index} className="flex items-start p-3 hover:bg-slate-50 rounded-lg transition-colors">
+                        <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center text-blue-600 font-medium mt-1 mr-3">
                           {index + 1}
                         </div>
-                        <p>{tip}</p>
+                        <p className="text-slate-700">{tip}</p>
                       </div>
                     ))}
                   </div>
                   
-                  <div className="mt-8 pt-6 border-t border-gray-200">
-                    <h3 className="text-lg font-bold mb-4 text-indigo-800">
+                  <div className="mt-8 pt-6 border-t border-slate-200">
+                    <h3 className="text-lg font-bold mb-4 text-slate-800">
                       {t.learning.quiz}
                     </h3>
-                    <p className="mb-4">
+                    <p className="mb-4 text-slate-600">
                       {locale === 'th' 
                         ? 'ทดสอบความรู้ของคุณเกี่ยวกับหัวข้อนี้:' 
                         : 'Test your knowledge on this topic:'}
                     </p>
-                    <button className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-2 rounded-lg font-medium flex items-center gap-2 mx-auto">
+                    <button className="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-6 py-2 rounded-lg font-medium flex items-center gap-2 mx-auto hover:shadow-md transition-all">
                       {t.learning.quiz}
                       <ChevronRight className="w-4 h-4" />
                     </button>
@@ -313,29 +316,29 @@ export default function Home() {
         <section className="py-12 md:py-16 bg-white">
           <div className="container mx-auto px-4">
             <div className="text-center max-w-2xl mx-auto mb-12">
-              <h2 className="text-2xl md:text-3xl font-bold mb-4 text-indigo-900">
+              <h2 className="text-2xl md:text-3xl font-bold mb-4 text-slate-800">
                 {t.testimonials.title}
               </h2>
-              <p className="text-gray-600">
-                {locale === 'th' 
-                  ? 'ความคิดเห็นจากสมาชิกในชุมชนของเรา' 
+              <p className="text-slate-600">
+                {locale === 'th'
+                  ? 'ความคิดเห็นจากสมาชิกในชุมชนของเรา'
                   : 'Feedback from our community members'}
               </p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {t.testimonials.items.map((testimonial, index) => (
-                <div key={index} className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl shadow-md">
+                <div key={index} className="bg-gradient-to-br from-slate-50 to-slate-100 p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-all">
                   <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 bg-blue-200 rounded-full mr-4 flex items-center justify-center">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full mr-4 flex items-center justify-center">
                       <Star className="w-5 h-5 text-blue-600" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-indigo-800">{testimonial.author}</h4>
-                      <p className="text-sm text-gray-600">{testimonial.role}</p>
+                      <h4 className="font-semibold text-slate-800">{testimonial.author}</h4>
+                      <p className="text-sm text-slate-500">{testimonial.role}</p>
                     </div>
                   </div>
-                  <p className="text-gray-700 italic">"{testimonial.text}"</p>
+                  <p className="text-slate-700 italic">"{testimonial.text}"</p>
                 </div>
               ))}
             </div>
@@ -343,23 +346,23 @@ export default function Home() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-12 md:py-16 bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+        <section className="py-12 md:py-25 bg-gradient-to-r from-blue-600 to-blue-800 text-white">
           <div className="container mx-auto px-4 text-center">
             <div className="max-w-3xl mx-auto">
-              <h2 className="text-2xl md:text-3xl font-bold mb-4">
+              <h2 className="mt-5 mb-6 text-4xl md:text-4xl font-bold animate-fade-in">
                 {t.cta.title}
               </h2>
               <p className="text-xl mb-8 max-w-2xl mx-auto text-blue-100">
                 {t.cta.subtitle}
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-4">
-                <button className="bg-white text-indigo-600 px-8 py-3 rounded-lg font-medium shadow-lg hover:bg-blue-50 transition-colors text-lg flex items-center justify-center gap-2">
+                <button className="bg-white text-blue-700 px-8 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl hover:bg-slate-50 transition-all text-lg flex items-center justify-center gap-2">
                   <Link href="/signup" className="flex items-center gap-2">
                     {t.cta.button1}
                     <ChevronRight className="w-5 h-5" />
                   </Link>
                 </button>
-                <button className="bg-transparent border-2 border-white px-8 py-3 rounded-lg font-medium hover:bg-white/10 transition-colors text-lg flex items-center justify-center gap-2">
+                <button className="bg-transparent border-2 border-white/50 px-8 py-3 rounded-lg font-medium hover:border-white hover:bg-white/10 transition-all text-lg flex items-center justify-center gap-2">
                   {t.cta.button2}
                   <HelpCircle className="w-5 h-5" />
                 </button>
