@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { hashPassword } from "../lib/auth";
-import { User, Globe, CreditCard, Phone, Lock, Eye, EyeOff, AlertCircle, CheckCircle, UserPlus, ShieldCheck  } from "lucide-react";
+import { User, Globe, CreditCard, Phone, Lock, Eye, EyeOff, AlertCircle, CheckCircle, UserPlus, Shield, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 
 const SignUpPage = () => {
@@ -131,7 +131,7 @@ const SignUpPage = () => {
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
           <div className="bg-gradient-to-r from-blue-600 to-cyan-600 p-6 text-center">
             <div className="flex flex-col items-center space-y-2">
-              <ShieldCheck className="w-15 h-15 text-white" />
+              <Shield className="w-15 h-15 text-white" />
               <h1 className="text-2xl font-bold text-white">
                 JitCyber Security Portal
               </h1>
@@ -359,7 +359,8 @@ const SignUpPage = () => {
           {/* Security Notice */}
           <div className="px-6 pb-6">
             <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-              <div className="flex items-center">
+              <div className="flex items-center space-x-2">
+                <ShieldCheck className="w-5 h-5 text-green-600" />
                 <p className="text-xs text-green-800">
                   Your data is protected with advanced security measures
                 </p>
