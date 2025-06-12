@@ -197,7 +197,7 @@ export default function Home() {
               </p>
             </div>
             
-       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
   {Object.entries(t.topics)
     // The filter now acts as a type guard, ensuring 'topic' is an object
     .filter(
@@ -213,7 +213,7 @@ export default function Home() {
         id={key}
         title={topic.title}
         description={topic.desc}
-        icon={key === 'phishing' ? '🪝' : 
+        icon={key === 'phishing' ? '🪝' :
               key === 'password' ? '🔑' : 
               key === 'social' ? '👥' : 
               key === 'mobile' ? '📱' : 
