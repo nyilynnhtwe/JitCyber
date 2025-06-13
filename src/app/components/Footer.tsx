@@ -69,9 +69,13 @@ export default function Footer({ t, locale }: FooterProps) {
               </li>
             </ul>
             <div className="mt-4">
-              <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+              <Link href="/contact_form">
+              <button
+                className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+              >
                 {locale === 'th' ? 'ติดต่อทีมงาน' : 'Contact Team'}
               </button>
+              </Link>
             </div>
           </div>
         </div>

@@ -354,7 +354,7 @@ export default function Home() {
             <div className="absolute top-1/4 right-1/4 w-48 h-48 bg-blue-500 rounded-full mix-blend-overlay blur-xl"></div>
           </div>
           
-          {/* Added Rectangle Grid texture */}
+          {/* Added Rectangle Grid texture */} 
           <div className="absolute inset-0 opacity-5">
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48cGF0aCBkPSJNMCAwaDQwdjQwSDB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTIwIDB2NDBNMCAyMGg0MCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjEiLz48L3N2Zz4=')]"></div>
           </div>
