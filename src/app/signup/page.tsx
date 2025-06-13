@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { hashPassword } from "../lib/auth";
+import { hashPassword } from "../../lib/auth";
 import { User, Globe, CreditCard, Phone, Lock, Eye, EyeOff, AlertCircle, CheckCircle, UserPlus, Shield, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 
@@ -23,7 +23,7 @@ const SignUpPage = () => {
       color: "text-gray-500 bg-gray-50 border-gray-200",
       feedback: "Password cannot be empty"
     };
-    
+
     const checks = {
       length: password.length >= 8,
       length12: password.length >= 12,
@@ -32,7 +32,7 @@ const SignUpPage = () => {
       numbers: /\d/.test(password),
       special: /[!@#$%^&*(),.?":{}|<>]/.test(password),
     };
-    
+
     const negatives = {
       common: ["password", "123456", "qwerty", "abc123", ThaiID].some(
         word => password.toLowerCase().includes(word.toLowerCase())
@@ -43,34 +43,34 @@ const SignUpPage = () => {
         info => info && password.toLowerCase().includes(info.toLowerCase())
       ),
     };
-    
+
     let score = Object.values(checks).filter(Boolean).length;
-    
+
     if (negatives.common) score = Math.max(1, score - 2);
     if (negatives.sequential || negatives.repeated) score = Math.max(1, score - 1);
     if (negatives.userInfo) score = Math.max(1, score - 1);
-    
+
     if (score <= 2) return {
       score,
       label: "Weak",
       color: "text-red-600 bg-red-50 border-red-200",
       feedback: "Add more character types (uppercase, numbers, symbols)"
     };
-    
+
     if (score <= 3) return {
       score,
       label: "Fair",
       color: "text-orange-600 bg-orange-50 border-orange-200",
       feedback: "Try making it longer or adding symbols"
     };
-    
+
     if (score <= 5) return {
       score,
       label: "Good",
       color: "text-blue-600 bg-blue-50 border-blue-200",
       feedback: "Almost there - add another character type"
     };
-    
+
     return {
       score,
       label: "Strong",
@@ -85,25 +85,25 @@ const SignUpPage = () => {
     (ThaiID.length === 13 && /^\d+$/.test(ThaiID));
   const isPassportValid = Passport !== "foreign" ||
     (ThaiID.length >= 6 && /^[a-zA-Z0-9]+$/.test(ThaiID));
-  
+
   const showThaiIdError = Passport === "thai" && ThaiID.length > 0 && !isThaiIdValid;
   const showPassportError = Passport === "foreign" && ThaiID.length > 0 && !isPassportValid;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (Passport === "thai" && (ThaiID.length !== 13 || !/^\d+$/.test(ThaiID))) {
       return;
     }
-    
+
     if (Passport === "foreign" && ThaiID.length < 6) {
       return;
     }
-    
+
     if (passwordStrength.score < 3) {
       return;
     }
-    
+
     setIsSubmitting(true);
     try {
       const hashedPassword = await hashPassword(password);
@@ -114,10 +114,14 @@ const SignUpPage = () => {
         fullName: fullname,
         phoneNumber: phone
       };
-      
-      console.log("Sign Up", userData);
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      router.push("/dashboard");
+
+
+      await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fullname: userData.fullName, id: userData.idNumber, password: userData.password, phone: userData.phoneNumber }),
+      });
+      router.push("/profile");
     } catch (error) {
       console.error("Authentication error:", error);
     } finally {
@@ -182,15 +186,14 @@ const SignUpPage = () => {
                       ? "13-digit Thai ID number"
                       : "Passport number (min 6 characters)"
                   }
-                  className={`w-full pl-10 pr-4 py-3 bg-gray-50 border ${
-                    (showThaiIdError || showPassportError)
+                  className={`w-full pl-10 pr-4 py-3 bg-gray-50 border ${(showThaiIdError || showPassportError)
                       ? "border-red-500"
                       : "border-gray-200"
-                  } rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
+                    } rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
                   required
                 />
               </div>
-              
+
               {Passport === "thai" && showThaiIdError && (
                 <div className="text-red-600 text-xs mt-1 flex items-center">
                   <AlertCircle className="w-4 h-4 mr-1" />
@@ -203,7 +206,7 @@ const SignUpPage = () => {
                   Valid Thai ID format
                 </div>
               )}
-              
+
               {Passport === "foreign" && showPassportError && (
                 <div className="text-red-600 text-xs mt-1 flex items-center">
                   <AlertCircle className="w-4 h-4 mr-1" />
@@ -280,7 +283,7 @@ const SignUpPage = () => {
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
-              
+
               {(isPasswordFocused || password) && (
                 <div className="mt-2 space-y-2">
                   <div className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium border ${passwordStrength.color}`}>
@@ -291,7 +294,7 @@ const SignUpPage = () => {
                     )}
                     Password Strength: {passwordStrength.label}
                   </div>
-                  
+
                   <div className="text-xs text-gray-600 mt-2 space-y-1">
                     <p className="font-medium">Password must contain:</p>
                     <ul className="list-disc list-inside space-y-1">

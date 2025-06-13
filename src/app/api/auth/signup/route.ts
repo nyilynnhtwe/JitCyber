@@ -1,12 +1,12 @@
-import { connectToDatabase } from "@/app/lib/db";
+import { COLLECTION_USERS, DB_NAME } from "@/app/constants";
+import { connectToDatabase } from "@/lib/db";
 
-export  async function POST(req: Request) {
+export async function POST(req: Request) {
     const { email, password } = await req.json();
 
     const client = await connectToDatabase();
-    const dbName = 'jitcyber';
-    const db = client.db(dbName);
-    const existingUser = await db.collection("users").findOne({ email });
+    const db = client.db(DB_NAME);
+    const existingUser = await db.collection(COLLECTION_USERS).findOne({ email });
 
 
     if (existingUser) {
@@ -17,7 +17,7 @@ export  async function POST(req: Request) {
         });
     }
 
-    await db.collection("users").insertOne({
+    await db.collection(COLLECTION_USERS).insertOne({
         email,
         password,
     });

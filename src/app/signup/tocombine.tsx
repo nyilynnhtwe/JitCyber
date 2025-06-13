@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { hashPassword } from "../lib/auth";
+import { hashPassword } from "../../lib/auth";
 
 export default function SignupPage() {
   const [password, setPassword] = useState("");
