@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { hashPassword } from "../../lib/auth";
 
 export default function SignupPage() {
@@ -8,7 +7,6 @@ export default function SignupPage() {
   const [username, setUsername] = useState("");
   const [ID,setID] = useState("");
   const [phone, setPhone] =  useState("");
-  const router = useRouter();
 
   async function handleSubmit(e) {
     e.preventDefault();

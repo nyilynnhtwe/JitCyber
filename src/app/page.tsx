@@ -1,12 +1,13 @@
 "use client";
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import Head from 'next/head';
 import { useLocale } from '@/context/LocalContext';
 import Footer from './components/Footer';
 import TopicCard from './components/TopicCard';
 import SecurityTip from './components/SecurityTip';
 import LanguageSwitcher from './components/LanguageSwitcher';
-import {  Lock, Shield, Smartphone, Users, Key, Zap, ChevronRight, AlertTriangle, Mail, HelpCircle, Star, Menu, X } from 'lucide-react';
+import { Lock, Shield, Smartphone, Users, Key, Zap, ChevronRight, AlertTriangle, Mail, HelpCircle, Star, Menu, X } from 'lucide-react';
 
 // Import localization data
 import enData from './data/en.json';
@@ -17,10 +18,10 @@ export default function Home() {
   const { locale } = useLocale();
   const [activeTopic, setActiveTopic] = useState('phishing');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
+
   // Select the correct localization data
   const t = locale === 'th' ? thData : enData;
-  
+
   // Security tips for each topic
   const securityTips = {
     phishing: [
@@ -54,7 +55,7 @@ export default function Home() {
       'ตรวจสอบกับหน่วยงานที่เกี่ยวข้องก่อนโอนเงิน'
     ]
   };
-  
+
   // Topic icons mapping
   const topicIcons = {
     phishing: <Mail className="w-5 h-5 text-rose-500" />,
@@ -64,7 +65,7 @@ export default function Home() {
     privacy: <Shield className="w-5 h-5 text-blue-600" />,
     scams: <AlertTriangle className="w-5 h-5 text-blue-700" />
   };
-  
+
   // Close menu on resize
   useEffect(() => {
     const handleResize = () => {
@@ -72,11 +73,11 @@ export default function Home() {
         setIsMenuOpen(false);
       }
     };
-    
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-  
+
   return (
     <>
       <Head>
@@ -91,12 +92,12 @@ export default function Home() {
         <header className="fixed w-full z-50 bg-white/90 backdrop-blur-sm shadow-sm py-3 border-b border-slate-200">
           <div className="container mx-auto px-4 flex justify-between items-center">
             <div className="flex items-center">
-              <img src="/logo.svg" alt="Logo" className="w-10 h-10 mr-3" />
+              <Image width={100} height={100} src="/logo.svg" alt="Logo" className="w-10 h-10 mr-3" />
               <div className="text-xl font-bold bg-gradient-to-r from-blue-700 to-blue-900 bg-clip-text text-transparent">
                 {t.appName}
               </div>
             </div>
-            
+
             {/* Desktop Navigation */}
             <nav className="hidden md:flex space-x-8 items-center">
               {Object.values(t.nav).map((item, index) => (
@@ -111,7 +112,7 @@ export default function Home() {
               ))}
               <LanguageSwitcher />
             </nav>
-            
+
             {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center space-x-4">
               <LanguageSwitcher />
@@ -128,15 +129,15 @@ export default function Home() {
               </button>
             </div>
           </div>
-          
+
           {/* Mobile Menu */}
           {isMenuOpen && (
             <div className="md:hidden bg-white/95 backdrop-blur-sm py-4 shadow-lg border-b border-slate-200">
               <nav className="container mx-auto px-4 flex flex-col space-y-3">
                 {Object.values(t.nav).map((item, index) => (
-                  <a 
-                    key={index} 
-                    href="#" 
+                  <a
+                    key={index}
+                    href="#"
                     className="text-slate-700 hover:text-blue-600 transition-colors py-2 font-medium flex items-center border-b border-slate-100"
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -211,17 +212,18 @@ export default function Home() {
             <div className="text-center max-w-2xl mx-auto mb-10">
               <h2 className="text-2xl md:text-3xl font-bold mb-4 text-slate-800">{t.topics.title}</h2>
               <p className="text-slate-600">
-                {locale === 'th' 
-                  ? 'เรียนรู้หัวข้อสำคัญด้านความปลอดภัยไซเบอร์ด้วยวิธีที่เข้าใจง่าย' 
+                {locale === 'th'
+                  ? 'เรียนรู้หัวข้อสำคัญด้านความปลอดภัยไซเบอร์ด้วยวิธีที่เข้าใจง่าย'
                   : 'Learn essential cybersecurity topics in an easy-to-understand way'}
               </p>
             </div>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {Object.entries(t.topics)
                 .filter(
                   (entry): entry is [string, { title: string; desc: string }] => {
                     const [_key, value] = entry;
+                    console.log(_key);
                     return typeof value === 'object' && value !== null;
                   }
                 )
@@ -274,13 +276,13 @@ export default function Home() {
                         {t.learning.tips}
                       </h3>
                       <p className="text-slate-500">
-                        {locale === 'th' 
-                          ? 'นำไปใช้ได้ในชีวิตประจำวัน' 
+                        {locale === 'th'
+                          ? 'นำไปใช้ได้ในชีวิตประจำวัน'
                           : 'Practical tips for daily life'}
                       </p>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-4">
                     {securityTips[activeTopic].map((tip, index) => (
                       <div key={index} className="flex items-start p-3 hover:bg-slate-50 rounded-lg transition-colors">
@@ -291,14 +293,14 @@ export default function Home() {
                       </div>
                     ))}
                   </div>
-                  
+
                   <div className="mt-8 pt-6 border-t border-slate-200">
                     <h3 className="text-lg font-bold mb-4 text-slate-800">
                       {t.learning.quiz}
                     </h3>
                     <p className="mb-4 text-slate-600">
-                      {locale === 'th' 
-                        ? 'ทดสอบความรู้ของคุณเกี่ยวกับหัวข้อนี้:' 
+                      {locale === 'th'
+                        ? 'ทดสอบความรู้ของคุณเกี่ยวกับหัวข้อนี้:'
                         : 'Test your knowledge on this topic:'}
                     </p>
                     <button className="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-6 py-2 rounded-lg font-medium flex items-center gap-2 mx-auto hover:shadow-md transition-all">
@@ -325,7 +327,7 @@ export default function Home() {
                   : 'Feedback from our community members'}
               </p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {t.testimonials.items.map((testimonial, index) => (
                 <div key={index} className="bg-gradient-to-br from-slate-50 to-slate-100 p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-all">
@@ -353,12 +355,12 @@ export default function Home() {
             <div className="absolute bottom-0 right-0 w-64 h-64 bg-blue-300 rounded-full mix-blend-overlay blur-xl"></div>
             <div className="absolute top-1/4 right-1/4 w-48 h-48 bg-blue-500 rounded-full mix-blend-overlay blur-xl"></div>
           </div>
-          
-          {/* Added Rectangle Grid texture */} 
+
+          {/* Added Rectangle Grid texture */}
           <div className="absolute inset-0 opacity-5">
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48cGF0aCBkPSJNMCAwaDQwdjQwSDB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTIwIDB2NDBNMCAyMGg0MCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjEiLz48L3N2Zz4=')]"></div>
           </div>
-          
+
           {/* Content */}
           <div className="container mx-auto px-4 text-center relative z-10">
             <div className="max-w-3xl mx-auto">

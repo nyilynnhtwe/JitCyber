@@ -21,7 +21,7 @@ export default function ProfilePage() {
       <h1>Name : {session?.user?.fullName}</h1>
       <h1>Phone : {session?.user?.phone}</h1>
       <h1>Expires In : {new Date().toUTCString()}</h1>
-      <h1>Expires In : {new Date(session?.expires).toUTCString()}</h1>
+      <h1>Expires In : {new Date(session!.expires).toUTCString()}</h1>
       <button onClick={() => signOut()}>Sign Out</button>
     </div>
   );

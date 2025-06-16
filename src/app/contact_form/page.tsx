@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
+import Image from 'next/image';
 import {
-    Shield,
     Mail,
     Phone,
     MessageSquare,
@@ -15,6 +15,7 @@ import {
     Home,
     ArrowLeft
 } from 'lucide-react';
+import Link from 'next/link';
 
 function App() {
     const [formData, setFormData] = useState({
@@ -77,13 +78,13 @@ function App() {
                             <Send className="w-4 h-4" />
                             Send Another
                         </button>
-                        <a
+                        <Link
                             href="/"
                             className="px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-semibold rounded-xl hover:from-purple-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
                         >
                             <Home className="w-4 h-4" />
                             Go Home
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -97,7 +98,9 @@ function App() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
-                            <img
+                            <Image
+                                width={100}
+                                height={100}
                                 src="/logo.svg"
                                 alt="JitCyber Logo"
                                 className="w-12 h-12"
@@ -122,14 +125,14 @@ function App() {
             </header>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <a 
-                    href="/" 
+                <Link
+                    href="/"
                     className="mb-6 inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-200"
                 >
                     <ArrowLeft className="w-5 h-5 mr-2" />
                     Back to Homepage
-                </a>
-                
+                </Link>
+
                 <div className="grid lg:grid-cols-2 gap-12 items-start">
                     {/* Left Column - Contact Info */}
                     <div className="space-y-8">
@@ -141,7 +144,7 @@ function App() {
                                 <h2 className="text-3xl font-bold text-gray-900">Get in Touch</h2>
                             </div>
                             <p className="text-lg text-gray-600 leading-relaxed">
-                                Have questions about our cybersecurity tools? Want to collaborate or provide feedback? 
+                                Have questions about our cybersecurity tools? Want to collaborate or provide feedback?
                                 We'd love to hear from you!
                             </p>
                         </div>
@@ -204,7 +207,7 @@ function App() {
                         <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-100 rounded-full opacity-20"></div>
                         <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-purple-100 rounded-full opacity-20"></div>
                         <div className="absolute top-1/4 -left-8 w-16 h-16 bg-cyan-100 rounded-full opacity-20"></div>
-                        
+
                         <div className="relative z-10">
                             <div className="text-center mb-8">
                                 <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">

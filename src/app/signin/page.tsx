@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { hashPassword } from "../../lib/auth";
 import { Globe, CreditCard, Lock, Eye, EyeOff, LogIn, ShieldCheck, Shield } from "lucide-react";
 import { signIn } from "next-auth/react";
@@ -10,7 +9,6 @@ const SignInForm = () => {
     const [password, setPassword] = useState("");
     const [ThaiID, setThaiID] = useState("");
     const [Passport, setPassport] = useState("thai");
-    const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Validation for IDs
