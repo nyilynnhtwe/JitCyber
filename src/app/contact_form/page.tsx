@@ -101,7 +101,7 @@ function App() {
                             <Image
                                 width={100}
                                 height={100}
-                                src="/logo.svg"
+                                src="/Logo.svg"
                                 alt="JitCyber Logo"
                                 className="w-12 h-12"
                             />

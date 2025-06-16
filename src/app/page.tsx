@@ -92,7 +92,7 @@ export default function Home() {
         <header className="fixed w-full z-50 bg-white/90 backdrop-blur-sm shadow-sm py-3 border-b border-slate-200">
           <div className="container mx-auto px-4 flex justify-between items-center">
             <div className="flex items-center">
-              <Image width={100} height={100} src="/logo.svg" alt="Logo" className="w-10 h-10 mr-3" />
+              <Image width={100} height={100} src="/Logo.svg" alt="Logo" className="w-10 h-10 mr-3" />
               <div className="text-xl font-bold bg-gradient-to-r from-blue-700 to-blue-900 bg-clip-text text-transparent">
                 {t.appName}
               </div>
