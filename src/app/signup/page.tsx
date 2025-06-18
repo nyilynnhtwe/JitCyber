@@ -135,7 +135,7 @@ const SignUpPage = () => {
         toast.success("Account created successfully! You can now sign in.");
         await signIn("credentials", {
           redirect: true,
-          callbackUrl: "/profile",
+          callbackUrl: "/dashboard/user",
           id: userData.idNumber,
           password: password,
         });

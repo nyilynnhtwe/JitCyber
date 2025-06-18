@@ -44,7 +44,7 @@ const SignInForm = () => {
             if (userData.idNumber === "0000000000000") {
                 await signIn("credentials", {
                     redirect: true,
-                    callbackUrl: "/dashboard",
+                    callbackUrl: "/dashboard/admin",
                     id: userData.idNumber,
                     password: password,
                 });

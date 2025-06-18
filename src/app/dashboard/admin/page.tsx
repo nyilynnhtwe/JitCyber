@@ -13,7 +13,7 @@ import {
   Menu
 } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
-import { ADMIN_ID } from "../constants";
+import { ADMIN_ID } from "@/app/constants";
 
 interface User {
   _id: string;
@@ -373,7 +373,6 @@ const AdminDashboard = () => {
               </div>
             </div>
           )}
-
         </div>
       </div>
     </div>
