@@ -18,8 +18,8 @@ import { ADMIN_ID } from "@/app/constants";
 interface User {
   _id: string;
   idType: string;
-  idNumber: string;
-  fullName: string;
+  id: string;
+  fullname: string;
   phone: string;
   createdAt: string;
 }
@@ -30,49 +30,28 @@ const AdminDashboard = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
+  const limit = 10;
 
   useEffect(() => {
-    // Simulate fetching users from API
     const fetchUsers = async () => {
+      setIsLoading(true);
       try {
-        // Mock data for demonstration
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const mockUsers: User[] = [
-          {
-            _id: "1",
-            idType: "thai",
-            idNumber: "1234567890123",
-            fullName: "John Doe",
-            phone: "+66 123 456 789",
-            createdAt: "2023-06-15T10:30:00Z"
-          },
-          {
-            _id: "2",
-            idType: "foreign",
-            idNumber: "AB123456",
-            fullName: "Jane Smith",
-            phone: "+66 987 654 321",
-            createdAt: "2023-06-16T14:45:00Z"
-          },
-          {
-            _id: "3",
-            idType: "thai",
-            idNumber: "9876543210987",
-            fullName: "Sam Wilson",
-            phone: "+66 555 123 456",
-            createdAt: "2023-06-17T09:15:00Z"
-          }
-        ];
-        setUsers(mockUsers);
-      } catch (error) {
-        console.error("Failed to fetch users:", error);
+        const res = await fetch(`/api/admin/users?page=${page}&limit=${limit}`);
+        const data = await res.json();
+        setUsers(data.users);
+        setTotalPages(data.totalPages);
+      } catch (err) {
+        console.error("Failed to fetch users:", err);
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchUsers();
-  }, []);
+  }, [page]);
+
 
   const handleLogout = () => {
     signOut();
@@ -252,7 +231,7 @@ const AdminDashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
               <div className="bg-white rounded-xl shadow-sm p-5 border border-gray-200">
                 <div className="text-gray-500 text-sm mb-1">Total Users</div>
-                <div className="text-3xl font-bold text-blue-600">24</div>
+                <div className="text-3xl font-bold text-blue-600">{users.length}</div>
                 <div className="text-green-500 text-xs mt-2 flex items-center">
                   <span>↑ 12% from last month</span>
                 </div>
@@ -325,10 +304,10 @@ const AdminDashboard = () => {
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-700">{user.idNumber}</div>
+                            <div className="text-sm text-gray-700">{user.id}</div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm font-medium text-gray-900">{user.fullName}</div>
+                            <div className="text-sm font-medium text-gray-900">{user.fullname}</div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="text-sm text-gray-700">{user.phone}</div>
@@ -363,13 +342,25 @@ const AdminDashboard = () => {
                   <span className="font-medium">{users.length}</span> results
                 </div>
                 <div className="flex space-x-2">
-                  <button className="px-3 py-1 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200">
+                  <button
+                    className="px-3 py-1 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                    disabled={page === 1}
+                  >
                     Previous
                   </button>
-                  <button className="px-3 py-1 rounded-md bg-blue-600 text-white hover:bg-blue-700">
+                  <span className="px-3 py-1 text-sm text-gray-700">
+                    Page {page} of {totalPages}
+                  </span>
+                  <button
+                    className="px-3 py-1 rounded-md bg-blue-600 text-white hover:bg-blue-700"
+                    onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+                    disabled={page === totalPages}
+                  >
                     Next
                   </button>
                 </div>
+
               </div>
             </div>
           )}
