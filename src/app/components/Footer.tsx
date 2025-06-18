@@ -16,15 +16,13 @@ export default function Footer({ t, locale }: FooterProps) {
               <Image
                 width={100}
                 height={100}
-                src="../greenlogo.svg"
+                src="/greenlogo.svg"
                 alt={t.footer.company}
                 className="w-13 h-13 rounded-lg object-contain mr-3"
               />
               <div className="text-xl font-bold text-white">{t.footer.company}</div>
             </div>
-            <p className="mb-4">
-              {t.footer.slogan}
-            </p>
+            <p className="mb-4">{t.footer.slogan}</p>
           </div>
 
           <div>
@@ -58,26 +56,13 @@ export default function Footer({ t, locale }: FooterProps) {
             <ul className="space-y-2">
               <li>{t.footer.email}</li>
               <li>{t.footer.phone}</li>
-              <li>
-                {locale === 'th' ? 'กรุงเทพมหานคร' : 'Bangkok'}
-              </li>
+              <li>{locale === 'th' ? 'กรุงเทพมหานคร' : 'Bangkok'}</li>
             </ul>
             <div className="mt-4">
-<<<<<<< HEAD
-              <Link href="./contact_form">
-              <button
-                className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-              >
-                {locale === 'th' ? 'ติดต่อทีมงาน' : 'Contact Team'}
-              </button>
-=======
               <Link href="/contact_form">
-                <button
-                  className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-                >
+                <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
                   {locale === 'th' ? 'ติดต่อทีมงาน' : 'Contact Team'}
                 </button>
->>>>>>> 7e37c485e2c534c54404e555987577ae4ad02459
               </Link>
             </div>
           </div>

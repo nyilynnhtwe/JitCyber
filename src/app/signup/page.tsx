@@ -3,12 +3,9 @@ import { useState } from "react";
 import { hashPassword } from "../../lib/auth";
 import { User, Globe, CreditCard, Phone, Lock, Eye, EyeOff, AlertCircle, CheckCircle, UserPlus, Shield, ShieldCheck } from "lucide-react";
 import Link from "next/link";
-<<<<<<< HEAD
 import { Calendar } from 'lucide-react';
-=======
 import { signIn } from "next-auth/react";
 import { toast } from "react-toastify";
->>>>>>> 7e37c485e2c534c54404e555987577ae4ad02459
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);

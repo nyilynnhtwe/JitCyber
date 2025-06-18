@@ -1,10 +1,7 @@
 "use client";
 import React, { useState } from 'react';
-<<<<<<< HEAD
 import { send } from '@emailjs/browser';
-=======
 import Image from 'next/image';
->>>>>>> 7e37c485e2c534c54404e555987577ae4ad02459
 import {
     Mail,
     Phone,
@@ -32,7 +29,6 @@ function App() {
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const [error,setError] = useState('');
 
     const handleInputChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -47,12 +43,11 @@ function App() {
     const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError('');
 
     try {
-        const serviceID = '';
-        const templateID = '';
-        const publicKey = '';
+        const serviceID = 'service_9vpx8vw';
+        const templateID = 'template_39et3ul';
+        const publicKey = 'xMtwp131nFMaGy76D';
 
         await send(
             serviceID,
@@ -72,7 +67,6 @@ function App() {
         setIsSubmitted(true);
     } catch (err) {
         setIsSubmitting(false);
-        setError('Failed to send message. Please try again later.');
         console.error('Email sending error:', err);
     }
 };
