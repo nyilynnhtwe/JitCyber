@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from 'react';
+import { send } from '@emailjs/browser';
 import {
     Shield,
     Mail,
@@ -27,6 +28,7 @@ function App() {
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [error,setError] = useState('');
 
     const handleInputChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -39,12 +41,37 @@ function App() {
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-        await new Promise(resolve => setTimeout(resolve, 2000));
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError('');
+
+    try {
+        const serviceID = '';
+        const templateID = '';
+        const publicKey = '';
+
+        await send(
+            serviceID,
+            templateID,
+            {
+                from_name: formData.name,
+                from_email: formData.email,
+                from_phone: formData.phone,
+                subject: formData.subject,
+                message: formData.message,
+                inquiry_type: formData.inquiryType
+            },
+            publicKey
+        );
+
         setIsSubmitting(false);
         setIsSubmitted(true);
-    };
+    } catch (err) {
+        setIsSubmitting(false);
+        setError('Failed to send message. Please try again later.');
+        console.error('Email sending error:', err);
+    }
+};
 
     const resetForm = () => {
         setFormData({
