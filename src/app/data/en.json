@@ -3,9 +3,6 @@
   "nav": {
     "home": "Home",
     "learn": "Learn",
-    "fake_email_checker": "Fake Email Checker",
-    "password_strength_checker": "Password Strength Checker",
-    "resources": "Resources",
     "about": "About"
   },
   "hero": {
@@ -70,7 +67,7 @@
     "title": "Start Protecting Yourself Today!",
     "subtitle": "Join our community of security-aware users",
     "button1": "Create Free Account",
-    "button2": "View Learning Path"
+    "button2": "Sign In"
   },
   "footer": {
     "company": "JitCyber",

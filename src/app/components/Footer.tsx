@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 type FooterProps = {
@@ -12,27 +13,20 @@ export default function Footer({ t, locale }: FooterProps) {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center mb-4">
-                <img
-                src="./greenlogo.svg"
+              <Image
+                width={100}
+                height={100}
+                src="../greenlogo.svg"
                 alt={t.footer.company}
                 className="w-13 h-13 rounded-lg object-contain mr-3"
-                />
+              />
               <div className="text-xl font-bold text-white">{t.footer.company}</div>
             </div>
             <p className="mb-4">
               {t.footer.slogan}
             </p>
-            <div className="flex space-x-4">
-              {[1, 2, 3].map((i) => (
-                <a key={i} href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <div className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center">
-                    <span className="text-xs">S{i}</span>
-                  </div>
-                </a>
-              ))}
-            </div>
           </div>
-          
+
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">{t.footer.resources}</h3>
             <ul className="space-y-2">
@@ -45,7 +39,7 @@ export default function Footer({ t, locale }: FooterProps) {
               ))}
             </ul>
           </div>
-          
+
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">{t.footer.legal}</h3>
             <ul className="space-y-2">
@@ -58,7 +52,7 @@ export default function Footer({ t, locale }: FooterProps) {
               ))}
             </ul>
           </div>
-          
+
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">{t.footer.contact}</h3>
             <ul className="space-y-2">
@@ -69,17 +63,26 @@ export default function Footer({ t, locale }: FooterProps) {
               </li>
             </ul>
             <div className="mt-4">
+<<<<<<< HEAD
               <Link href="./contact_form">
               <button
                 className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
               >
                 {locale === 'th' ? 'ติดต่อทีมงาน' : 'Contact Team'}
               </button>
+=======
+              <Link href="/contact_form">
+                <button
+                  className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+                >
+                  {locale === 'th' ? 'ติดต่อทีมงาน' : 'Contact Team'}
+                </button>
+>>>>>>> 7e37c485e2c534c54404e555987577ae4ad02459
               </Link>
             </div>
           </div>
         </div>
-        
+
         <div className="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400">
           <p>{t.footer.copyright}</p>
         </div>
