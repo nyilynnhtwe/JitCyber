@@ -25,7 +25,7 @@ export const authOptions : AuthOptions = {
                 if (!credentials?.id || !credentials?.password) {
                     throw new Error("Missing credentials");
                 }
-
+                
                 const client = await connectToDatabase();
                 const db = client.db(DB_NAME);
 
@@ -38,12 +38,11 @@ export const authOptions : AuthOptions = {
                 if (!user) {
                     throw new Error("No user found!");
                 }
-
+                
                 const isValid = await verifyPassword(
                     credentials.password,
                     user.password
                 );
-
                 if (!isValid) {
                     throw new Error("Could not log you in!");
                 }

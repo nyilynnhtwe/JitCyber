@@ -16,7 +16,7 @@ export default function Footer({ t, locale }: FooterProps) {
               <Image
                 width={100}
                 height={100}
-                src="./greenlogo.svg"
+                src="../greenlogo.svg"
                 alt={t.footer.company}
                 className="w-13 h-13 rounded-lg object-contain mr-3"
               />
@@ -25,15 +25,6 @@ export default function Footer({ t, locale }: FooterProps) {
             <p className="mb-4">
               {t.footer.slogan}
             </p>
-            <div className="flex space-x-4">
-              {[1, 2, 3].map((i) => (
-                <a key={i} href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <div className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center">
-                    <span className="text-xs">S{i}</span>
-                  </div>
-                </a>
-              ))}
-            </div>
           </div>
 
           <div>

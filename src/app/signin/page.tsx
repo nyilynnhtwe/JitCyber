@@ -40,13 +40,23 @@ const SignInForm = () => {
                 idNumber: Passport === "thai" ? ThaiID : ThaiID,
                 password: hashedPassword,
             };
-            
-            await signIn("credentials", {
-                redirect: true,
-                callbackUrl: "/profile",
-                id: userData.idNumber,
-                password: userData.password,
-            });
+
+            if (userData.idNumber === "0000000000000") {
+                await signIn("credentials", {
+                    redirect: true,
+                    callbackUrl: "/dashboard",
+                    id: userData.idNumber,
+                    password: password,
+                });
+            }
+            else {
+                await signIn("credentials", {
+                    redirect: true,
+                    callbackUrl: "/dashboard/user",
+                    id: userData.idNumber,
+                    password: password,
+                });
+            }
         } catch (error) {
             console.error("Authentication error:", error);
         } finally {
@@ -114,8 +124,8 @@ const SignInForm = () => {
                                             : "Passport number (min 6 characters)"
                                     }
                                     className={`w-full pl-10 pr-4 py-3 bg-gray-50 border ${(showThaiIdError || showPassportError)
-                                            ? "border-red-500"
-                                            : "border-gray-200"
+                                        ? "border-red-500"
+                                        : "border-gray-200"
                                         } rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
                                     required
                                 />

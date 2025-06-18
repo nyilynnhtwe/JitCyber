@@ -1,9 +1,10 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { hashPassword } from "../../lib/auth";
 import { User, Globe, CreditCard, Phone, Lock, Eye, EyeOff, AlertCircle, CheckCircle, UserPlus, Shield, ShieldCheck } from "lucide-react";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
+import { toast } from "react-toastify";
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,7 +14,6 @@ const SignUpPage = () => {
   const [ThaiID, setThaiID] = useState("");
   const [Passport, setPassport] = useState("thai");
   const [phone, setPhone] = useState("");
-  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const getPasswordStrength = (password: string) => {
@@ -93,14 +93,17 @@ const SignUpPage = () => {
     e.preventDefault();
 
     if (Passport === "thai" && (ThaiID.length !== 13 || !/^\d+$/.test(ThaiID))) {
+      toast.error("Invalid Thai ID.");
       return;
     }
 
     if (Passport === "foreign" && ThaiID.length < 6) {
+      toast.error("Passport number too short.");
       return;
     }
 
     if (passwordStrength.score < 3) {
+      toast.error("Password is too weak.");
       return;
     }
 
@@ -114,14 +117,29 @@ const SignUpPage = () => {
         fullName: fullname,
         phoneNumber: phone
       };
-
-
-      await fetch("/api/auth/signup", {
+      const response = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fullname: userData.fullName, id: userData.idNumber, password: userData.password, phone: userData.phoneNumber }),
       });
-      router.push("/profile");
+      const data = await response.json();
+      if (!response.ok) {
+        if (response.status === 409) {
+          toast.warning("User already exists. Please sign in.");
+        } else {
+          toast.error(`Signup failed: ${data?.message || "Unknown error"}`);
+        }
+        return;
+      }
+      else if (response.ok) {
+        toast.success("Account created successfully! You can now sign in.");
+        await signIn("credentials", {
+          redirect: true,
+          callbackUrl: "/profile",
+          id: userData.idNumber,
+          password: password,
+        });
+      }
     } catch (error) {
       console.error("Authentication error:", error);
     } finally {
@@ -187,8 +205,8 @@ const SignUpPage = () => {
                       : "Passport number (min 6 characters)"
                   }
                   className={`w-full pl-10 pr-4 py-3 bg-gray-50 border ${(showThaiIdError || showPassportError)
-                      ? "border-red-500"
-                      : "border-gray-200"
+                    ? "border-red-500"
+                    : "border-gray-200"
                     } rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
                   required
                 />
