@@ -3,6 +3,7 @@ import { useState } from "react";
 import { hashPassword } from "../../lib/auth";
 import { User, Globe, CreditCard, Phone, Lock, Eye, EyeOff, AlertCircle, CheckCircle, UserPlus, Shield, ShieldCheck } from "lucide-react";
 import Link from "next/link";
+import { Calendar } from 'lucide-react';
 import { signIn } from "next-auth/react";
 import { toast } from "react-toastify";
 
@@ -15,6 +16,7 @@ const SignUpPage = () => {
   const [Passport, setPassport] = useState("thai");
   const [phone, setPhone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [dob, setDob] = useState("");
 
   const getPasswordStrength = (password: string) => {
     if (!password) return {
@@ -115,12 +117,13 @@ const SignUpPage = () => {
         idNumber: ThaiID,
         password: hashedPassword,
         fullName: fullname,
-        phoneNumber: phone
+        phoneNumber: phone,
+        dob: dob
       };
       const response = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullname: userData.fullName, id: userData.idNumber, password: userData.password, phone: userData.phoneNumber }),
+        body: JSON.stringify({ fullname: userData.fullName, id: userData.idNumber, password: userData.password, phone: userData.phoneNumber, dob: dob }),
       });
       const data = await response.json();
       if (!response.ok) {
@@ -338,6 +341,25 @@ const SignUpPage = () => {
                   </div>
                 </div>
               )}
+
+
+            {/* Date of Birth */}
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-gray-700">Date of Birth</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                  <Calendar className="w-5 h-5" />
+                </div>
+                <input
+                  type="date"
+                  value={dob}
+                  onChange={(e) => setDob(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  required
+                />
+              </div>
+            </div>
+
             </div>
 
             {/* Submit Button */}

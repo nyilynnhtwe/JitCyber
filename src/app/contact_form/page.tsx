@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from 'react';
+import { send } from '@emailjs/browser';
 import Image from 'next/image';
 import {
     Mail,
@@ -40,12 +41,35 @@ function App() {
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-        await new Promise(resolve => setTimeout(resolve, 2000));
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+        const serviceID = 'service_9vpx8vw';
+        const templateID = 'template_39et3ul';
+        const publicKey = 'xMtwp131nFMaGy76D';
+
+        await send(
+            serviceID,
+            templateID,
+            {
+                from_name: formData.name,
+                from_email: formData.email,
+                from_phone: formData.phone,
+                subject: formData.subject,
+                message: formData.message,
+                inquiry_type: formData.inquiryType
+            },
+            publicKey
+        );
+
         setIsSubmitting(false);
         setIsSubmitted(true);
-    };
+    } catch (err) {
+        setIsSubmitting(false);
+        console.error('Email sending error:', err);
+    }
+};
 
     const resetForm = () => {
         setFormData({
