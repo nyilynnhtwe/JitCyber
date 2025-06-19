@@ -21,6 +21,8 @@ export async function POST(req: Request) {
         fullname,
         phone,
         password,
+        dob,
+        createdAt: new Date(),
     });
 
     client.close();
