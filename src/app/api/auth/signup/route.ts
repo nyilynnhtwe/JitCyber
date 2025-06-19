@@ -2,7 +2,7 @@ import { COLLECTION_USERS, DB_NAME } from "@/app/constants";
 import { connectToDatabase } from "@/lib/db";
 
 export async function POST(req: Request) {
-    const { id, fullname, password, phone, dob,DOB } = await req.json();
+    const { id, fullname, password, phone, dob } = await req.json();
 
     const client = await connectToDatabase();
     const db = client.db(DB_NAME);
