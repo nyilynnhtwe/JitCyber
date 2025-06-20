@@ -80,5 +80,66 @@
     "email": "help@jitcyber.com",
     "phone": "02-123-4567",
     "copyright": "© 2025 จิตไซเบอร์. สงวนลิขสิทธิ์."
+  },
+
+
+  
+  "quizApp": {
+    "appName": "JitCyber",
+    "nav": {
+      "home": "หน้าหลัก",
+      "languageToggle": "EN"
+    },
+    "quizHero": {
+      "testKnowledge": "ทดสอบความรู้ของคุณ",
+      "learnHeading": "แบบทดสอบ",
+      "cybersecurityHeading": "ความปลอดภัยไซเบอร์",
+      "challengeText": "ท้าทายตัวเองด้วยแบบทดสอบแบบโต้ตอบและเรียนรู้แนวคิดด้านความปลอดภัยที่สำคัญ"
+    },
+    "quizTopics": {
+      "phishing": {
+        "title": "การป้องกันฟิชชิ่ง",
+        "description": "เรียนรู้วิธีระบุและหลีกเลี่ยงการโจมตีแบบฟิชชิ่ง",
+        "stats": {
+          "questions": "12 คำถาม",
+          "duration": "8 นาที",
+          "difficulty": "ปานกลาง"
+        }
+      },
+      "password": {
+        "title": "ความปลอดภัยของรหัสผ่าน",
+        "description": "สร้างรหัสผ่านที่แข็งแกร่งเพื่อปกป้องบัญชีของคุณ",
+        "stats": {
+          "questions": "10 คำถาม",
+          "duration": "6 นาที",
+          "difficulty": "ง่าย"
+        }
+      },
+      "social": {
+        "title": "วิศวกรรมสังคม",
+        "description": "เข้าใจและป้องกันกลวิธีทางวิศวกรรมสังคม",
+        "stats": {
+          "questions": "15 คำถาม",
+          "duration": "10 นาที",
+          "difficulty": "ยาก"
+        }
+      },
+      "mobile": {
+        "title": "ความปลอดภัยบนมือถือ",
+        "description": "ปกป้องอุปกรณ์มือถือจากภัยคุกคามและมัลแวร์",
+        "stats": {
+          "questions": "8 คำถาม",
+          "duration": "5 นาที",
+          "difficulty": "ง่าย"
+        }
+      }
+    },
+    "quizUI": {
+      "startQuiz": "เริ่มแบบทดสอบ",
+      "learnFirst": "เรียนรู้ก่อน",
+      "readGuide": "อ่านคู่มือ",
+      "watchTutorial": "ดูวิดีโอสอน",
+      "studyNotes": "เอกสารศึกษา"
+    }
   }
 }
