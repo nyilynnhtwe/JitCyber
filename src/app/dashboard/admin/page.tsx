@@ -22,6 +22,7 @@ interface User {
   fullname: string;
   phone: string;
   createdAt: string;
+  dob: string;
 }
 
 const AdminDashboard = () => {
@@ -278,6 +279,9 @@ const AdminDashboard = () => {
                         Phone
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        DOB
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Registered
                       </th>
                       <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -311,6 +315,9 @@ const AdminDashboard = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="text-sm text-gray-700">{user.phone}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-500">{formatDate(user.dob)}</div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="text-sm text-gray-500">{formatDate(user.createdAt)}</div>
