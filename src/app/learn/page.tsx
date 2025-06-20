@@ -19,6 +19,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface CourseCardProps {
     id: string;
@@ -95,6 +96,7 @@ function CourseCard({
     const course = courseData.find((c) => c.id === id);
     const [isHovered, setIsHovered] = useState(false);
     const [showLearnOptions, setShowLearnOptions] = useState(false);
+    const router = useRouter();
 
     return (
         <div className="space-y-3 w-full">
@@ -217,6 +219,7 @@ function CourseCard({
                                 className="flex-1 px-4 py-3 border-2 border-blue-700 rounded-xl bg-gradient-to-r from-blue-700 to-blue-600 text-white text-sm font-semibold hover:from-blue-800 hover:to-blue-700 transition-colors shadow-lg flex items-center justify-center gap-2"
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
+                                onClick={() => router.push(`/quiz/${id}`)}  // Updated to use dynamic routing
                             >
                                 <Award className="w-4 h-4" />
                                 {isThai ? "เริ่มแบบทดสอบ" : "Start Quiz"}
@@ -244,32 +247,47 @@ function CourseCard({
                                 exit={{ opacity: 0, height: 0 }}
                                 transition={{ duration: 0.2 }}
                             >
-                                <button className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors group">
+                                <motion.button 
+                                    className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors group"
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    onClick={() => router.push(`/learn/${id}/guide`)}
+                                >
                                     <div className="p-2 rounded-lg bg-blue-100 group-hover:bg-blue-200 transition-colors">
                                         <BookOpen className="w-5 h-5 text-blue-700" />
                                     </div>
                                     <span className="text-sm font-medium">
                                         {isThai ? "อ่านคู่มือ" : "Read Guide"}
                                     </span>
-                                </button>
+                                </motion.button>
 
-                                <button className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors group">
+                                <motion.button 
+                                    className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors group"
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    onClick={() => router.push(`/learn/${id}/video`)}
+                                >
                                     <div className="p-2 rounded-lg bg-blue-100 group-hover:bg-blue-200 transition-colors">
                                         <Video className="w-5 h-5 text-blue-700" />
                                     </div>
                                     <span className="text-sm font-medium">
                                         {isThai ? "ดูวิดีโอสอน" : "Watch Tutorial"}
                                     </span>
-                                </button>
+                                </motion.button>
 
-                                <button className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors group">
+                                <motion.button 
+                                    className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors group"
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    onClick={() => router.push(`/learn/${id}/notes`)}
+                                >
                                     <div className="p-2 rounded-lg bg-blue-100 group-hover:bg-blue-200 transition-colors">
                                         <FileText className="w-5 h-5 text-blue-700" />
                                     </div>
                                     <span className="text-sm font-medium">
                                         {isThai ? "เอกสารศึกษา" : "Study Notes"}
                                     </span>
-                                </button>
+                                </motion.button>
                             </motion.div>
                         )}
                     </div>
@@ -317,15 +335,15 @@ export default function Page() {
                             href="/"
                             className="flex items-center gap-1 text-gray-600 hover:text-blue-700 transition-colors"
                         >
-                            <Home className="w-5 h-5" />
+                            <Home className="w-5 h-5 text-blue-500" />
                             <span className="hidden sm:inline">{isThai ? "หน้าหลัก" : "Home"}</span>
                         </Link>
 
                         <button
                             onClick={() => setIsThai(!isThai)}
-                            className="flex items-center gap-1 px-3 py-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                            className="flex items-center gap-1 px-3 py-2 rounded-full bg-blue-100 hover:bg-gray-200 transition-colors"
                         >
-                            <Globe className="w-5 h-5 text-gray-600" />
+                            <Globe className="w-5 h-5 text-green-600" />
                             <span className="text-sm font-medium">{isThai ? "EN" : "ไทย"}</span>
                         </button>
                     </div>
@@ -335,10 +353,10 @@ export default function Page() {
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
                     <div className="flex justify-center mb-6">
                         <Image 
-                            src="/chibi.svg" 
-                            alt="Cybersecurity Illustration" 
-                            width={280} 
-                            height={280} 
+                            src="/chibi.svg"
+                            alt="Cybersecurity Illustration"
+                            width={280}
+                            height={280}
                             className="w-70 h-70"
                         />
                     </div>
@@ -353,7 +371,7 @@ export default function Page() {
                                 animate={{ rotate: [0, 360] }}
                                 transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
                             >
-                                <Sparkles className="w-4 h-4 text-blue-600" />
+                                <Sparkles className="w-4 h-4 text-green-600" />
                             </motion.div>
                             {isThai ? "ทดสอบความรู้ของคุณ" : "Test Your Knowledge"}
                         </div>
