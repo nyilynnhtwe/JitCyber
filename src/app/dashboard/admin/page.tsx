@@ -10,7 +10,8 @@ import {
   ChevronDown,
   Search,
   Bell,
-  Menu
+  Menu,
+  ClipboardList
 } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { ADMIN_ID } from "@/app/constants";
@@ -25,10 +26,19 @@ interface User {
   dob: string;
 }
 
+interface Quiz {
+  _id: string;
+  question: string;
+  answers: string[];
+  correctAnswer: string;
+  info?: string;
+}
+
 const AdminDashboard = () => {
   const { data: session, status } = useSession();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [users, setUsers] = useState<User[]>([]);
+  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
@@ -51,6 +61,24 @@ const AdminDashboard = () => {
     };
 
     fetchUsers();
+  }, [page]);
+
+  useEffect(() => {
+    const fetchQuizzes = async () => {
+      setIsLoading(true);
+      try {
+        const res = await fetch(`/api/admin/quizzes?page=${page}&limit=${limit}`);
+        const data = await res.json();
+        setQuizzes(data.quizzes);
+        // Optionally setTotalPages(data.totalPages) if your API supports it for quizzes
+      } catch (err) {
+        console.error("Failed to fetch quizzes:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchQuizzes();
   }, [page]);
 
 
@@ -113,6 +141,18 @@ const AdminDashboard = () => {
           >
             <Users className="w-5 h-5 mr-3" />
             User Management
+          </button>
+
+          <button
+            className={`flex items-center w-full px-6 py-3 text-left ${
+              activeTab === "quizzes"
+                ? "bg-blue-700 border-l-4 border-cyan-400"
+                : "hover:bg-blue-700"
+            }`}
+            onClick={() => setActiveTab("quizzes")}
+          >
+            <ClipboardList className="w-5 h-5 mr-3" />
+            Quiz Management
           </button>
 
           <button
@@ -209,6 +249,18 @@ const AdminDashboard = () => {
               >
                 <Users className="w-5 h-5" />
                 <span className="text-xs mt-1">Users</span>
+              </button>
+
+              <button
+                className={`flex flex-col items-center p-3 rounded ${activeTab === "quizzes" ? "bg-blue-50 text-blue-600" : "text-gray-600"
+                  }`}
+                onClick={() => {
+                  setActiveTab("quizzes");
+                  setMobileMenuOpen(false);
+                }}
+              >
+                <ClipboardList className="w-5 h-5" />
+                <span className="text-xs mt-1">Quizzes</span>
               </button>
 
               <button
@@ -371,6 +423,98 @@ const AdminDashboard = () => {
               </div>
             </div>
           )}
+
+          {activeTab === "quizzes" && (
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                <h3 className="text-lg font-medium text-gray-800">Quiz Management</h3>
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                  Add Quiz
+                </button>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quiz ID</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Question</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Answers</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Correct Answer</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Info</th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {isLoading ? (
+                      <tr>
+                        <td colSpan={6} className="px-6 py-8 text-center">
+                          <div className="flex justify-center">
+                            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+                          </div>
+                          <p className="mt-2 text-gray-500">Loading quizzes...</p>
+                        </td>
+                      </tr>
+                    ) : quizzes.length > 0 ? (
+                      quizzes.map((quiz) => (
+                        <tr key={quiz._id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{quiz._id}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{quiz.question}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                            {quiz.answers?.join(", ")}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-medium">
+                            {quiz.correctAnswer}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {quiz.info || "-"}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button className="text-blue-600 hover:text-blue-900 mr-3">Edit</button>
+                            <button className="text-red-600 hover:text-red-900">Delete</button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                          No quizzes found
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="px-6 py-4 border-t border-gray-200 flex justify-between items-center">
+                <div className="text-sm text-gray-700">
+                  Showing <span className="font-medium">1</span> to{" "}
+                  <span className="font-medium">{quizzes.length}</span> of{" "}
+                  <span className="font-medium">{quizzes.length}</span> results
+                </div>
+                <div className="flex space-x-2">
+                  <button
+                    className="px-3 py-1 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                    disabled={page === 1}
+                  >
+                    Previous
+                  </button>
+                  <span className="px-3 py-1 text-sm text-gray-700">
+                    Page {page} of {totalPages}
+                  </span>
+                  <button
+                    className="px-3 py-1 rounded-md bg-blue-600 text-white hover:bg-blue-700"
+                    onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+                    disabled={page === totalPages}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
         </div>
       </div>
     </div>
