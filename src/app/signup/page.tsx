@@ -278,6 +278,25 @@ const SignUpPage = () => {
               </div>
             </div>
 
+            {/* Date of Birth */}
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-gray-700">Date of Birth</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                  <Calendar className="w-5 h-5" />
+                </div>
+                <input
+                  type="date"
+                  value={dob}
+                  onChange={(e) => setDob(e.target.value)}
+                  max={new Date().toISOString().split('T')[0]} // Prevent future dates
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  required
+                />
+              </div>
+            </div>
+
+
             {/* Password Field */}
             <div className="space-y-1">
               <label className="text-sm font-medium text-gray-700">Password</label>
@@ -341,25 +360,6 @@ const SignUpPage = () => {
                   </div>
                 </div>
               )}
-
-
-            {/* Date of Birth */}
-            <div className="space-y-1">
-              <label className="text-sm font-medium text-gray-700">Date of Birth</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                  <Calendar className="w-5 h-5" />
-                </div>
-                <input
-                  type="date"
-                  value={dob}
-                  onChange={(e) => setDob(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                  required
-                />
-              </div>
-            </div>
-
             </div>
 
             {/* Submit Button */}
