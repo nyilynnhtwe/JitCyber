@@ -116,10 +116,12 @@ export default function Home() {
                   {t.hero.subtitle}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <button className="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-6 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-blue-900 transition-all flex items-center justify-center gap-2">
-                    {t.hero.cta1}
-                    <Zap className="w-4 h-4" />
-                  </button>
+                  <Link href="/learn">
+                    <button className="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-6 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-blue-900 transition-all flex items-center justify-center gap-2">
+                      {t.hero.cta1}
+                      <Zap className="w-4 h-4" />
+                    </button>
+                  </Link>
                 </div>
               </div>
               <div className="md:w-1/2 flex justify-center">
