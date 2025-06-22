@@ -275,11 +275,11 @@ function CourseCard({
                                     </span>
                                 </motion.button>
 
-                                <motion.button 
+                                <motion.button
                                     className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors group"
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
-                                    onClick={() => router.push(`/learn/${id}/notes`)}
+                                    onClick={() => router.push(`/readguide/${id}`)}
                                 >
                                     <div className="p-2 rounded-lg bg-blue-100 group-hover:bg-blue-200 transition-colors">
                                         <FileText className="w-5 h-5 text-blue-700" />
@@ -314,11 +314,11 @@ export default function Page() {
                 <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
                     <Link href="/" className="flex items-center gap-2 group">
                         <div className="p-1 flex items-center justify-center w-12 h-12">
-                            <Image 
-                                src="/logo.svg" 
-                                alt="Logo" 
-                                width={40} 
-                                height={40} 
+                            <Image
+                                src="/logo.svg"
+                                alt="Logo"
+                                width={40}
+                                height={40}
                                 className="w-10 h-10 object-contain"
                             />
                         </div>
