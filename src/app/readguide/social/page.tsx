@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Eye, ChevronLeft, BookOpen, User, Shield, AlertOctagon, Clipboard, Globe } from "lucide-react";
+import { Eye, ChevronLeft, BookOpen, User, Shield, AlertOctagon, Clipboard, Globe, Mail, Smartphone, HardHat } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -25,7 +25,6 @@ export default function SocialEngineeringGuide() {
                     </span>
                 </Link>
 
-                {/* Language switcher */}
                 <button
                     className="flex items-center gap-1 px-3 py-2 rounded-full bg-blue-100 hover:bg-gray-200 transition-colors cursor-default"
                     disabled
@@ -57,7 +56,7 @@ export default function SocialEngineeringGuide() {
                         <Eye className="w-6 h-6 text-white" />
                     </div>
                     <h1 className="text-3xl font-bold text-gray-900">
-                        Social Engineering
+                        Social Engineering Defense Guide
                     </h1>
                 </motion.div>
 
@@ -69,87 +68,155 @@ export default function SocialEngineeringGuide() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1 }}
                         >
-                            <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-                                <User className="w-5 h-5 text-blue-600" />
-                                What is Social Engineering?
-                            </h2>
-                            <p className="mb-4">
-                                Attack techniques that use psychological manipulation to trick people into revealing sensitive information or performing actions that compromise security.
-                            </p>
-
-                            <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200 mb-6">
-                                <h3 className="font-semibold text-yellow-800 mb-2 flex items-center gap-2">
-                                    <AlertOctagon className="w-5 h-5" />
-                                    Why is it dangerous?
-                                </h3>
-                                <p className="text-yellow-700">
-                                    Because it targets the weakest link in security - humans, not technology.
+                            {/* Section 1: Introduction */}
+                            <section className="mb-8">
+                                <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+                                    <User className="w-5 h-5 text-blue-600" />
+                                    The Human Firewall
+                                </h2>
+                                <p className="mb-4">
+                                    Social engineering accounts for 98% of cyber attacks (IBM 2023). Unlike software vulnerabilities, humans can't be patched - we must build awareness.
                                 </p>
-                            </div>
-
-                            <h2 className="text-2xl font-semibold mb-4 mt-8 flex items-center gap-2">
-                                <Shield className="w-5 h-5 text-blue-600" />
-                                Common Techniques
-                            </h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                                <div className="border rounded-lg p-4">
-                                    <h3 className="font-medium mb-2">Phishing</h3>
-                                    <p className="text-sm text-gray-600">
-                                        Fake emails/messages appearing to be from trusted sources
+                                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+                                    <p className="text-yellow-700 font-medium flex items-start gap-2">
+                                        <AlertOctagon className="w-5 h-5 flex-shrink-0" />
+                                        <span>Attackers spend 2-3 hours researching targets before launching attacks (Proofpoint)</span>
                                     </p>
                                 </div>
-                                <div className="border rounded-lg p-4">
-                                    <h3 className="font-medium mb-2">Pretexting</h3>
-                                    <p className="text-sm text-gray-600">
-                                        Creating a fabricated scenario to obtain information
-                                    </p>
-                                </div>
-                                <div className="border rounded-lg p-4">
-                                    <h3 className="font-medium mb-2">Baiting</h3>
-                                    <p className="text-sm text-gray-600">
-                                        Offering something enticing to install malware
-                                    </p>
-                                </div>
-                                <div className="border rounded-lg p-4">
-                                    <h3 className="font-medium mb-2">Tailgating</h3>
-                                    <p className="text-sm text-gray-600">
-                                        Following authorized persons into secure areas
-                                    </p>
-                                </div>
-                            </div>
+                            </section>
 
-                            <h2 className="text-2xl font-semibold mb-4 mt-8 flex items-center gap-2">
-                                <Clipboard className="w-5 h-5 text-blue-600" />
-                                Prevention Methods
-                            </h2>
-                            <ul className="space-y-3 mb-6 list-disc pl-5">
-                                <li>Verify identities before sharing information</li>
-                                <li>Never share sensitive info via phone/email</li>
-                                <li>Adopt a 'verify before trust' approach</li>
-                                <li>Beware of urgent requests or emotionally charged messages</li>
-                                <li>Report suspicious incidents to IT</li>
-                            </ul>
+                            {/* Section 2: Attack Breakdown */}
+                            <section className="mb-8">
+                                <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+                                    <Shield className="w-5 h-5 text-blue-600" />
+                                    Anatomy of an Attack
+                                </h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div className="border rounded-lg p-4 bg-red-50">
+                                        <h3 className="font-medium mb-2 flex items-center gap-2">
+                                            <Mail className="w-4 h-4" />
+                                            Phase 1: Reconnaissance
+                                        </h3>
+                                        <p className="text-sm text-gray-600">
+                                            Scouring LinkedIn, company websites, and social media for personal details
+                                        </p>
+                                    </div>
+                                    <div className="border rounded-lg p-4 bg-red-50">
+                                        <h3 className="font-medium mb-2 flex items-center gap-2">
+                                            <Smartphone className="w-4 h-4" />
+                                            Phase 2: Hook
+                                        </h3>
+                                        <p className="text-sm text-gray-600">
+                                            Crafting believable pretexts ("IT needs your password for maintenance")
+                                        </p>
+                                    </div>
+                                    <div className="border rounded-lg p-4 bg-red-50">
+                                        <h3 className="font-medium mb-2 flex items-center gap-2">
+                                            <HardHat className="w-4 h-4" />
+                                            Phase 3: Play
+                                        </h3>
+                                        <p className="text-sm text-gray-600">
+                                            Executing the attack via phone, email, or in-person
+                                        </p>
+                                    </div>
+                                    <div className="border rounded-lg p-4 bg-red-50">
+                                        <h3 className="font-medium mb-2 flex items-center gap-2">
+                                            <Clipboard className="w-4 h-4" />
+                                            Phase 4: Exit
+                                        </h3>
+                                        <p className="text-sm text-gray-600">
+                                            Covering tracks while maintaining access
+                                        </p>
+                                    </div>
+                                </div>
+                            </section>
 
-                            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mt-8">
-                                <h3 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
-                                    <BookOpen className="w-5 h-5" />
-                                    Key Takeaway
-                                </h3>
-                                <p className="text-blue-700">
-                                    Healthy skepticism is your best defense against social engineering.
-                                </p>
-                            </div>
+                            {/* Section 3: Defense Strategies */}
+                            <section className="mb-8">
+                                <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+                                    <Shield className="w-5 h-5 text-blue-600" />
+                                    Defense Framework
+                                </h2>
+                                <div className="bg-green-50 p-4 rounded-lg border border-green-200 mb-6">
+                                    <h3 className="font-medium mb-3">The SLAM Method</h3>
+                                    <ul className="space-y-3">
+                                        <li className="flex items-start gap-2">
+                                            <span className="font-bold">S</span>
+                                            <span><strong>Sender:</strong> Verify email addresses/phone numbers</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                            <span className="font-bold">L</span>
+                                            <span><strong>Links:</strong> Hover before clicking</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                            <span className="font-bold">A</span>
+                                            <span><strong>Attachments:</strong> Never open unexpected files</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                            <span className="font-bold">M</span>
+                                            <span><strong>Message:</strong> Check for urgency/grammar errors</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </section>
 
-                            <h2 className="text-2xl font-semibold mb-4 mt-8 flex items-center gap-2">
-                                <AlertOctagon className="w-5 h-5 text-red-600" />
-                                If You're a Victim
-                            </h2>
-                            <ol className="space-y-2 mb-6 list-decimal pl-5">
-                                <li>Report the incident immediately</li>
-                                <li>Change all affected passwords</li>
-                                <li>Monitor accounts for suspicious activity</li>
-                                <li>Alert colleagues and contacts</li>
-                            </ol>
+                            {/* Section 4: Real-World Case */}
+                            <section className="mb-8">
+                                <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+                                    <AlertOctagon className="w-5 h-5 text-red-600" />
+                                    Case Study: The Twitter Bitcoin Scam
+                                </h2>
+                                <div className="border rounded-lg p-4 bg-gray-50 mb-4">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                                        <div className="text-sm font-medium">July 2020 Attack</div>
+                                    </div>
+                                    <p className="mb-3">
+                                        Hackers compromised 130 high-profile Twitter accounts (Obama, Musk, Gates) through a phone spear-phishing attack on employees.
+                                    </p>
+                                    <div className="bg-blue-100 text-blue-800 px-3 py-2 rounded text-sm">
+                                        "Send Bitcoin to this address and we'll double your money!"
+                                    </div>
+                                </div>
+                                <div className="bg-blue-50 p-3 rounded-lg">
+                                    <h4 className="font-medium mb-1 flex items-center gap-2">
+                                        <BookOpen className="w-4 h-4" />
+                                        Lessons Learned:
+                                    </h4>
+                                    <ul className="text-sm space-y-1 list-disc pl-5">
+                                        <li>Even tech companies can fall victim</li>
+                                        <li>Internal access controls are critical</li>
+                                        <li>Social media verification systems failed</li>
+                                        <li>$118,000 stolen in 3 hours</li>
+                                    </ul>
+                                </div>
+                            </section>
+
+                            {/* Section 5: Training Resources */}
+                            <section>
+                                <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+                                    <Clipboard className="w-5 h-5 text-blue-600" />
+                                    Security Culture Tips
+                                </h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="border rounded-lg p-4 bg-blue-50">
+                                        <h3 className="font-medium mb-2">For Employees</h3>
+                                        <ul className="text-sm space-y-2 list-disc pl-5">
+                                            <li>Monthly security awareness training</li>
+                                            <li>Phishing simulation exercises</li>
+                                            <li>Clear reporting procedures</li>
+                                        </ul>
+                                    </div>
+                                    <div className="border rounded-lg p-4 bg-blue-50">
+                                        <h3 className="font-medium mb-2">For Families</h3>
+                                        <ul className="text-sm space-y-2 list-disc pl-5">
+                                            <li>Teach kids about online stranger danger</li>
+                                            <li>Verify unusual payment requests via call</li>
+                                            <li>Use family password managers</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </section>
                         </motion.div>
                     </div>
                 </div>

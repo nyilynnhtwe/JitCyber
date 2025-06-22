@@ -45,6 +45,7 @@ const courseData = [
         stats: { questions: 12, duration: "8 min", difficulty: "Medium" },
         statsThai: { questions: 12, duration: "8 นาที", difficulty: "ปานกลาง" },
         color: "from-blue-600 to-blue-800",
+        videoUrl: "https://youtu.be/Y7zNlEMDmI4",
     },
     {
         id: "password",
@@ -56,6 +57,7 @@ const courseData = [
         stats: { questions: 10, duration: "6 min", difficulty: "Easy" },
         statsThai: { questions: 10, duration: "6 นาที", difficulty: "ง่าย" },
         color: "from-teal-600 to-blue-700",
+        videoUrl: "https://youtu.be/BoyeFozmAXk",
     },
     {
         id: "social",
@@ -67,6 +69,7 @@ const courseData = [
         stats: { questions: 15, duration: "10 min", difficulty: "Hard" },
         statsThai: { questions: 15, duration: "10 นาที", difficulty: "ยาก" },
         color: "from-indigo-600 to-blue-800",
+        videoUrl: "https://youtu.be/uvKTMgWRPw4",
     },
     {
         id: "mobile",
@@ -78,6 +81,7 @@ const courseData = [
         stats: { questions: 8, duration: "5 min", difficulty: "Easy" },
         statsThai: { questions: 8, duration: "5 นาที", difficulty: "ง่าย" },
         color: "from-cyan-600 to-blue-700",
+        videoUrl: "https://youtu.be/AXHTVTDj-R8",
     },
 ];
 
@@ -251,7 +255,7 @@ function CourseCard({
                                     className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors group"
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
-                                    onClick={() => router.push(`/learn/${id}/guide`)}
+                                    onClick={() => router.push(`/readguide/${id}`)}
                                 >
                                     <div className="p-2 rounded-lg bg-blue-100 group-hover:bg-blue-200 transition-colors">
                                         <BookOpen className="w-5 h-5 text-blue-700" />
@@ -265,7 +269,7 @@ function CourseCard({
                                     className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors group"
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
-                                    onClick={() => router.push(`/learn/${id}/video`)}
+                                    onClick={() => window.open(course?.videoUrl, '_blank')}
                                 >
                                     <div className="p-2 rounded-lg bg-blue-100 group-hover:bg-blue-200 transition-colors">
                                         <Video className="w-5 h-5 text-blue-700" />
@@ -279,7 +283,7 @@ function CourseCard({
                                     className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors group"
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
-                                    onClick={() => router.push(`/readguide/${id}`)}
+                                    onClick={() => router.push(`/studynote/${id}`)}
                                 >
                                     <div className="p-2 rounded-lg bg-blue-100 group-hover:bg-blue-200 transition-colors">
                                         <FileText className="w-5 h-5 text-blue-700" />

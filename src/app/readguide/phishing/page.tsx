@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Shield, ChevronLeft, BookOpen, Globe } from "lucide-react";
+import { Shield, ChevronLeft, BookOpen, Globe, Mail, Link as LinkIcon, AlertTriangle, Smartphone, AlertOctagon, User } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -25,7 +25,6 @@ export default function PhishingGuide() {
                     </span>
                 </Link>
 
-                {/* Language switcher */}
                 <button
                     className="flex items-center gap-1 px-3 py-2 rounded-full bg-blue-100 hover:bg-gray-200 transition-colors cursor-default"
                     disabled
@@ -57,7 +56,7 @@ export default function PhishingGuide() {
                         <Shield className="w-6 h-6 text-white" />
                     </div>
                     <h1 className="text-3xl font-bold text-gray-900">
-                        Phishing Prevention
+                        Phishing Defense Guide
                     </h1>
                 </motion.div>
 
@@ -69,62 +68,157 @@ export default function PhishingGuide() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1 }}
                         >
-                            <h2 className="text-2xl font-semibold mb-4">
-                                What is Phishing?
-                            </h2>
-                            <p className="mb-4">
-                                Phishing is a cyber attack where attackers impersonate trustworthy organizations to trick victims into revealing sensitive information like passwords or credit card details.
-                            </p>
-
-                            <h2 className="text-2xl font-semibold mb-4 mt-8">
-                                How to Identify Phishing Emails
-                            </h2>
-                            <ul className="space-y-3 mb-6">
-                                <li className="flex items-start gap-2">
-                                    <span className="text-blue-600">•</span>
-                                    <span>
-                                        Sender's email address looks suspicious or doesn't match the organization
-                                    </span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                    <span className="text-blue-600">•</span>
-                                    <span>
-                                        Urgent or threatening language demanding immediate action
-                                    </span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                    <span className="text-blue-600">•</span>
-                                    <span>
-                                        Suspicious links or attachments
-                                    </span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                    <span className="text-blue-600">•</span>
-                                    <span>
-                                        Grammar and spelling mistakes
-                                    </span>
-                                </li>
-                            </ul>
-
-                            <h2 className="text-2xl font-semibold mb-4 mt-8">
-                                Prevention Tips
-                            </h2>
-                            <ol className="space-y-3 mb-6 list-decimal pl-5">
-                                <li>Don't click links or open attachments from unknown sources</li>
-                                <li>Hover over links to check URLs before clicking</li>
-                                <li>Enable two-factor authentication (2FA)</li>
-                                <li>Report suspicious emails to your IT department</li>
-                            </ol>
-
-                            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mt-8">
-                                <h3 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
-                                    <BookOpen className="w-5 h-5" />
-                                    Key Takeaway
-                                </h3>
-                                <p className="text-blue-700">
-                                    When in doubt, delete it! Legitimate organizations will never ask for sensitive information via email.
+                            {/* Section 1: Introduction */}
+                            <section className="mb-8">
+                                <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+                                    <Mail className="w-5 h-5 text-blue-600" />
+                                    The Phishing Epidemic
+                                </h2>
+                                <p className="mb-4">
+                                    36% of all data breaches involve phishing (Verizon 2023). Attackers evolve their tactics daily, making awareness your best defense.
                                 </p>
-                            </div>
+                                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+                                    <p className="text-yellow-700 font-medium flex items-start gap-2">
+                                        <AlertTriangle className="w-5 h-5 flex-shrink-0" />
+                                        <span>The average organization sees 1,200+ phishing attempts monthly (SlashNext)</span>
+                                    </p>
+                                </div>
+                            </section>
+
+                            {/* Section 2: Attack Types */}
+                            <section className="mb-8">
+                                <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+                                    <Shield className="w-5 h-5 text-blue-600" />
+                                    Modern Phishing Variants
+                                </h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div className="border rounded-lg p-4 bg-red-50">
+                                        <h3 className="font-medium mb-2 flex items-center gap-2">
+                                            <Smartphone className="w-4 h-4" />
+                                            Smishing (SMS Phishing)
+                                        </h3>
+                                        <p className="text-sm text-gray-600">
+                                            Fake delivery notifications or bank alerts via text
+                                        </p>
+                                    </div>
+                                    <div className="border rounded-lg p-4 bg-red-50">
+                                        <h3 className="font-medium mb-2 flex items-center gap-2">
+                                            <LinkIcon className="w-4 h-4" />
+                                            Clone Phishing
+                                        </h3>
+                                        <p className="text-sm text-gray-600">
+                                            Duplicates of legitimate emails with malicious links
+                                        </p>
+                                    </div>
+                                    <div className="border rounded-lg p-4 bg-red-50">
+                                        <h3 className="font-medium mb-2 flex items-center gap-2">
+                                            <User className="w-4 h-4" />
+                                            Spear Phishing
+                                        </h3>
+                                        <p className="text-sm text-gray-600">
+                                            Highly personalized attacks targeting specific individuals
+                                        </p>
+                                    </div>
+                                    <div className="border rounded-lg p-4 bg-red-50">
+                                        <h3 className="font-medium mb-2 flex items-center gap-2">
+                                            <Globe className="w-4 h-4" />
+                                            Whaling
+                                        </h3>
+                                        <p className="text-sm text-gray-600">
+                                            Attacks targeting C-level executives
+                                        </p>
+                                    </div>
+                                </div>
+                            </section>
+
+                            {/* Section 3: Detection Guide */}
+                            <section className="mb-8">
+                                <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+                                    <AlertTriangle className="w-5 h-5 text-yellow-600" />
+                                    The 5-Second Email Check
+                                </h2>
+                                <div className="bg-green-50 p-4 rounded-lg border border-green-200 mb-6">
+                                    <ul className="space-y-3">
+                                        <li className="flex items-start gap-2">
+                                            <span className="font-bold">1.</span>
+                                            <span>Check sender address (look for misspellings like "amaz0n")</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                            <span className="font-bold">2.</span>
+                                            <span>Hover over links (do URLs match the displayed text?)</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                            <span className="font-bold">3.</span>
+                                            <span>Look for urgent language ("Act now!")</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                            <span className="font-bold">4.</span>
+                                            <span>Check for poor grammar/spelling</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                            <span className="font-bold">5.</span>
+                                            <span>Ask: Was I expecting this message?</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </section>
+
+                            {/* Section 4: Real-World Example */}
+                            <section className="mb-8">
+                                <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+                                    <AlertOctagon className="w-5 h-5 text-red-600" />
+                                    Case Study: Google Docs Phishing
+                                </h2>
+                                <div className="border rounded-lg p-4 bg-gray-50 mb-4">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                                        <div className="text-sm font-medium">2017 Attack</div>
+                                    </div>
+                                    <p className="mb-3">
+                                        A fake Google Docs invite compromised 1 million accounts in hours. The email appeared to come from a trusted contact with subject: "[Name] has shared a document on Google Docs with you"
+                                    </p>
+                                    <div className="bg-blue-100 text-blue-800 px-3 py-2 rounded text-sm">
+                                        "Click to view document" → Malicious OAuth permissions request
+                                    </div>
+                                </div>
+                                <div className="bg-blue-50 p-3 rounded-lg">
+                                    <h4 className="font-medium mb-1 flex items-center gap-2">
+                                        <BookOpen className="w-4 h-4" />
+                                        Why it worked:
+                                    </h4>
+                                    <ul className="text-sm space-y-1 list-disc pl-5">
+                                        <li>Appeared to come from known contacts</li>
+                                        <li>Used Google's real OAuth flow</li>
+                                        <li>Bypassed traditional spam filters</li>
+                                    </ul>
+                                </div>
+                            </section>
+
+                            {/* Section 5: Protection */}
+                            <section>
+                                <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+                                    <Shield className="w-5 h-5 text-blue-600" />
+                                    Advanced Protection
+                                </h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="border rounded-lg p-4 bg-blue-50">
+                                        <h3 className="font-medium mb-2">For Individuals</h3>
+                                        <ul className="text-sm space-y-2 list-disc pl-5">
+                                            <li>Use email aliases for different services</li>
+                                            <li>Enable U2F security keys for critical accounts</li>
+                                            <li>Bookmark important sites (don't Google "PayPal login")</li>
+                                        </ul>
+                                    </div>
+                                    <div className="border rounded-lg p-4 bg-blue-50">
+                                        <h3 className="font-medium mb-2">For Organizations</h3>
+                                        <ul className="text-sm space-y-2 list-disc pl-5">
+                                            <li>Implement DMARC/DKIM/SPF email authentication</li>
+                                            <li>Conduct quarterly phishing simulations</li>
+                                            <li>Deploy AI-based email security solutions</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </section>
                         </motion.div>
                     </div>
                 </div>
