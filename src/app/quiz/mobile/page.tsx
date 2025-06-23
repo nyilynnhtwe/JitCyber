@@ -1,211 +1,122 @@
-"use client";
-
+"use client"
+import { Trophy, ChevronDown, ChevronUp, Medal, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 
-interface Question {
-    id: number;
-    text: string;
-    options: string[];
-    correctAnswer: number;
-    explanation: string;
-}
+const Leaderboard = () => {
+  const [showAll, setShowAll] = useState(false);
 
-const QuizPage = () => {
-    // Mobile security quiz questions (easy difficulty)
-    const quizQuestions: Question[] = [
-        {
-            id: 1,
-            text: "What should you do when you receive an app update notification?",
-            options: [
-                "Update immediately through the official app store",
-                "Click any update link you receive",
-                "Ignore all updates to save data",
-                "Only update when your phone stops working"
-            ],
-            correctAnswer: 0,
-            explanation: "Always update apps through official app stores as updates often contain important security fixes."
-        },
-        {
-            id: 2,
-            text: "What's the safest way to connect to public Wi-Fi?",
-            options: [
-                "Use it for all activities including banking",
-                "Avoid accessing sensitive accounts",
-                "Never use public Wi-Fi at all",
-                "Ask the café staff for their password"
-            ],
-            correctAnswer: 1,
-            explanation: "Public Wi-Fi networks can be insecure. Avoid accessing bank accounts or entering passwords on public networks."
-        },
-        {
-            id: 3,
-            text: "What should you do with old phones you no longer use?",
-            options: [
-                "Throw them in the trash",
-                "Sell or donate without wiping data",
-                "Perform a factory reset before disposing",
-                "Keep them forever in a drawer"
-            ],
-            correctAnswer: 2,
-            explanation: "Always perform a factory reset to erase all personal data before disposing of or giving away old devices."
-        },
-        {
-            id: 4,
-            text: "Why should you review app permissions?",
-            options: [
-                "To see which apps can access your contacts or location",
-                "It's required by law",
-                "To make your phone faster",
-                "Only developers need to check permissions"
-            ],
-            correctAnswer: 0,
-            explanation: "Reviewing permissions helps you understand what data apps can access and prevent unnecessary sharing of personal information."
-        },
-        {
-            id: 5,
-            text: "What's the best way to lock your smartphone?",
-            options: [
-                "Don't lock it for convenience",
-                "Use a simple swipe pattern",
-                "Use biometrics (fingerprint/face) or a strong PIN",
-                "Write your password on the back of the phone"
-            ],
-            correctAnswer: 2,
-            explanation: "Biometric authentication or a strong PIN provides the best security for your mobile device."
-        }
-    ];
+  // Mock data
+  const topPlayers = [
+    { id: 1, name: 'Alex Johnson', score: 9850, trend: 'up' },
+    { id: 2, name: 'Sam Wilson', score: 8720, trend: 'down' },
+    { id: 3, name: 'Taylor Swift', score: 8450, trend: 'up' },
+  ];
 
-    // State management
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [selectedOption, setSelectedOption] = useState<number | null>(null);
-    const [score, setScore] = useState(0);
-    const [showResult, setShowResult] = useState(false);
-    const [showExplanation, setShowExplanation] = useState(false);
+  const otherPlayers = [
+    { id: 4, name: 'Jamie Lee', score: 8120, trend: 'up' },
+    { id: 5, name: 'Chris Evans', score: 7950, trend: 'down' },
+    { id: 6, name: 'Morgan Freeman', score: 7820, trend: 'new' },
+    { id: 7, name: 'Diana Prince', score: 7650, trend: 'up' },
+    { id: 8, name: 'Bruce Wayne', score: 7420, trend: 'down' },
+  ];
 
-    const currentQuestion = quizQuestions[currentQuestionIndex];
-
-    const handleOptionSelect = (optionIndex: number) => {
-        setSelectedOption(optionIndex);
-        setShowExplanation(false);
-    };
-
-    const handleNext = () => {
-        if (selectedOption === null) return;
-
-        // Update score if correct
-        if (selectedOption === currentQuestion.correctAnswer) {
-            setScore(score + 1);
-        }
-
-        setShowExplanation(true);
-
-        setTimeout(() => {
-            if (currentQuestionIndex < quizQuestions.length - 1) {
-                setCurrentQuestionIndex(currentQuestionIndex + 1);
-                setSelectedOption(null);
-                setShowExplanation(false);
-            } else {
-                setShowResult(true);
-            }
-        }, 1500);
-    };
-
-    const handleRestart = () => {
-        setCurrentQuestionIndex(0);
-        setSelectedOption(null);
-        setScore(0);
-        setShowResult(false);
-        setShowExplanation(false);
-    };
-
-    const progress = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
-
-    return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 py-12 px-4">
-            <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
-                <div className="p-6 sm:p-8">
-                    {showResult ? (
-                        <div className="text-center space-y-6">
-                            <h1 className="text-3xl font-bold text-gray-900">Quiz Completed!</h1>
-                            <div className="text-4xl font-bold text-blue-600">
-                                {score} <span className="text-gray-500">/ {quizQuestions.length}</span>
-                            </div>
-                            <div className="text-xl text-gray-600">
-                                ({Math.round((score / quizQuestions.length) * 100)}%)
-                            </div>
-                            <button
-                                onClick={handleRestart}
-                                className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-105"
-                            >
-                                Take Quiz Again
-                            </button>
-                        </div>
-                    ) : (
-                        <>
-                            <div className="mb-6">
-                                <div className="flex justify-between mb-2 text-sm font-medium text-gray-600">
-                                    <span>Question {currentQuestionIndex + 1} of {quizQuestions.length}</span>
-                                    <span>Score: {score}</span>
-                                </div>
-                                <div className="w-full bg-gray-200 rounded-full h-2">
-                                    <div
-                                        className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                                        style={{ width: `${progress}%` }}
-                                    ></div>
-                                </div>
-                            </div>
-
-                            <h2 className="text-xl font-bold text-gray-800 mb-6 leading-tight">
-                                {currentQuestion.text}
-                            </h2>
-
-                            <div className="space-y-3 mb-6">
-                                {currentQuestion.options.map((option, index) => {
-                                    let optionStyle = "bg-white border-gray-200 hover:border-blue-400 text-gray-800";
-                                    if (selectedOption !== null) {
-                                        if (index === currentQuestion.correctAnswer) {
-                                            optionStyle = "bg-green-50 border-green-400 text-green-800";
-                                        } else if (index === selectedOption && index !== currentQuestion.correctAnswer) {
-                                            optionStyle = "bg-red-50 border-red-400 text-red-800";
-                                        }
-                                    }
-
-                                    return (
-                                        <button
-                                            key={index}
-                                            onClick={() => handleOptionSelect(index)}
-                                            disabled={showExplanation}
-                                            className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 ${optionStyle} ${
-                                                selectedOption === index ? 'ring-2 ring-offset-2 ring-blue-400' : ''
-                                            }`}
-                                        >
-                                            <span className="font-medium">{option}</span>
-                                        </button>
-                                    );
-                                })}
-                            </div>
-
-                            {showExplanation && (
-                                <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200 text-blue-800">
-                                    <p className="font-medium">{currentQuestion.explanation}</p>
-                                </div>
-                            )}
-
-                            <div className="flex justify-end">
-                                <button
-                                    onClick={handleNext}
-                                    disabled={selectedOption === null}
-                                    className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-                                >
-                                    {currentQuestionIndex === quizQuestions.length - 1 ? 'Finish' : 'Next'}
-                                </button>
-                            </div>
-                        </>
-                    )}
-                </div>
-            </div>
+  return (
+    <div className="max-w-md mx-auto bg-white rounded-xl shadow-lg overflow-hidden font-sans">
+      {/* Header */}
+      <div className="bg-blue-600 p-4 text-white">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-bold flex items-center gap-2">
+            <Trophy className="w-5 h-5" />
+            Live Leaderboard
+          </h2>
+          <div className="flex items-center gap-1 text-sm bg-blue-700 px-2 py-1 rounded-full">
+            <Sparkles className="w-4 h-4" />
+            <span>Active</span>
+          </div>
         </div>
-    );
+      </div>
+
+      {/* Podium */}
+      <div className="flex justify-center items-end h-52 px-4 gap-2 mt-2">
+        {/* 2nd Place */}
+        <div className="flex-1 max-w-24 bg-blue-400 rounded-t-lg h-40 flex flex-col items-center justify-end pb-2">
+          <Medal className="text-blue-800 mb-1 w-5 h-5" />
+          <span className="text-white font-bold text-lg">2</span>
+          <div className="bg-white rounded w-full mx-1 p-2 mt-2 text-center">
+            <p className="font-semibold text-blue-800 text-sm truncate">{topPlayers[1].name}</p>
+            <p className="text-blue-600 font-bold text-sm">{topPlayers[1].score.toLocaleString()}</p>
+          </div>
+        </div>
+
+        {/* 1st Place */}
+        <div className="flex-1 max-w-28 bg-blue-500 rounded-t-lg h-48 flex flex-col items-center justify-end pb-2">
+          <Trophy className="text-yellow-400 mb-1 w-6 h-6" />
+          <span className="text-white font-bold text-xl">1</span>
+          <div className="bg-white rounded w-full mx-1 p-2 mt-2 text-center">
+            <p className="font-semibold text-blue-800 text-sm truncate">{topPlayers[0].name}</p>
+            <p className="text-blue-600 font-bold text-sm">{topPlayers[0].score.toLocaleString()}</p>
+          </div>
+        </div>
+
+        {/* 3rd Place */}
+        <div className="flex-1 max-w-24 bg-blue-300 rounded-t-lg h-32 flex flex-col items-center justify-end pb-2">
+          <Medal className="text-blue-700 mb-1 w-5 h-5" />
+          <span className="text-white font-bold text-lg">3</span>
+          <div className="bg-white rounded w-full mx-1 p-2 mt-2 text-center">
+            <p className="font-semibold text-blue-800 text-sm truncate">{topPlayers[2].name}</p>
+            <p className="text-blue-600 font-bold text-sm">{topPlayers[2].score.toLocaleString()}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Players List */}
+      <div className="p-4">
+        <ul className="divide-y divide-gray-200">
+          {topPlayers.map((player, index) => (
+            <li key={player.id} className="py-3 flex items-center">
+              <span className={`font-bold w-6 text-center ${index === 0 ? 'text-blue-600' : 'text-gray-500'}`}>
+                {index + 1}
+              </span>
+              <p className="ml-3 flex-1 font-medium text-gray-900 truncate">{player.name}</p>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-blue-600">{player.score.toLocaleString()}</span>
+                {player.trend === 'up' ? (
+                  <ChevronUp className="w-4 h-4 text-green-500" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-red-500" />
+                )}
+              </div>
+            </li>
+          ))}
+
+          {showAll && otherPlayers.map((player) => (
+            <li key={player.id} className="py-3 flex items-center">
+              <span className="font-bold w-6 text-center text-gray-500">{player.id}</span>
+              <p className="ml-3 flex-1 font-medium text-gray-900 truncate">{player.name}</p>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-blue-600">{player.score.toLocaleString()}</span>
+                {player.trend === 'up' ? (
+                  <ChevronUp className="w-4 h-4 text-green-500" />
+                ) : player.trend === 'down' ? (
+                  <ChevronDown className="w-4 h-4 text-red-500" />
+                ) : (
+                  <Sparkles className="w-4 h-4 text-yellow-500" />
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <button
+          onClick={() => setShowAll(!showAll)}
+          className="w-full mt-2 py-2 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg font-medium flex items-center justify-center gap-1 transition-colors"
+        >
+          {showAll ? 'Show Less' : 'See More Competitors'}
+          {showAll ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        </button>
+      </div>
+    </div>
+  );
 };
 
-export default QuizPage;
+export default Leaderboard;

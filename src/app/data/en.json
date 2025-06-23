@@ -83,62 +83,36 @@
   },
 
   
-    "quizApp": {
-    "appName": "JitCyber",
-    "nav": {
-      "home": "Home",
-      "languageToggle": "ไทย"
-    },
-    "quizHero": {
-      "testKnowledge": "Test Your Knowledge",
-      "learnHeading": "Learn",
-      "cybersecurityHeading": "Cybersecurity",
-      "challengeText": "Challenge yourself with interactive quizzes and master essential security concepts."
-    },
-    "quizTopics": {
-      "phishing": {
-        "title": "Phishing Prevention",
-        "description": "Learn to identify and avoid phishing attempts.",
-        "stats": {
-          "questions": "12 questions",
-          "duration": "8 min",
-          "difficulty": "Medium"
-        }
-      },
-      "password": {
-        "title": "Password Security",
-        "description": "Create strong, secure passwords to protect your accounts.",
-        "stats": {
-          "questions": "10 questions",
-          "duration": "6 min",
-          "difficulty": "Easy"
-        }
-      },
-      "social": {
-        "title": "Social Engineering",
-        "description": "Understand and defend against social engineering tactics.",
-        "stats": {
-          "questions": "15 questions",
-          "duration": "10 min",
-          "difficulty": "Hard"
-        }
-      },
-      "mobile": {
-        "title": "Mobile Security",
-        "description": "Secure your mobile devices from threats and malware.",
-        "stats": {
-          "questions": "8 questions",
-          "duration": "5 min",
-          "difficulty": "Easy"
-        }
-      }
-    },
-    "quizUI": {
-      "startQuiz": "Start Quiz",
-      "learnFirst": "Learn First",
-      "readGuide": "Read Guide",
-      "watchTutorial": "Watch Tutorial",
-      "studyNotes": "Study Notes"
+  "home": "Home",
+  "testYourKnowledge": "Test Your Knowledge",
+  "cybersecurity": "Cybersecurity",
+  "quizDescription": "Challenge yourself with interactive quizzes and master essential security concepts.",
+  "phishing": {
+    "title": "Phishing Prevention",
+    "description": "Learn to identify and avoid phishing attempts.",
+    "questions": "questions",
+    "duration": "min",
+    "difficulty": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
     }
-  }
+  },
+  "password": {
+    "title": "Password Security",
+    "description": "Create strong, secure passwords to protect your accounts."
+  },
+  "social": {
+    "title": "Social Engineering",
+    "description": "Understand and defend against social engineering tactics."
+  },
+  "mobile": {
+    "title": "Mobile Security",
+    "description": "Secure your mobile devices from threats and malware."
+  },
+  "startQuiz": "Start Quiz",
+  "learnFirst": "Learn First",
+  "readGuide": "Read Guide",
+  "watchTutorial": "Watch Tutorial",
+  "studyNotes": "Study Notes"
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 interface Question {
     id: number;
@@ -11,187 +12,151 @@ interface Question {
 }
 
 const QuizPage = () => {
-    // Social Engineering quiz questions (HARD difficulty)
+    // Phishing quiz questions (all 12 questions maintained)
     const quizQuestions: Question[] = [
         {
             id: 1,
-            text: "What is the most sophisticated form of social engineering that targets specific high-value individuals?",
+            text: "You receive an email claiming to be from your bank asking you to click a link to verify your account. What should you do?",
             options: [
-                "Phishing",
-                "Whaling",
-                "Vishing",
-                "Baiting"
+                "Click the link and log in to verify your account",
+                "Forward the email to your bank's fraud department",
+                "Reply to the email with your account details",
+                "Call the phone number provided in the email"
             ],
             correctAnswer: 1,
-            explanation: "Whaling attacks specifically target C-level executives or high-net-worth individuals with highly personalized tactics."
+            explanation: "Legitimate banks never ask for verification via email links. Always forward suspicious emails to your bank's fraud department."
         },
         {
             id: 2,
-            text: "Which psychological principle do social engineers exploit when creating fake urgency in emails?",
+            text: "What's a common sign of a phishing website?",
             options: [
-                "Reciprocity",
-                "Scarcity",
-                "Authority",
-                "Consensus"
+                "The URL contains the company's name",
+                "The website has a valid SSL certificate",
+                "The URL has subtle misspellings (like 'paypai' instead of 'paypal')",
+                "The website loads quickly"
             ],
-            correctAnswer: 1,
-            explanation: "Scarcity principle makes people act quickly when they believe an opportunity is limited or time-sensitive."
+            correctAnswer: 2,
+            explanation: "Phishers often use URLs with subtle misspellings to mimic legitimate sites while hosting their fraudulent pages."
         },
         {
             id: 3,
-            text: "What's the primary difference between pretexting and phishing?",
+            text: "You get a text message saying you've won a prize with a link to claim it. You didn't enter any contest. What's this likely to be?",
             options: [
-                "Pretexting uses false identities, phishing uses fake websites",
-                "Pretexting is always phone-based, phishing is email-based",
-                "Pretexting requires malware, phishing doesn't",
-                "They're identical techniques"
+                "A legitimate surprise prize",
+                "A smishing (SMS phishing) attempt",
+                "A wrong number message",
+                "A delayed contest notification"
             ],
-            correctAnswer: 0,
-            explanation: "Pretexting involves creating a fabricated scenario/identity to extract information, while phishing typically uses deceptive communications."
+            correctAnswer: 1,
+            explanation: "This is smishing - SMS phishing. Never click links in unexpected prize notifications."
         },
         {
             id: 4,
-            text: "Which of these is NOT a red flag in a potential social engineering attack?",
+            text: "What should you do if you accidentally enter credentials on a phishing site?",
             options: [
-                "Requests for sensitive information via unofficial channels",
-                "Unsolicited attachments from known contacts",
-                "Verified digital signatures on documents",
-                "Pressure to bypass normal procedures"
+                "Nothing, it's probably fine",
+                "Change your password immediately on the real site",
+                "Wait to see if you get unauthorized access notifications",
+                "Email the site to ask if it's legitimate"
             ],
-            correctAnswer: 2,
-            explanation: "Verified digital signatures are a security feature, while the other options are common social engineering indicators."
+            correctAnswer: 1,
+            explanation: "Immediately change your password on the legitimate site and enable two-factor authentication if available."
         },
         {
             id: 5,
-            text: "What makes 'spear phishing' different from regular phishing?",
+            text: "Which of these is NOT a common phishing tactic?",
             options: [
-                "Use of voice calls instead of emails",
-                "Highly targeted towards specific individuals",
-                "Involves physical documents",
-                "Always includes malware payloads"
+                "Creating a sense of urgency",
+                "Using legitimate company logos",
+                "Threatening account suspension",
+                "Asking you to mail a physical check"
             ],
-            correctAnswer: 1,
-            explanation: "Spear phishing uses personalized information to target specific individuals or organizations."
+            correctAnswer: 3,
+            explanation: "Phishing typically happens digitally. While mail fraud exists, it's not considered phishing."
         },
         {
             id: 6,
-            text: "Which cognitive bias do 'CEO fraud' attacks primarily exploit?",
+            text: "What's the best way to check if an email is legitimate?",
             options: [
-                "Confirmation bias",
-                "Authority bias",
-                "Bandwagon effect",
-                "Choice-supportive bias"
+                "Look at the sender's display name",
+                "Check the email headers for the actual sender address",
+                "See if the email is well-written",
+                "Check if the email includes your name"
             ],
             correctAnswer: 1,
-            explanation: "Authority bias makes people comply with requests from perceived authority figures without proper verification."
+            explanation: "The display name can be faked. Always check the actual email address in the headers."
         },
         {
             id: 7,
-            text: "What is 'tailgating' in social engineering?",
+            text: "A colleague sends you an unexpected Dropbox link via chat. What should you do?",
             options: [
-                "Following someone through secured access points",
-                "Adding malicious footers to emails",
-                "Monitoring social media posts",
-                "Creating fake social media profiles"
+                "Click it immediately as it's from a colleague",
+                "Ask the colleague in person if they sent it",
+                "Forward it to your IT department",
+                "Both B and C"
             ],
-            correctAnswer: 0,
-            explanation: "Tailgating is a physical security breach where unauthorized persons follow authorized personnel into restricted areas."
+            correctAnswer: 3,
+            explanation: "Compromised accounts are common in phishing. Verify unexpected links through another channel."
         },
         {
             id: 8,
-            text: "Which technique involves researching discarded materials?",
+            text: "What does 'HTTPS' in a URL guarantee?",
             options: [
-                "Shoulder surfing",
-                "Dumpster diving",
-                "Water holing",
-                "Elicitation"
+                "The website is legitimate",
+                "The connection is encrypted",
+                "The company is trustworthy",
+                "The site has no malware"
             ],
             correctAnswer: 1,
-            explanation: "Dumpster diving retrieves sensitive information from discarded documents, devices, or materials."
+            explanation: "HTTPS only means the connection is encrypted. Phishing sites can have HTTPS too."
         },
         {
             id: 9,
-            text: "What is the most effective defense against business email compromise (BEC)?",
+            text: "You receive an invoice attachment from an unknown sender. What should you do?",
             options: [
-                "Strong spam filters",
-                "Multi-factor authentication",
-                "Verbal confirmation for financial transactions",
-                "Employee awareness training"
+                "Open it to see what it's about",
+                "Forward it to your accounting department",
+                "Delete it without opening",
+                "Reply asking for more information"
             ],
             correctAnswer: 2,
-            explanation: "Verbal confirmation through established protocols is the most reliable defense against BEC scams."
+            explanation: "Unexpected attachments are dangerous. Delete them without opening."
         },
         {
             id: 10,
-            text: "Which social engineering attack exploits current news events?",
+            text: "What's 'vishing'?",
             options: [
-                "Honeytraps",
-                "Watering hole attacks",
-                "Newsjacking",
-                "Quid pro quo"
+                "Video phishing through platforms like Zoom",
+                "Voice phishing through phone calls",
+                "Virtual reality phishing",
+                "Verified phishing"
             ],
-            correctAnswer: 2,
-            explanation: "Newsjacking leverages breaking news or popular trends to add credibility to malicious communications."
+            correctAnswer: 1,
+            explanation: "Vishing is voice phishing, where scammers call pretending to be from legitimate organizations."
         },
         {
             id: 11,
-            text: "What is 'elicitation' in social engineering?",
+            text: "Which of these is a red flag in an email?",
             options: [
-                "Extracting information through casual conversation",
-                "Sending mass phishing emails",
-                "Creating fake websites",
-                "Impersonating tech support"
+                "Professional branding",
+                "A generic greeting like 'Dear Customer'",
+                "A clear unsubscribe link",
+                "Proper grammar and spelling"
             ],
-            correctAnswer: 0,
-            explanation: "Elicitation is the subtle extraction of information through seemingly normal conversations."
+            correctAnswer: 1,
+            explanation: "While not definitive, generic greetings are common in phishing as they're sent en masse."
         },
         {
             id: 12,
-            text: "Which psychological principle makes 'quid pro quo' attacks effective?",
+            text: "What should you do if you suspect a phishing attempt at work?",
             options: [
-                "Reciprocity",
-                "Commitment",
-                "Liking",
-                "Social proof"
+                "Report it to your IT security team",
+                "Forward it to coworkers as an example",
+                "Reply to the sender to confront them",
+                "Ignore it if you didn't fall for it"
             ],
             correctAnswer: 0,
-            explanation: "Reciprocity makes people feel obligated to return favors, even to malicious actors."
-        },
-        {
-            id: 13,
-            text: "What is the primary goal of 'watering hole' attacks?",
-            options: [
-                "Compromise frequently visited websites of targets",
-                "Create fake social media profiles",
-                "Intercept water utility systems",
-                "Distribute malware through water-themed emails"
-            ],
-            correctAnswer: 0,
-            explanation: "Watering hole attacks compromise websites that specific target groups are known to visit."
-        },
-        {
-            id: 14,
-            text: "Which verification method is MOST resistant to social engineering?",
-            options: [
-                "Knowledge-based authentication",
-                "Behavioral biometrics",
-                "Security questions",
-                "One-time codes via SMS"
-            ],
-            correctAnswer: 1,
-            explanation: "Behavioral biometrics (typing patterns, mouse movements) are extremely difficult for attackers to replicate."
-        },
-        {
-            id: 15,
-            text: "What makes 'deepfake' social engineering particularly dangerous?",
-            options: [
-                "Bypasses all multi-factor authentication",
-                "Creates convincing fake audio/video of trusted individuals",
-                "Automates phishing at massive scale",
-                "Infects systems with undetectable malware"
-            ],
-            correctAnswer: 1,
-            explanation: "Deepfakes can realistically impersonate executives or colleagues in video/audio, bypassing normal skepticism."
+            explanation: "Always report phishing attempts to your IT team so they can protect others."
         }
     ];
 
@@ -206,7 +171,7 @@ const QuizPage = () => {
 
     const handleOptionSelect = (optionIndex: number) => {
         setSelectedOption(optionIndex);
-        setShowExplanation(false);
+        setShowExplanation(true);
     };
 
     const handleNext = () => {
@@ -217,17 +182,13 @@ const QuizPage = () => {
             setScore(score + 1);
         }
 
-        setShowExplanation(true);
-
-        setTimeout(() => {
-            if (currentQuestionIndex < quizQuestions.length - 1) {
-                setCurrentQuestionIndex(currentQuestionIndex + 1);
-                setSelectedOption(null);
-                setShowExplanation(false);
-            } else {
-                setShowResult(true);
-            }
-        }, 1500);
+        if (currentQuestionIndex < quizQuestions.length - 1) {
+            setCurrentQuestionIndex(currentQuestionIndex + 1);
+            setSelectedOption(null);
+            setShowExplanation(false);
+        } else {
+            setShowResult(true);
+        }
     };
 
     const handleRestart = () => {
@@ -246,19 +207,99 @@ const QuizPage = () => {
                 <div className="p-6 sm:p-8">
                     {showResult ? (
                         <div className="text-center space-y-6">
-                            <h1 className="text-3xl font-bold text-gray-900">Quiz Completed!</h1>
-                            <div className="text-4xl font-bold text-blue-600">
-                                {score} <span className="text-gray-500">/ {quizQuestions.length}</span>
+                            {/* Trophy icon and completion message */}
+                            <div className="relative">
+                                <div className="w-24 h-24 bg-yellow-400 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-yellow-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <h1 className="text-3xl font-bold text-gray-900 mb-2">Quiz Completed!</h1>
+                                <p className="text-gray-600">You've answered all the questions</p>
                             </div>
-                            <div className="text-xl text-gray-600">
-                                ({Math.round((score / quizQuestions.length) * 100)}%)
+
+                            {/* Score display with circular progress */}
+                            <div className="relative w-40 h-40 mx-auto">
+                                <svg className="w-full h-full" viewBox="0 0 100 100">
+                                    {/* Background circle */}
+                                    <circle
+                                        className="text-gray-200"
+                                        strokeWidth="8"
+                                        stroke="currentColor"
+                                        fill="transparent"
+                                        r="40"
+                                        cx="50"
+                                        cy="50"
+                                    />
+                                    {/* Progress circle */}
+                                    <circle
+                                        className="text-blue-600"
+                                        strokeWidth="8"
+                                        strokeLinecap="round"
+                                        stroke="currentColor"
+                                        fill="transparent"
+                                        r="40"
+                                        cx="50"
+                                        cy="50"
+                                        strokeDasharray={`${(score / quizQuestions.length) * 251} 251`}
+                                        transform="rotate(-90 50 50)"
+                                    />
+                                </svg>
+                                <div className="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center">
+                                    <div className="text-4xl font-bold text-blue-600">
+                                        {score}
+                                    </div>
+                                    <div className="text-gray-500 text-sm">out of {quizQuestions.length}</div>
+                                </div>
                             </div>
-                            <button
-                                onClick={handleRestart}
-                                className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-105"
-                            >
-                                Take Quiz Again
-                            </button>
+
+                            {/* Performance message based on score */}
+                            <div className="pt-2">
+                                {score === quizQuestions.length ? (
+                                    <div className="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-800">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                        </svg>
+                                        Perfect Score! Excellent work!
+                                    </div>
+                                ) : score >= quizQuestions.length * 0.7 ? (
+                                    <div className="inline-flex items-center px-4 py-2 rounded-full bg-blue-100 text-blue-800">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                        </svg>
+                                        Great Job! You did well!
+                                    </div>
+                                ) : (
+                                    <div className="inline-flex items-center px-4 py-2 rounded-full bg-yellow-100 text-yellow-800">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
+                                        </svg>
+                                        Good effort! Keep learning!
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Action buttons */}
+                            <div className="flex flex-col sm:flex-row justify-center gap-4 pt-6">
+                                <Link
+                                    href="../learn"
+                                    className="flex items-center justify-center px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-all duration-200"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                                    </svg>
+                                    Back to Learning
+                                </Link>
+                                <Link
+                                    href="../leaderboard"
+                                    className="flex items-center justify-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-all duration-200"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+                                    </svg>
+                                    View Leaderboard
+                                </Link>
+                            </div>
                         </div>
                     ) : (
                         <>
@@ -294,7 +335,7 @@ const QuizPage = () => {
                                         <button
                                             key={index}
                                             onClick={() => handleOptionSelect(index)}
-                                            disabled={showExplanation}
+                                            disabled={showExplanation && selectedOption !== index}
                                             className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 ${optionStyle} ${
                                                 selectedOption === index ? 'ring-2 ring-offset-2 ring-blue-400' : ''
                                             }`}
