@@ -97,9 +97,7 @@ function CourseCard({
     color,
     isThai,
 }: CourseCardProps) {
-    const course = courseData.find((c) => c.id === id);
     const [isHovered, setIsHovered] = useState(false);
-    const [showLearnOptions, setShowLearnOptions] = useState(false);
     const router = useRouter();
 
     return (
@@ -165,7 +163,7 @@ function CourseCard({
                                 {isThai ? descriptionThai : description}
                             </p>
 
-                            {isSelected && course?.stats && (
+                            {isSelected && (
                                 <motion.div
                                     className="mt-3 flex flex-wrap items-center gap-4 text-xs text-gray-500"
                                     initial={{ opacity: 0, y: 10 }}
@@ -175,18 +173,20 @@ function CourseCard({
                                     <span className="flex items-center gap-1">
                                         <BarChart2 className="w-3 h-3" />
                                         {isThai
-                                            ? `${course.statsThai.questions} คำถาม`
-                                            : `${course.stats.questions} questions`}
+                                            ? `${courseData.find(c => c.id === id)?.statsThai.questions} คำถาม`
+                                            : `${courseData.find(c => c.id === id)?.stats.questions} questions`}
                                     </span>
                                     <span className="flex items-center gap-1">
                                         <Clock className="w-3 h-3" />
-                                        {isThai ? course.statsThai.duration : course.stats.duration}
+                                        {isThai 
+                                            ? courseData.find(c => c.id === id)?.statsThai.duration 
+                                            : courseData.find(c => c.id === id)?.stats.duration}
                                     </span>
                                     <span className="flex items-center gap-1">
                                         <Award className="w-3 h-3" />
                                         {isThai
-                                            ? course.statsThai.difficulty
-                                            : course.stats.difficulty}
+                                            ? courseData.find(c => c.id === id)?.statsThai.difficulty
+                                            : courseData.find(c => c.id === id)?.stats.difficulty}
                                     </span>
                                 </motion.div>
                             )}
@@ -211,90 +211,33 @@ function CourseCard({
 
             <AnimatePresence>
                 {isSelected && (
-                    <div className="space-y-3">
-                        <motion.div
-                            className="flex gap-3"
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -10 }}
-                            transition={{ type: "spring", stiffness: 300 }}
+                    <motion.div
+                        className="flex gap-3"
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                    >
+                        <motion.button
+                            className="flex-1 px-4 py-3 border-2 border-blue-700 rounded-xl bg-gradient-to-r from-blue-700 to-blue-600 text-white text-sm font-semibold hover:from-blue-800 hover:to-blue-700 transition-colors shadow-lg flex items-center justify-center gap-2"
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => router.push(`/quiz/${id}`)}
                         >
-                            <motion.button
-                                className="flex-1 px-4 py-3 border-2 border-blue-700 rounded-xl bg-gradient-to-r from-blue-700 to-blue-600 text-white text-sm font-semibold hover:from-blue-800 hover:to-blue-700 transition-colors shadow-lg flex items-center justify-center gap-2"
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                onClick={() => router.push(`/quiz/${id}`)}  // Updated to use dynamic routing
-                            >
-                                <Award className="w-4 h-4" />
-                                {isThai ? "เริ่มแบบทดสอบ" : "Start Quiz"}
-                            </motion.button>
+                            <Award className="w-4 h-4" />
+                            {isThai ? "เริ่มแบบทดสอบ" : "Start Quiz"}
+                        </motion.button>
 
-                            <motion.button
-                                className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl bg-white text-gray-800 text-sm font-semibold hover:bg-gray-50 transition-colors shadow-sm flex items-center justify-center gap-2"
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setShowLearnOptions(!showLearnOptions);
-                                }}
-                            >
-                                <Eye className="w-4 h-4" />
-                                {isThai ? "เรียนรู้ก่อน" : "Learn First"}
-                            </motion.button>
-                        </motion.div>
-
-                        {showLearnOptions && (
-                            <motion.div
-                                className="bg-white border border-gray-200 rounded-xl p-4 space-y-3 shadow-sm"
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: "auto" }}
-                                exit={{ opacity: 0, height: 0 }}
-                                transition={{ duration: 0.2 }}
-                            >
-                                <motion.button 
-                                    className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors group"
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    onClick={() => router.push(`/readguide/${id}`)}
-                                >
-                                    <div className="p-2 rounded-lg bg-blue-100 group-hover:bg-blue-200 transition-colors">
-                                        <BookOpen className="w-5 h-5 text-blue-700" />
-                                    </div>
-                                    <span className="text-sm font-medium">
-                                        {isThai ? "อ่านคู่มือ" : "Read Guide"}
-                                    </span>
-                                </motion.button>
-
-                                <motion.button 
-                                    className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors group"
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    onClick={() => window.open(course?.videoUrl, '_blank')}
-                                >
-                                    <div className="p-2 rounded-lg bg-blue-100 group-hover:bg-blue-200 transition-colors">
-                                        <Video className="w-5 h-5 text-blue-700" />
-                                    </div>
-                                    <span className="text-sm font-medium">
-                                        {isThai ? "ดูวิดีโอสอน" : "Watch Tutorial"}
-                                    </span>
-                                </motion.button>
-
-                                <motion.button
-                                    className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors group"
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    onClick={() => router.push(`/studynote/${id}`)}
-                                >
-                                    <div className="p-2 rounded-lg bg-blue-100 group-hover:bg-blue-200 transition-colors">
-                                        <FileText className="w-5 h-5 text-blue-700" />
-                                    </div>
-                                    <span className="text-sm font-medium">
-                                        {isThai ? "เอกสารศึกษา" : "Study Notes"}
-                                    </span>
-                                </motion.button>
-                            </motion.div>
-                        )}
-                    </div>
+                        <motion.button
+                            className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl bg-white text-gray-800 text-sm font-semibold hover:bg-gray-50 transition-colors shadow-sm flex items-center justify-center gap-2"
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => router.push(`/readguide/${id}`)}
+                        >
+                            <BookOpen className="w-4 h-4" />
+                            {isThai ? "เรียนรู้ก่อน" : "Learn First"}
+                        </motion.button>
+                    </motion.div>
                 )}
             </AnimatePresence>
         </div>
@@ -311,7 +254,6 @@ export default function Page() {
 
     return (
         <div className="min-h-screen relative overflow-hidden bg-gray-50 bg-[radial-gradient(circle,_rgba(0,0,0,0.2)_1.5px,_transparent_1px)] bg-[length:80px_80px] bg-repeat text-gray-900">
-
             {/* Content */}
             <div className="relative z-10">
                 {/* Navigation */}

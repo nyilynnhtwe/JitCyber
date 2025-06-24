@@ -90,6 +90,7 @@
     "phone": "02-123-4567",
     "copyright": "© 2025 JitCyber. All rights reserved."
   },
+<<<<<<< HEAD
   "quizApp": {
     "appName": "JitCyber",
     "nav": {
@@ -146,6 +147,40 @@
       "readGuide": "Read Guide",
       "watchTutorial": "Watch Tutorial",
       "studyNotes": "Study Notes"
+=======
+
+  
+  "home": "Home",
+  "testYourKnowledge": "Test Your Knowledge",
+  "cybersecurity": "Cybersecurity",
+  "quizDescription": "Challenge yourself with interactive quizzes and master essential security concepts.",
+  "phishing": {
+    "title": "Phishing Prevention",
+    "description": "Learn to identify and avoid phishing attempts.",
+    "questions": "questions",
+    "duration": "min",
+    "difficulty": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
+>>>>>>> c582b1b7a670ac2644e95c38a96d63a7b5bcb29a
     }
-  }
+  },
+  "password": {
+    "title": "Password Security",
+    "description": "Create strong, secure passwords to protect your accounts."
+  },
+  "social": {
+    "title": "Social Engineering",
+    "description": "Understand and defend against social engineering tactics."
+  },
+  "mobile": {
+    "title": "Mobile Security",
+    "description": "Secure your mobile devices from threats and malware."
+  },
+  "startQuiz": "Start Quiz",
+  "learnFirst": "Learn First",
+  "readGuide": "Read Guide",
+  "watchTutorial": "Watch Tutorial",
+  "studyNotes": "Study Notes"
 }
