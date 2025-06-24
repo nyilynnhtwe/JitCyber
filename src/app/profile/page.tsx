@@ -38,8 +38,7 @@ export default function ProfilePage() {
         </div>
         <button
           onClick={() => {
-            signOut();
-            window.location.href = "/";
+            signOut({ callbackUrl: "/" });
           }}
           className="mt-6 w-full bg-gradient-to-r from-rose-500 to-red-600 text-white py-2 px-4 rounded-lg flex items-center justify-center gap-2 hover:from-rose-600 hover:to-red-700 transition-all shadow-md"
         >

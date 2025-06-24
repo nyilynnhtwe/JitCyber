@@ -21,11 +21,8 @@ export default function LoggedInHome() {
 
     const handleLogout = async (e: React.MouseEvent) => {
         e.preventDefault(); // Prevent default link behavior
-        // Your custom logic here
-        console.log("Logging out...");
 
-        signOut();
-        window.location.href = '/'; // Redirect to home page after logout
+        signOut({ callbackUrl: "/" });
     };
 
     useEffect(() => {
