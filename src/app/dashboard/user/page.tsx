@@ -11,6 +11,8 @@ import enData from '../../data/en.json';
 import thData from '../../data/th.json';
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
+import { Chatbot } from '@/app/components/Chatbot';
+
 
 export default function LoggedInHome() {
     const { locale } = useLocale();
@@ -124,6 +126,8 @@ export default function LoggedInHome() {
                 </main>
 
                 <Footer t={t} locale={locale} />
+                 {/* Chatbot component here */}
+                <Chatbot />
             </div>
         </>
     );
