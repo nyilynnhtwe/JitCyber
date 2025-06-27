@@ -3,20 +3,23 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 
-interface Quiz {
+// Export the Quiz interface
+export interface Quiz {
+  _id: string;
   question: string;
   answers: string[];
   correctAnswer: string;
   info?: string;
 }
 
-// interface AddQuizModalProps 
-
-const AddQuizModal = ({ isOpen, onClose, onAddQuiz }: {
+// Export the props interface
+export interface AddQuizModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAddQuiz: (quiz: Omit<Quiz, "_id">) => void;
-}) => {
+}
+
+export const AddQuizModal = ({ isOpen, onClose, onAddQuiz }: AddQuizModalProps) => {
   const [newQuiz, setNewQuiz] = useState({
     question: "",
     answers: ["", "", "", ""],
@@ -162,5 +165,3 @@ const AddQuizModal = ({ isOpen, onClose, onAddQuiz }: {
     </div>
   );
 };
-
-export default AddQuizModal;

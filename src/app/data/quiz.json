@@ -1,0 +1,16 @@
+{
+    "quizzes": [
+        {
+            "topic": "social_engineering_awareness",
+            "question": "What trick did the hacker use to fool Jane?",
+            "answers": [
+                "Malware on her phone",
+                "Pretended to be Jane’s boss",
+                "Took over her friend’s Facebook and asked for money",
+                "Sent an official email"
+            ],
+            "correctAnswer": 2,
+            "info": "Blah blah"
+        }
+    ]
+}

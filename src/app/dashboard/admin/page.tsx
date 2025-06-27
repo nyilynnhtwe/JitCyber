@@ -2,7 +2,10 @@
 import { useState, useEffect } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { ADMIN_ID } from "@/app/constants";
-import AddQuizModal from "./quiz/page";
+import {
+  AddQuizModal,
+  type Quiz
+} from "@/app/components/admin/AddQuizModal";
 import Sidebar from "@/app/components/admin/SideBar";
 import Topbar from "@/app/components/admin/TopBar";
 import MobileMenu from "@/app/components/admin/MobileMenu";
@@ -22,13 +25,6 @@ interface User {
   dob: string;
 }
 
-interface Quiz {
-  _id: string;
-  question: string;
-  answers: string[];
-  correctAnswer: string;
-  info?: string;
-}
 
 const AdminDashboard = () => {
   const { data: session, status } = useSession();

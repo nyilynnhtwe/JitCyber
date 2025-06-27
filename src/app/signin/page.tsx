@@ -18,7 +18,7 @@ const SignInForm = () => {
     // Redirect if already authenticated
     useEffect(() => {
         if (status === "authenticated") {
-            router.push(session.user?.isAdmin ? "/dashboard/admin" : "/dashboard/user");
+            router.push(session.user?.id === "0000000000000" ? "/dashboard/admin" : "/dashboard/user");
         }
     }, [status, session, router]);
 
