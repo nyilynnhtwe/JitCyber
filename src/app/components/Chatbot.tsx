@@ -1,6 +1,17 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import {
+    MessageCircle,
+    X,
+    Send,
+    Paperclip,
+    Bot,
+    ChevronDown,
+    ShieldCheck,
+} from 'lucide-react';
+
+// If you see this message, it means the code is being run in dashboard user page. When implementing ai apis, make sure the ai is supported for both thai and english languages with a opening message options for the user to choose from after the introduction of course. Thx yah
 
 export const Chatbot = () => {
     const [isChatOpen, setIsChatOpen] = useState(false);
@@ -13,7 +24,6 @@ export const Chatbot = () => {
         },
     ]);
     const [inputMessage, setInputMessage] = useState('');
-    const [selectedLanguage, setSelectedLanguage] = useState<'en' | 'th'>('en');
     const [isTyping, setIsTyping] = useState(false);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -46,11 +56,13 @@ export const Chatbot = () => {
 
     const handleSendMessage = () => {
         if (!inputMessage.trim() && !previewImage) return;
+
         const userMessage = {
             text: inputMessage,
             sender: 'user' as const,
             ...(previewImage && { image: previewImage }),
         };
+
         setMessages((prev) => [...prev, userMessage]);
         setInputMessage('');
         setPreviewImage(null);
@@ -65,7 +77,7 @@ export const Chatbot = () => {
                 },
             ]);
             setIsTyping(false);
-        }, 1000);
+        }, 1000 + Math.random() * 500);
     };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,86 +102,46 @@ export const Chatbot = () => {
             {/* Chatbot toggle button */}
             <button
                 onClick={() => setIsChatOpen(!isChatOpen)}
-                className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg transition-all duration-300 flex items-center justify-center"
+                className={`bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg transition-all duration-300 flex items-center justify-center
+                    ${isChatOpen ? 'rotate-0' : 'hover:rotate-12'}`}
                 aria-label="Open chatbot"
             >
                 {isChatOpen ? (
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M6 18L18 6M6 6l12 12"
-                        />
-                    </svg>
+                    <X className="h-6 w-6" />
                 ) : (
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                        />
-                    </svg>
+                    <div className="relative">
+                        <MessageCircle className="h-6 w-6" />
+                        <div className="absolute -top-1 -right-1 h-3 w-3 bg-green-400 rounded-full animate-pulse"></div>
+                    </div>
                 )}
             </button>
 
             {/* Chatbot window */}
             {isChatOpen && (
-                <div className="fixed bottom-24 right-6 w-96 bg-white rounded-lg shadow-xl border border-gray-200 flex flex-col z-50 overflow-hidden">
+                <div
+                    className={`fixed bottom-24 right-6 w-96 bg-white rounded-lg shadow-xl border border-gray-200 flex flex-col z-50 overflow-hidden
+                        ${isChatOpen ? 'animate-fade-in-up' : 'animate-fade-out-down'}`}
+                >
                     {/* Header */}
-                    <div className="bg-blue-600 text-white p-4 flex justify-between items-center">
-                        <div className="flex items-center space-x-2">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-5 w-5"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                                />
-                            </svg>
-                            <h2 className="font-semibold">JitCyber Assistant</h2>
+                    <div className="bg-gradient-to-r from-blue-600 to-blue-500 text-white p-4 flex justify-between items-center">
+                        <div className="flex items-center space-x-3">
+                            <div className="p-2 bg-blue-700 rounded-full">
+                                <ShieldCheck className="h-5 w-5" />
+                            </div>
+                            <div>
+                                <h2 className="font-semibold">JitCyber Assistant</h2>
+                                <p className="text-xs text-blue-100 flex items-center">
+                                    <span className="w-2 h-2 bg-green-400 rounded-full mr-1 animate-pulse"></span>
+                                    Online
+                                </p>
+                            </div>
                         </div>
-                        <div className="flex space-x-2">
-                            <button
-                                onClick={() => setSelectedLanguage('en')}
-                                className={`px-2 py-1 text-xs rounded ${
-                                    selectedLanguage === 'en'
-                                        ? 'bg-blue-800'
-                                        : 'bg-blue-400'
-                                }`}
-                            >
-                                EN
-                            </button>
-                            <button
-                                onClick={() => setSelectedLanguage('th')}
-                                className={`px-2 py-1 text-xs rounded ${
-                                    selectedLanguage === 'th'
-                                        ? 'bg-blue-800'
-                                        : 'bg-blue-400'
-                                }`}
-                            >
-                                TH
-                            </button>
-                        </div>
+                        <button
+                            className="text-blue-100 hover:text-white transition-colors"
+                            onClick={() => setIsChatOpen(false)}
+                        >
+                            <ChevronDown className="h-5 w-5" />
+                        </button>
                     </div>
 
                     {/* Messages area */}
@@ -181,24 +153,24 @@ export const Chatbot = () => {
                             <div
                                 key={index}
                                 className={`mb-4 flex ${
-                                    msg.sender === 'user'
-                                        ? 'justify-end'
-                                        : 'justify-start'
+                                    msg.sender === 'user' ? 'justify-end' : 'justify-start'
                                 }`}
                             >
                                 <div
-                                    className={`max-w-xs lg:max-w-md rounded-lg px-4 py-2 ${
+                                    className={`max-w-xs lg:max-w-md rounded-lg px-4 py-2 transition-all duration-200 ${
                                         msg.sender === 'user'
                                             ? 'bg-blue-500 text-white'
                                             : 'bg-gray-200 text-gray-800'
-                                    }`}
+                                    } ${index === messages.length - 1 ? 'animate-message-in' : ''}`}
                                 >
                                     {msg.image && (
-                                        <div className="mb-2">
+                                        <div className="mb-2 overflow-hidden rounded">
                                             <Image
                                                 src={msg.image}
+                                                width={300}
+                                                height={200}
                                                 alt="User upload"
-                                                className="rounded max-w-full h-auto"
+                                                className="rounded max-w-full h-auto object-cover"
                                             />
                                         </div>
                                     )}
@@ -208,7 +180,8 @@ export const Chatbot = () => {
                         ))}
                         {isTyping && (
                             <div className="flex justify-start mb-4">
-                                <div className="bg-gray-200 text-gray-800 rounded-lg px-4 py-2">
+                                <div className="bg-gray-200 text-gray-800 rounded-lg px-4 py-2 flex items-center">
+                                    <Bot className="h-4 w-4 mr-2" />
                                     <div className="flex space-x-1">
                                         <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
                                         <div
@@ -232,53 +205,29 @@ export const Chatbot = () => {
                             <div className="relative mb-2">
                                 <Image
                                     src={previewImage}
+                                    width={300}
+                                    height={200}
                                     alt="Preview"
-                                    className="rounded max-w-full h-32 object-contain"
+                                    className="rounded max-w-full h-32 object-contain border border-gray-200"
                                 />
                                 <button
                                     onClick={() => {
                                         setPreviewImage(null);
                                         if (fileInputRef.current) fileInputRef.current.value = '';
                                     }}
-                                    className="absolute top-1 right-1 bg-gray-800 bg-opacity-75 text-white rounded-full p-1"
+                                    className="absolute top-1 right-1 bg-gray-800 bg-opacity-75 text-white rounded-full p-1 hover:bg-opacity-100 transition-all"
                                 >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="h-4 w-4"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M6 18L18 6M6 6l12 12"
-                                        />
-                                    </svg>
+                                    <X className="h-4 w-4" />
                                 </button>
                             </div>
                         )}
                         <div className="flex space-x-2">
                             <button
                                 onClick={() => fileInputRef.current?.click()}
-                                className="p-2 text-gray-600 hover:text-gray-800 rounded-full hover:bg-gray-100"
+                                className="p-2 text-gray-600 hover:text-blue-600 rounded-full hover:bg-gray-100 transition-colors"
                                 aria-label="Attach file"
                             >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-5 w-5"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
-                                    />
-                                </svg>
+                                <Paperclip className="h-5 w-5" />
                                 <input
                                     ref={fileInputRef}
                                     type="file"
@@ -292,44 +241,75 @@ export const Chatbot = () => {
                                 value={inputMessage}
                                 onChange={(e) => setInputMessage(e.target.value)}
                                 onKeyDown={handleKeyDown}
-                                placeholder={
-                                    selectedLanguage === 'en'
-                                        ? 'Type your message...'
-                                        : 'พิมพ์ข้อความของคุณ...'
-                                }
-                                className="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Type your message..."
+                                className="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                             />
                             <button
                                 onClick={handleSendMessage}
                                 disabled={
                                     (!inputMessage.trim() && !previewImage) || isTyping
                                 }
-                                className={`p-2 rounded-full ${
+                                className={`p-2 rounded-full transition-colors ${
                                     (!inputMessage.trim() && !previewImage) || isTyping
-                                        ? 'text-gray-400'
-                                        : 'text-blue-600 hover:bg-blue-50'
+                                        ? 'text-gray-400 cursor-not-allowed'
+                                        : 'text-blue-600 hover:bg-blue-50 hover:text-blue-700'
                                 }`}
                                 aria-label="Send message"
                             >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-5 w-5"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                                    />
-                                </svg>
+                                <Send className="h-5 w-5" />
                             </button>
                         </div>
                     </div>
                 </div>
             )}
+
+            {/* Some experimental styles for animations */}
+            <style jsx global>{`
+                @keyframes fadeInUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(10px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                @keyframes fadeOutDown {
+                    from {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                    to {
+                        opacity: 0;
+                        transform: translateY(10px);
+                    }
+                }
+
+                @keyframes messageIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(5px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .animate-fade-in-up {
+                    animation: fadeInUp 0.3s ease-out forwards;
+                }
+
+                .animate-fade-out-down {
+                    animation: fadeOutDown 0.3s ease-out forwards;
+                }
+
+                .animate-message-in {
+                    animation: messageIn 0.2s ease-out;
+                }
+            `}</style>
         </div>
     );
 };
