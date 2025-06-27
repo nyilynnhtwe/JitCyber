@@ -33,6 +33,7 @@ export const Chatbot = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
+    // Can delete this just fine if you are implementing real AI responses with an API
     const getMockResponse = (message: string) => {
         const lowerMsg = message.toLowerCase();
         if (lowerMsg.includes('password')) {
