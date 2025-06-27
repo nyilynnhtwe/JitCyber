@@ -47,13 +47,13 @@ const SignInForm = () => {
 
         setIsSubmitting(true);
         try {
-            const hashedPassword = await hashPassword(password);
+
             const idNumber = ThaiID.trim();
 
             const result = await signIn("credentials", {
                 redirect: false,
                 id: idNumber,
-                password: hashedPassword,
+                password
             });
 
             if (result?.error) {
