@@ -167,14 +167,6 @@ const QuizPage = () => {
         }
     };
 
-    const handleRestart = () => {
-        setCurrentQuestionIndex(0);
-        setSelectedOption(null);
-        setScore(0);
-        setShowResult(false);
-        setShowExplanation(false);
-    };
-
     const progress = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
 
     return (

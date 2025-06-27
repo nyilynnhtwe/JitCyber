@@ -10,6 +10,7 @@ import DashboardTab from "@/app/components/admin/DashboardTab";
 import UsersTab from "@/app/components/admin/UsersTab";
 import QuizzesTab from "@/app/components/admin/QuizzesTab";
 import UnauthorizedPage from "@/app/unauthorized/page";
+import { fetchQuizzes } from "@/lib/utils";
 
 interface User {
   _id: string;
@@ -59,21 +60,10 @@ const AdminDashboard = () => {
     fetchUsers();
   }, [page]);
 
-  const fetchQuizzes = async () => {
-    setIsLoading(true);
-    try {
-      const res = await fetch(`/api/admin/quizzes?page=${page}&limit=${limit}`);
-      const data = await res.json();
-      setQuizzes(data.quizzes);
-    } catch (err) {
-      console.error("Failed to fetch quizzes:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+
 
   useEffect(() => {
-    fetchQuizzes();
+    fetchQuizzes(setQuizzes, setIsLoading, page, limit);
   }, [page]);
 
   const handleAddNewQuiz = async (quizData: Omit<Quiz, "_id">) => {
@@ -88,7 +78,7 @@ const AdminDashboard = () => {
       });
 
       if (res.ok) {
-        fetchQuizzes();
+        fetchQuizzes(setQuizzes, setIsLoading, page, limit);
       } else {
         console.error("Failed to add quiz");
       }
@@ -148,7 +138,7 @@ const AdminDashboard = () => {
         )}
 
         <div className="flex-1 overflow-y-auto p-6 bg-gray-100">
-          {activeTab === "dashboard" && <DashboardTab users={users} />}
+          {activeTab === "dashboard" && <DashboardTab numOfUsers={users.length} />}
 
           {activeTab === "users" && (
             <UsersTab

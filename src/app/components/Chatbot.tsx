@@ -1,5 +1,6 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 
 export const Chatbot = () => {
     const [isChatOpen, setIsChatOpen] = useState(false);
@@ -194,7 +195,7 @@ export const Chatbot = () => {
                                 >
                                     {msg.image && (
                                         <div className="mb-2">
-                                            <img
+                                            <Image
                                                 src={msg.image}
                                                 alt="User upload"
                                                 className="rounded max-w-full h-auto"
@@ -229,7 +230,7 @@ export const Chatbot = () => {
                     <div className="border-t border-gray-200 p-3 bg-white">
                         {previewImage && (
                             <div className="relative mb-2">
-                                <img
+                                <Image
                                     src={previewImage}
                                     alt="Preview"
                                     className="rounded max-w-full h-32 object-contain"

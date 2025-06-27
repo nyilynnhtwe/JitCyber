@@ -11,8 +11,6 @@ import {
     BarChart2,
     Sparkles,
     BookOpen,
-    Video,
-    FileText,
     Home,
     Globe,
 } from "lucide-react";

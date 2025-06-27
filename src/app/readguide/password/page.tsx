@@ -3,7 +3,6 @@ import React from "react";
 import {
     Key,
     ChevronLeft,
-    BookOpen,
     Lock,
     AlertTriangle,
     RefreshCw,

@@ -10,13 +10,13 @@ interface Quiz {
   info?: string;
 }
 
-interface AddQuizModalProps {
+// interface AddQuizModalProps 
+
+const AddQuizModal = ({ isOpen, onClose, onAddQuiz }: {
   isOpen: boolean;
   onClose: () => void;
   onAddQuiz: (quiz: Omit<Quiz, "_id">) => void;
-}
-
-const AddQuizModal = ({ isOpen, onClose, onAddQuiz }: AddQuizModalProps) => {
+}) => {
   const [newQuiz, setNewQuiz] = useState({
     question: "",
     answers: ["", "", "", ""],
