@@ -5,7 +5,7 @@ export default function Header() {
   const { locale } = useLocale();
   
   return (
-    <header className="fixed w-full z-50 bg-white shadow-sm py-3">
+    <header className="w-full z-50 bg-white shadow-sm py-3">
       <div className="container mx-auto px-4 flex justify-between items-center">
         <div className="flex items-center">
           <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center mr-3">

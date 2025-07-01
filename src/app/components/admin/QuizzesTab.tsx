@@ -1,12 +1,7 @@
+import { Quiz } from "@/types/admin";
 import Pagination from "./Pagination";
 
-interface Quiz {
-  _id: string;
-  question: string;
-  answers: string[];
-  correctAnswer: string;
-  info?: string;
-}
+
 
 export default function QuizzesTab({ 
   quizzes, 

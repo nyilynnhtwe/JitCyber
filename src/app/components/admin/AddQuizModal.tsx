@@ -1,167 +1,137 @@
 "use client";
 
 import { useState } from "react";
-import { X } from "lucide-react";
+import { toast } from "react-toastify";
 
-// Export the Quiz interface
-export interface Quiz {
-  _id: string;
-  question: string;
-  answers: string[];
-  correctAnswer: string;
-  info?: string;
-}
+export default function AddQuizModal({ setIsAddQuizModalOpen, topicId }: { setIsAddQuizModalOpen: (open: boolean) => void; topicId: string }) {
+  const [question, setQuestion] = useState("");
+  const [answers, setAnswers] = useState(["", "", "", ""]);
+  const [correctAnswer, setCorrectAnswer] = useState("");
+  const [info, setInfo] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-// Export the props interface
-export interface AddQuizModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onAddQuiz: (quiz: Omit<Quiz, "_id">) => void;
-}
-
-export const AddQuizModal = ({ isOpen, onClose, onAddQuiz }: AddQuizModalProps) => {
-  const [newQuiz, setNewQuiz] = useState({
-    question: "",
-    answers: ["", "", "", ""],
-    correctAnswer: "",
-    info: ""
-  });
-
-  const handleAnswerChange = (index: number, value: string) => {
-    const newAnswers = [...newQuiz.answers];
-    newAnswers[index] = value;
-    setNewQuiz({ ...newQuiz, answers: newAnswers });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Basic validation
-    if (
-      !newQuiz.question.trim() ||
-      newQuiz.answers.some(a => !a.trim()) ||
-      !newQuiz.correctAnswer
-    ) {
-      alert("Please fill in all required fields");
+  const handleSave = async () => {
+    if (!question || answers.some(a => !a) || !correctAnswer) {
+      toast.error("Please fill all required fields");
       return;
     }
 
-    onAddQuiz(newQuiz);
-    handleClose();
-  };
+    setIsSubmitting(true);
+    try {
+      const res = await fetch(`/api/admin/topics/${topicId}/quizzes`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          question,
+          answers,
+          correctAnswer,
+          info,
+        }),
+      });
 
-  const handleClose = () => {
-    setNewQuiz({
-      question: "",
-      answers: ["", "", "", ""],
-      correctAnswer: "",
-      info: ""
-    });
-    onClose();
-  };
+      if (!res.ok) throw new Error("Failed to create quiz");
 
-  if (!isOpen) return null;
+      toast.success("Quiz added successfully!");
+      setIsAddQuizModalOpen(false);
+      // You might want to refetch the quiz list here too
+    } catch (error) {
+      toast.error("Error adding quiz");
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
-    <div className="fixed inset-0 bg-blue bg-opacity-10 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl drop-shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="p-4 border-b border-gray-200 sticky top-0 bg-white flex justify-between items-center shadow-sm z-10">
-          <h3 className="text-xl font-semibold text-gray-800">Add New Quiz</h3>
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-30 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-xl px-8 py-6 space-y-6 border border-gray-100">
+        {/* Header */}
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-semibold text-gray-800">Create Quiz</h2>
           <button
-            onClick={handleClose}
-            className="p-1 rounded-full hover:bg-gray-100"
+            onClick={() => setIsAddQuizModalOpen(false)}
+            className="text-gray-400 hover:text-gray-600 text-xl"
           >
-            <X className="w-6 h-6 text-gray-500" />
+            &times;
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6">
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Question *
-            </label>
-            <textarea
-              value={newQuiz.question}
-              onChange={(e) => setNewQuiz({ ...newQuiz, question: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              rows={3}
-              placeholder="Enter your question here"
-              required
+        {/* Form */}
+        <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Question</label>
+            <input
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              type="text"
+              className="w-full p-3 border rounded-lg focus:ring-blue-500 focus:outline-none"
+              placeholder="Type your question..."
             />
           </div>
 
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Answers *
-            </label>
-            <div className="space-y-3">
-              {newQuiz.answers.map((answer, index) => (
-                <div key={index} className="flex items-start">
-                  <div className="mt-2.5 mr-3 w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-sm font-medium text-blue-800">
-                    {String.fromCharCode(65 + index)}
-                  </div>
-                  <input
-                    type="text"
-                    value={answer}
-                    onChange={(e) => handleAnswerChange(index, e.target.value)}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder={`Option ${index + 1}`}
-                    required
-                  />
-                </div>
-              ))}
+          {answers.map((answer, index) => (
+            <div key={index}>
+              <label className="block text-sm text-gray-700 font-medium mb-1">Answer {String.fromCharCode(65 + index)}</label>
+              <input
+                value={answer}
+                onChange={(e) => {
+                  const newAnswers = [...answers];
+                  newAnswers[index] = e.target.value;
+                  setAnswers(newAnswers);
+                }}
+                type="text"
+                className="w-full p-3 border rounded-lg focus:ring-blue-500 focus:outline-none"
+                placeholder={`Enter answer ${String.fromCharCode(65 + index)}`}
+              />
             </div>
-          </div>
+          ))}
 
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Correct Answer *
-            </label>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Correct Answer</label>
             <select
-              value={newQuiz.correctAnswer}
-              onChange={(e) => setNewQuiz({ ...newQuiz, correctAnswer: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
+              value={correctAnswer}
+              onChange={(e) => setCorrectAnswer(e.target.value)}
+              className="w-full p-3 border rounded-lg focus:ring-blue-500 focus:outline-none"
             >
               <option value="">Select correct answer</option>
-              {newQuiz.answers.map((_, index) => (
-                <option key={index} value={index}>
-                  {String.fromCharCode(65 + index)}: {newQuiz.answers[index] || `Option ${index + 1}`}
+              {answers.map((_, index) => (
+                <option key={index} value={answers[index]}>
+                  Answer {String.fromCharCode(65 + index)}
                 </option>
               ))}
             </select>
           </div>
 
-          <div className="mb-8">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Additional Information (Optional)
-            </label>
-            <input
-              type="text"
-              value={newQuiz.info}
-              onChange={(e) => setNewQuiz({ ...newQuiz, info: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Explanation or reference link"
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Explanation (Optional)</label>
+            <textarea
+              value={info}
+              onChange={(e) => setInfo(e.target.value)}
+              rows={3}
+              className="w-full p-3 border rounded-lg focus:ring-blue-500 focus:outline-none"
+              placeholder="Explain the correct answer..."
             />
           </div>
 
-          <div className="flex justify-end space-x-3">
+          <div className="flex justify-end space-x-3 pt-4">
             <button
               type="button"
-              onClick={handleClose}
-              className="px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+              onClick={() => setIsAddQuizModalOpen(false)}
+              className="px-4 py-2 rounded-lg border text-gray-600 hover:bg-gray-100 transition"
             >
               Cancel
             </button>
             <button
-              type="submit"
-              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+              type="button"
+              onClick={handleSave}
+              disabled={isSubmitting}
+              className="px-5 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition disabled:opacity-50"
             >
-              Add Quiz
+              {isSubmitting ? "Saving..." : "Save Quiz"}
             </button>
           </div>
         </form>
       </div>
     </div>
   );
-};
+}

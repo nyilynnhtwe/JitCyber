@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import { hashPassword } from "../../lib/auth";
 import { Globe, CreditCard, Lock, Eye, EyeOff, LogIn, ShieldCheck, Shield } from "lucide-react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";

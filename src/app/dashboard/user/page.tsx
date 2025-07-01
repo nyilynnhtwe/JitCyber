@@ -98,7 +98,7 @@ export default function LoggedInHome() {
                 </header>
 
                 {/* Content */}
-                <main className="pt-28 pb-12 container mx-auto px-4">
+                <main className="flex-grow pt-28 pb-12 container mx-auto px-4">
                     <h1 className="text-3xl font-bold text-slate-800 mb-4">
                         {locale === 'th' ? 'ยินดีต้อนรับกลับ!' : 'Welcome back!'}
                     </h1>
@@ -122,8 +122,10 @@ export default function LoggedInHome() {
                     </div>
                 </main>
 
-                <Footer t={t} locale={locale} />
-                 {/* Chatbot component here */}
+                <footer className="bg-white border-t border-slate-200 py-6">
+                    <Footer t={t} locale={locale} />
+                </footer>
+                {/* Chatbot component here */}
                 <Chatbot />
             </div>
         </>
