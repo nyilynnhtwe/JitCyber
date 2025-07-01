@@ -45,9 +45,9 @@ function App() {
     setIsSubmitting(true);
 
     try {
-        const serviceID = 'service_9vpx8vw';
-        const templateID = 'template_39et3ul';
-        const publicKey = 'xMtwp131nFMaGy76D';
+        const serviceID = '';
+        const templateID = '';
+        const publicKey = '';
 
         await send(
             serviceID,
