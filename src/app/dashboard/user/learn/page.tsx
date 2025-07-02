@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Shield,
     Eye,
@@ -18,6 +18,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 interface CourseCardProps {
     id: string;
@@ -101,9 +102,8 @@ function CourseCard({
     return (
         <div className="space-y-3 w-full">
             <motion.div
-                className={`relative overflow-hidden bg-white border border-gray-200 rounded-xl cursor-pointer transition-all duration-300 hover:shadow-lg ${
-                    isSelected ? "ring-2 ring-blue-700 shadow-lg" : "hover:border-blue-300"
-                }`}
+                className={`relative overflow-hidden bg-white border border-gray-200 rounded-xl cursor-pointer transition-all duration-300 hover:shadow-lg ${isSelected ? "ring-2 ring-blue-700 shadow-lg" : "hover:border-blue-300"
+                    }`}
                 onClick={() => onSelect(id)}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
@@ -115,17 +115,13 @@ function CourseCard({
                     className="absolute inset-0 opacity-10"
                     animate={{
                         background: [
-                            `linear-gradient(45deg, ${color.split("from-")[1].split(" ")[0]}, ${
-                                color.split("to-")[1]
+                            `linear-gradient(45deg, ${color.split("from-")[1].split(" ")[0]}, ${color.split("to-")[1]
                             })`,
-                            `linear-gradient(135deg, ${color.split("from-")[1].split(" ")[0]}, ${
-                                color.split("to-")[1]
+                            `linear-gradient(135deg, ${color.split("from-")[1].split(" ")[0]}, ${color.split("to-")[1]
                             })`,
-                            `linear-gradient(225deg, ${color.split("from-")[1].split(" ")[0]}, ${
-                                color.split("to-")[1]
+                            `linear-gradient(225deg, ${color.split("from-")[1].split(" ")[0]}, ${color.split("to-")[1]
                             })`,
-                            `linear-gradient(315deg, ${color.split("from-")[1].split(" ")[0]}, ${
-                                color.split("to-")[1]
+                            `linear-gradient(315deg, ${color.split("from-")[1].split(" ")[0]}, ${color.split("to-")[1]
                             })`,
                         ],
                     }}
@@ -176,8 +172,8 @@ function CourseCard({
                                     </span>
                                     <span className="flex items-center gap-1">
                                         <Clock className="w-3 h-3" />
-                                        {isThai 
-                                            ? courseData.find(c => c.id === id)?.statsThai.duration 
+                                        {isThai
+                                            ? courseData.find(c => c.id === id)?.statsThai.duration
                                             : courseData.find(c => c.id === id)?.stats.duration}
                                     </span>
                                     <span className="flex items-center gap-1">
@@ -198,9 +194,8 @@ function CourseCard({
                             transition={{ repeat: isHovered ? Infinity : 0, duration: 1.5 }}
                         >
                             <ChevronRight
-                                className={`w-5 h-5 transition-transform duration-300 ${
-                                    isSelected ? "rotate-90" : ""
-                                }`}
+                                className={`w-5 h-5 transition-transform duration-300 ${isSelected ? "rotate-90" : ""
+                                    }`}
                             />
                         </motion.div>
                     </div>
@@ -243,12 +238,32 @@ function CourseCard({
 }
 
 export default function Page() {
+    const router = useRouter();
+    const { status } = useSession();
     const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
     const [isThai, setIsThai] = useState(false);
 
     const handleCourseSelect = (courseId: string) => {
         setSelectedCourse(selectedCourse === courseId ? null : courseId);
     };
+
+    useEffect(() => {
+        if (status === "unauthenticated") {
+            router.push("/unauthorized");
+        }
+    }, [status, router]);
+
+    if (status === "loading") {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-white">
+                <p className="text-gray-500 text-lg">Loading...</p>
+            </div>
+        );
+    }
+
+    if (status === "unauthenticated") {
+        return null; // Prevent render while redirecting
+    }
 
     return (
         <div className="min-h-screen relative overflow-hidden bg-gray-50 bg-[radial-gradient(circle,_rgba(0,0,0,0.2)_1.5px,_transparent_1px)] bg-[length:80px_80px] bg-repeat text-gray-900">
@@ -296,7 +311,7 @@ export default function Page() {
                 {/* Hero Section */}
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
                     <div className="flex justify-center mb-6">
-                        <Image 
+                        <Image
                             src="/chibi.svg"
                             alt="Cybersecurity Illustration"
                             width={280}

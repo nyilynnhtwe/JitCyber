@@ -107,19 +107,32 @@ export default function LoggedInHome() {
                     </p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <Link href="/dashboard/security" className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition border border-slate-200">
-                            <h2 className="text-xl font-semibold mb-2">🔐 {locale === 'th' ? 'ความปลอดภัย' : 'Security'}</h2>
-                            <p className="text-slate-500 text-sm">{locale === 'th' ? 'ตรวจสอบการตั้งค่าความปลอดภัยของคุณ' : 'Review your security settings.'}</p>
+                        <Link href="/dashboard/user/learn" className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition border border-slate-200">
+                            <h2 className="text-xl font-semibold mb-2">📚 {locale === 'th' ? 'เรียนรู้' : 'Learn'}</h2>
+                            <p className="text-slate-500 text-sm">{locale === 'th' ? 'สำรวจบทเรียนของคุณ' : 'Explore your learning modules.'}</p>
                         </Link>
-                        <Link href="/dashboard/activity" className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition border border-slate-200">
-                            <h2 className="text-xl font-semibold mb-2">📊 {locale === 'th' ? 'กิจกรรม' : 'Activity'}</h2>
-                            <p className="text-slate-500 text-sm">{locale === 'th' ? 'ดูประวัติการใช้งานของคุณ' : 'View your recent activity.'}</p>
+
+                        <Link href="/dashboard/user/quizzes" className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition border border-slate-200">
+                            <h2 className="text-xl font-semibold mb-2">📝 {locale === 'th' ? 'แบบทดสอบ' : 'Quizzes'}</h2>
+                            <p className="text-slate-500 text-sm">{locale === 'th' ? 'ทดสอบความรู้ของคุณ' : 'Test your knowledge with quizzes.'}</p>
                         </Link>
-                        <Link href="/profile/settings" className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition border border-slate-200">
-                            <h2 className="text-xl font-semibold mb-2">⚙️ {locale === 'th' ? 'การตั้งค่า' : 'Settings'}</h2>
-                            <p className="text-slate-500 text-sm">{locale === 'th' ? 'จัดการข้อมูลบัญชีของคุณ' : 'Manage your account settings.'}</p>
+
+                        <Link href="/dashboard/user/email_detector" className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition border border-slate-200">
+                            <h2 className="text-xl font-semibold mb-2">📧 {locale === 'th' ? 'ตรวจสอบอีเมล' : 'Email Detector'}</h2>
+                            <p className="text-slate-500 text-sm">{locale === 'th' ? 'ระบุอีเมลที่ไม่ปลอดภัยหรือปลอมแปลง' : 'Identify unsafe or fake emails.'}</p>
+                        </Link>
+
+                        <Link href="/dashboard/user/password_strength_checker" className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition border border-slate-200">
+                            <h2 className="text-xl font-semibold mb-2">🔐 {locale === 'th' ? 'ความแข็งแรงของรหัสผ่าน' : 'Password Checker'}</h2>
+                            <p className="text-slate-500 text-sm">{locale === 'th' ? 'ตรวจสอบรหัสผ่านของคุณว่าแข็งแรงแค่ไหน' : 'Check how strong your password is.'}</p>
+                        </Link>
+
+                        <Link href="/dashboard/user/leaderboard" className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition border border-slate-200">
+                            <h2 className="text-xl font-semibold mb-2">🏆 {locale === 'th' ? 'กระดานผู้นำ' : 'Leaderboard'}</h2>
+                            <p className="text-slate-500 text-sm">{locale === 'th' ? 'ดูอันดับของคุณในกระดานผู้นำ' : 'View your ranking on the leaderboard.'}</p>
                         </Link>
                     </div>
+
                 </main>
 
                 <footer className="bg-white border-t border-slate-200 py-6">

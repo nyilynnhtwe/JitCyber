@@ -1,11 +1,11 @@
 // src/lib/authOptions.ts
-import { AuthOptions,SessionStrategy } from "next-auth";
+import { AuthOptions, SessionStrategy } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { connectToDatabase } from "@/lib/db";
 import { verifyPassword } from "@/lib/auth";
 import { DB_NAME, COLLECTION_USERS } from "@/app/constants";
 
-export const authOptions : AuthOptions = {
+export const authOptions: AuthOptions = {
     session: {
         strategy: "jwt" as SessionStrategy,
     },
@@ -25,7 +25,7 @@ export const authOptions : AuthOptions = {
                 if (!credentials?.id || !credentials?.password) {
                     throw new Error("Missing credentials");
                 }
-                
+
                 const client = await connectToDatabase();
                 const db = client.db(DB_NAME);
 
@@ -38,7 +38,7 @@ export const authOptions : AuthOptions = {
                 if (!user) {
                     throw new Error("No user found!");
                 }
-                
+
                 const isValid = await verifyPassword(
                     credentials.password,
                     user.password
@@ -47,7 +47,17 @@ export const authOptions : AuthOptions = {
                     throw new Error("Could not log you in!");
                 }
 
-                return { id: user.id, fullName: user.fullname, phone: user.phone };
+                return {
+                    id: user.id,
+                    fullName: user.fullname,
+                    phone: user.phone,
+                    dob: user.dob,
+                } as {
+                    id: string;
+                    fullName: string;
+                    phone: string;
+                    dob: string;
+                };
             },
         }),
     ],
@@ -57,6 +67,7 @@ export const authOptions : AuthOptions = {
                 token.id = user.id;
                 token.fullName = user.fullName;
                 token.phone = user.phone;
+                token.dob = user.dob; // Include DOB if needed
             }
             return token;
         },
@@ -66,6 +77,7 @@ export const authOptions : AuthOptions = {
                     id: token.id as string,
                     fullName: token.fullName as string,
                     phone: token.phone as string,
+                    dob: token.dob as string, // Include DOB if needed
                 };
             }
             return session;

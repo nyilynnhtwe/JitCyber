@@ -176,7 +176,7 @@ const LeaderboardPage = () => {
                 {/* Bottom Back to Learn Link */}
                 <div className="mt-8 flex justify-center">
                     <Link
-                        href="../learn"
+                        href="/dashboard/user"
                         className="inline-flex items-center px-5 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg shadow transition-colors"
                     >
                         <svg
@@ -192,7 +192,7 @@ const LeaderboardPage = () => {
                                 d="M15 19l-7-7 7-7"
                             />
                         </svg>
-                        Back to Learn Page
+                        Back to Dashboard
                     </Link>
                 </div>
             </div>

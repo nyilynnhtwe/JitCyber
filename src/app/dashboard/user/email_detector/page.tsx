@@ -4,12 +4,12 @@ import { useState, useEffect, useCallback, useRef } from 'react'; // Added useRe
 import Head from 'next/head';
 import { useRouter } from 'next/navigation';
 import { useLocale } from '@/context/LocalContext';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Header from '@/app/components/Header';
+import Footer from '@/app/components/Footer';
 
 // Import localization data
-import enData from '../data/en.json';
-import thData from '../data/th.json';
+import enData from '@/app/data/en.json';
+import thData from '@/app/data/th.json';
 
 // Moved outside component to prevent recreation on every render
 const disposableDomains = [
@@ -490,13 +490,13 @@ export default function EmailChecker() {
               </div>
               <div className="text-center">
                 <button
-                  onClick={() => router.push('/')}
+                  onClick={() => router.push('/dashboard/user')}
                   className="inline-flex items-center text-indigo-600 hover:text-indigo-800"
                 >
                   <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                   </svg>
-                  {locale === 'th' ? 'กลับไปยังหน้าหลัก' : 'Back to Homepage'}
+                  {locale === 'th' ? 'กลับไปยังหน้าหลัก' : 'Back to Dashboard'}
                 </button>
               </div>
             </div>

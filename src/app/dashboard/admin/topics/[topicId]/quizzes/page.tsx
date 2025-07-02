@@ -77,9 +77,9 @@ export default function TopicQuizzesPage() {
                           </li>
                         ))}
                       </ul>
-                      {quiz.info && (
+                      {quiz.explanation && (
                         <p className="mt-2 text-sm text-gray-500">
-                          💡 {quiz.info}
+                          💡 {quiz.explanation}
                         </p>
                       )}
                     </div>

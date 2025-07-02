@@ -7,6 +7,7 @@ declare module "next-auth" {
       id: string;
       fullName: string;
       phone: string;
+      dob: string;
     };
     expires: string;
   }
@@ -15,6 +16,7 @@ declare module "next-auth" {
     id: string;
     fullName: string;
     phone: string;
+    dob: string;
   }
 
   interface JWT {

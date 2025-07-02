@@ -4,50 +4,50 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/navigation';
 import { useLocale } from '@/context/LocalContext';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import PasswordStrengthMeter from '../components/PasswordStrengthMeter';
+import Header from '@/app/components/Header';
+import Footer from '@/app/components/Footer';
+import PasswordStrengthMeter from '@/app/components/PasswordStrengthMeter';
 
 // Import localization data
-import enData from '../data/en.json';
-import thData from '../data/th.json';
+import enData from '@/app/data/en.json';
+import thData from '@/app/data/th.json';
 
 export default function PasswordChecker() {
   const { locale } = useLocale();
   const t = locale === 'th' ? thData : enData;
   const router = useRouter();
-  
+
   const [password, setPassword] = useState('');
   const [strength, setStrength] = useState(0);
   const [showTips, setShowTips] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  
+
   // Password strength criteria
   const checkPasswordStrength = (pwd) => {
     let strengthValue = 0;
-    
+
     // Length check
     if (pwd.length >= 8) strengthValue += 20;
     if (pwd.length >= 12) strengthValue += 20;
-    
+
     // Character diversity
     if (/[A-Z]/.test(pwd)) strengthValue += 15;
     if (/[a-z]/.test(pwd)) strengthValue += 15;
     if (/[0-9]/.test(pwd)) strengthValue += 15;
     if (/[^A-Za-z0-9]/.test(pwd)) strengthValue += 15;
-    
+
     // Deduct for common patterns
     if (/(.)\1{2,}/.test(pwd)) strengthValue -= 10; // Repeated characters
     if (/(123|abc|password|qwerty)/i.test(pwd)) strengthValue -= 20; // Common patterns
-    
+
     return Math.max(0, Math.min(100, strengthValue));
   };
-  
+
   // Update strength when password changes
   useEffect(() => {
     setStrength(checkPasswordStrength(password));
   }, [password]);
-  
+
   // Strength labels
   const getStrengthLabel = () => {
     if (strength === 0) return locale === 'th' ? 'ยังไม่ตรวจสอบ' : 'Not checked';
@@ -56,7 +56,7 @@ export default function PasswordChecker() {
     if (strength < 90) return locale === 'th' ? 'แข็งแกร่ง' : 'Strong';
     return locale === 'th' ? 'แข็งแกร่งมาก' : 'Very Strong';
   };
-  
+
   // Strength color
   const getStrengthColor = () => {
     if (strength < 40) return 'bg-red-500';
@@ -64,7 +64,7 @@ export default function PasswordChecker() {
     if (strength < 90) return 'bg-green-500';
     return 'bg-blue-500';
   };
-  
+
   // Password tips
   const passwordTips = [
     locale === 'th' ? 'ใช้อย่างน้อย 12 ตัวอักษร' : 'Use at least 12 characters',
@@ -86,7 +86,7 @@ export default function PasswordChecker() {
 
       <div className="min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-indigo-50">
         <Header />
-        
+
         <main className="flex-grow pt-24 pb-16">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto">
@@ -95,12 +95,12 @@ export default function PasswordChecker() {
                   {locale === 'th' ? 'ตรวจสอบความแข็งแกร่งรหัสผ่าน' : 'Password Strength Checker'}
                 </h1>
                 <p className="text-gray-600 text-lg">
-                  {locale === 'th' 
-                    ? 'ตรวจสอบว่ารหัสผ่านของคุณปลอดภัยเพียงพอที่จะป้องกันแฮกเกอร์' 
+                  {locale === 'th'
+                    ? 'ตรวจสอบว่ารหัสผ่านของคุณปลอดภัยเพียงพอที่จะป้องกันแฮกเกอร์'
                     : 'Check if your password is secure enough to protect against hackers'}
                 </p>
               </div>
-              
+
               <div className="bg-white rounded-xl shadow-lg p-6 md:p-8 mb-8">
                 <div className="mb-6">
                   <label htmlFor="password" className="block text-gray-700 font-medium mb-2">
@@ -133,7 +133,7 @@ export default function PasswordChecker() {
                     </button>
                   </div>
                 </div>
-                
+
                 <div className="mb-8">
                   <div className="flex justify-between mb-2">
                     <span className="text-gray-700 font-medium">
@@ -145,7 +145,7 @@ export default function PasswordChecker() {
                   </div>
                   <PasswordStrengthMeter strength={strength} color={getStrengthColor()} />
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <h3 className="text-lg font-semibold text-indigo-800 mb-3">
@@ -163,8 +163,8 @@ export default function PasswordChecker() {
                           </svg>
                         )}
                         <span>
-                          {locale === 'th' 
-                            ? `ความยาว: ${password.length} ตัวอักษร (แนะนำอย่างน้อย 8 ตัว)` 
+                          {locale === 'th'
+                            ? `ความยาว: ${password.length} ตัวอักษร (แนะนำอย่างน้อย 8 ตัว)`
                             : `Length: ${password.length} characters (recommend at least 8)`}
                         </span>
                       </li>
@@ -179,8 +179,8 @@ export default function PasswordChecker() {
                           </svg>
                         )}
                         <span>
-                          {locale === 'th' 
-                            ? 'มีตัวอักษรตัวใหญ่' 
+                          {locale === 'th'
+                            ? 'มีตัวอักษรตัวใหญ่'
                             : 'Contains uppercase letters'}
                         </span>
                       </li>
@@ -195,8 +195,8 @@ export default function PasswordChecker() {
                           </svg>
                         )}
                         <span>
-                          {locale === 'th' 
-                            ? 'มีตัวเลข' 
+                          {locale === 'th'
+                            ? 'มีตัวเลข'
                             : 'Contains numbers'}
                         </span>
                       </li>
@@ -211,39 +211,39 @@ export default function PasswordChecker() {
                           </svg>
                         )}
                         <span>
-                          {locale === 'th' 
-                            ? 'มีสัญลักษณ์พิเศษ' 
+                          {locale === 'th'
+                            ? 'มีสัญลักษณ์พิเศษ'
                             : 'Contains special characters'}
                         </span>
                       </li>
                     </ul>
                   </div>
-                  
+
                   <div>
                     <div className="flex justify-between items-center mb-3">
                       <h3 className="text-lg font-semibold text-indigo-800">
                         {locale === 'th' ? 'สร้างรหัสผ่านที่ปลอดภัย' : 'Create a Secure Password'}
                       </h3>
-                      <button 
+                      <button
                         onClick={() => setShowTips(!showTips)}
                         className="text-indigo-600 hover:text-indigo-800 flex items-center"
                       >
                         <span className="mr-1">
-                          {showTips 
-                            ? (locale === 'th' ? 'ซ่อน' : 'Hide') 
+                          {showTips
+                            ? (locale === 'th' ? 'ซ่อน' : 'Hide')
                             : (locale === 'th' ? 'แสดงเคล็ดลับ' : 'Show Tips')}
                         </span>
-                        <svg 
-                          className={`w-4 h-4 transform transition-transform ${showTips ? 'rotate-180' : ''}`} 
-                          fill="none" 
-                          viewBox="0 0 24 24" 
+                        <svg
+                          className={`w-4 h-4 transform transition-transform ${showTips ? 'rotate-180' : ''}`}
+                          fill="none"
+                          viewBox="0 0 24 24"
                           stroke="currentColor"
                         >
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
                       </button>
                     </div>
-                    
+
                     {showTips && (
                       <div className="bg-indigo-50 rounded-lg p-4">
                         <ul className="space-y-2">
@@ -258,7 +258,7 @@ export default function PasswordChecker() {
                         </ul>
                       </div>
                     )}
-                    
+
                     <div className="mt-4">
                       <h4 className="font-medium text-gray-700 mb-2">
                         {locale === 'th' ? 'ตัวอย่างรหัสผ่านที่แข็งแกร่ง:' : 'Examples of strong passwords:'}
@@ -270,7 +270,7 @@ export default function PasswordChecker() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="mt-8 pt-6 border-t border-gray-200">
                   <h3 className="text-lg font-bold text-indigo-800 mb-4">
                     {locale === 'th' ? 'คำแนะนำเพิ่มเติม' : 'Additional Recommendations'}
@@ -286,14 +286,14 @@ export default function PasswordChecker() {
                             {locale === 'th' ? 'ตัวจัดการรหัสผ่าน' : 'Password Managers'}
                           </h4>
                           <p className="text-sm">
-                            {locale === 'th' 
-                              ? 'ใช้แอปจัดการรหัสผ่านเพื่อสร้างและเก็บรหัสผ่านที่ซับซ้อนโดยไม่ต้องจำ' 
+                            {locale === 'th'
+                              ? 'ใช้แอปจัดการรหัสผ่านเพื่อสร้างและเก็บรหัสผ่านที่ซับซ้อนโดยไม่ต้องจำ'
                               : 'Use password managers to generate and store complex passwords without memorizing them'}
                           </p>
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="bg-green-50 p-4 rounded-lg">
                       <div className="flex items-start">
                         <div className="flex-shrink-0 w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600 mr-3">
@@ -304,8 +304,8 @@ export default function PasswordChecker() {
                             {locale === 'th' ? 'การยืนยันตัวตนสองขั้นตอน' : 'Two-Factor Authentication'}
                           </h4>
                           <p className="text-sm">
-                            {locale === 'th' 
-                              ? 'เปิดใช้งาน 2FA เพื่อเพิ่มความปลอดภัยให้กับบัญชีของคุณ' 
+                            {locale === 'th'
+                              ? 'เปิดใช้งาน 2FA เพื่อเพิ่มความปลอดภัยให้กับบัญชีของคุณ'
                               : 'Enable 2FA to add an extra layer of security to your accounts'}
                           </p>
                         </div>
@@ -314,22 +314,22 @@ export default function PasswordChecker() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="text-center mt-12">
-                <button 
-                  onClick={() => router.push('/')}
+                <button
+                  onClick={() => router.push('/dashboard/user')}
                   className="inline-flex items-center text-indigo-600 hover:text-indigo-800"
                 >
                   <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                   </svg>
-                  {locale === 'th' ? 'กลับไปยังหน้าหลัก' : 'Back to Homepage'}
+                  {locale === 'th' ? 'กลับไปยังหน้าหลัก' : 'Back to Dashboard'}
                 </button>
               </div>
             </div>
           </div>
         </main>
-        
+
         <Footer t={t} locale={locale} />
       </div>
     </>

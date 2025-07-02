@@ -12,7 +12,7 @@ export interface Quiz {
   answers: string[];
   correctAnswer: string;
   correctAnswerIndex: number;
-  info?: string;
+  explanation?: string;
 }
 
 export type UserUpdatePayload = {

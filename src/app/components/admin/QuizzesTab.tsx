@@ -64,7 +64,7 @@ export default function QuizzesTab({
                     {quiz.correctAnswer}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {quiz.info || "-"}
+                    {quiz.explanation || "-"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <button className="text-blue-600 hover:text-blue-900 mr-3">Edit</button>
