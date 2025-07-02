@@ -10,11 +10,12 @@ import { Menu, X, LogOut } from 'lucide-react';
 import enData from '../../data/en.json';
 import thData from '../../data/th.json';
 import Link from 'next/link';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { Chatbot } from '@/app/components/Chatbot';
 
 
 export default function LoggedInHome() {
+    const { data: session, status } = useSession();
     const { locale } = useLocale();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -100,7 +101,7 @@ export default function LoggedInHome() {
                 {/* Content */}
                 <main className="flex-grow pt-28 pb-12 container mx-auto px-4">
                     <h1 className="text-3xl font-bold text-slate-800 mb-4">
-                        {locale === 'th' ? 'ยินดีต้อนรับกลับ!' : 'Welcome back!'}
+                        {locale === 'th' ? 'ยินดีต้อนรับกลับ!' : 'Welcome back!'} , {session?.user?.fullName || 'User'}
                     </h1>
                     <p className="text-slate-600 text-lg mb-6">
                         {locale === 'th' ? 'นี่คือแดชบอร์ดของคุณ' : 'This is your personalized dashboard.'}

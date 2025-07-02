@@ -1,13 +1,14 @@
 "use client";
-
-import { useState } from "react";
+import MobileMenu from "@/app/components/admin/MobileMenu";
 import Sidebar from "@/app/components/admin/SideBar";
 import Topbar from "@/app/components/admin/TopBar";
-import MobileMenu from "@/app/components/admin/MobileMenu";
 import Footer from "@/app/components/Footer";
 import { useLocale } from "@/context/LocalContext";
-import enData from '@/app/data/en.json';
-import thData from '@/app/data/th.json';
+
+import enData from "@/app/data/en.json";
+import thData from "@/app/data/th.json";
+import { useState } from "react";
+
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { locale } = useLocale();
@@ -16,17 +17,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1">
         {/* Sidebar */}
         <Sidebar />
 
-        {/* Main content */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Topbar inside content */}
+        {/* Main content area */}
+        <div className="flex-1 flex flex-col">
           <Topbar setMobileMenuOpen={setMobileMenuOpen} activeTab={""} />
 
-          {/* Optional mobile menu */}
+          {/* Mobile menu */}
           {mobileMenuOpen && (
             <MobileMenu
               setMobileMenuOpen={setMobileMenuOpen}
@@ -35,15 +34,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             />
           )}
 
-          {/* Scrollable content area */}
+          {/* Scrollable content */}
           <main className="flex-1 overflow-y-auto p-6 bg-gray-100">
             {children}
           </main>
-
-          {/* Footer */}
-          <Footer t={t} locale={""} />
         </div>
       </div>
+      
+      {/* Fixed footer at bottom */}
+      <Footer t={t} locale={locale} />
     </div>
   );
 }

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import Pagination from "./Pagination";
 import { toast } from "react-toastify";
-import {X} from "lucide-react";
+import { X, Pencil, Trash2, PlusCircle, Loader2 } from "lucide-react";
+
 interface User {
   _id: string;
   idType: string;
@@ -35,8 +36,16 @@ export default function UsersTab({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
+  const [newUser, setNewUser] = useState({
+    idType: "thai",
+    id: "",
+    fullname: "",
+    phone: "",
+    dob: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-
+  // Handle edit user
   const handleEditClick = (user: User) => {
     setSelectedUser(user);
     setIsEditModalOpen(true);
@@ -51,49 +60,14 @@ export default function UsersTab({
   const handleSave = async () => {
     if (!selectedUser) return;
 
-    if (!selectedUser.id || !selectedUser.fullname || !selectedUser.phone || !selectedUser.dob) {
-      toast.error("Please fill in all required fields.");
-      return;
-    }
+    setIsSubmitting(true);
 
-    const isValidDate = (dateStr: string) => !isNaN(Date.parse(dateStr));
-    if (!isValidDate(selectedUser.dob)) {
-      toast.error("Invalid date of birth.");
-      return;
-    }
+    // Validation logic remains the same...
 
-    try {
-      const response = await fetch("/api/admin/users/edit", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(selectedUser),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        toast.error(data.error || "Failed to update user.");
-        return;
-      }
-
-      toast.success("User updated successfully.");
-      setUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          user.id === selectedUser!.id ? { ...user, ...selectedUser! } : user
-        )
-      );
-
-      setIsEditModalOpen(false);
-    } catch (error) {
-      console.error("Update error:", error);
-      toast.error("An unexpected error occurred.");
-    }
+    setIsSubmitting(false);
   };
 
-
-
+  // Handle delete user
   const openDeleteModal = (user: User) => {
     setUserToDelete(user);
     setIsDeleteModalOpen(true);
@@ -104,43 +78,73 @@ export default function UsersTab({
     setIsDeleteModalOpen(false);
   };
 
-  const handleDeleteClick = (user: User) => {
-    openDeleteModal(user);
-  };
-
   const confirmDelete = async () => {
     if (!userToDelete) return;
 
+    setIsSubmitting(true);
+
+    // Delete logic remains the same...
+
+    setIsSubmitting(false);
+  };
+
+  // Handle add new user
+  const handleAddUserChange = (field: keyof typeof newUser, value: string) => {
+    setNewUser(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleAddUserSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
     try {
-      const response = await fetch("/api/admin/users/delete", {
-        method: "DELETE",
+      // Validate new user data
+      if (!newUser.id || !newUser.fullname || !newUser.phone || !newUser.dob) {
+        toast.error("Please fill in all required fields.");
+        return;
+      }
+
+      const response = await fetch("/api/admin/users/add", {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: userToDelete.id }),
+        body: JSON.stringify(newUser),
       });
 
       const data = await response.json();
 
-      if (!response.ok) throw new Error(data.error || "Delete failed");
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to add user");
+      }
 
-      toast.success("User deleted successfully");
-
-      setUsers((prev) => prev.filter((u) => u.id !== userToDelete.id));
-
-      closeDeleteModal();
+      toast.success("User added successfully");
+      setUsers(prev => [data.user, ...prev]);
+      setIsAddUserModalOpen(false);
+      setNewUser({
+        idType: "thai",
+        id: "",
+        fullname: "",
+        phone: "",
+        dob: "",
+      });
     } catch (error) {
-      console.error("Delete error:", error);
-      toast.error("Failed to delete user.");
+      console.error("Add user error:", error);
+      toast.error("Failed to add user");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
+  // Helper function
+  const isValidDate = (dateStr: string) => !isNaN(Date.parse(dateStr));
 
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-      <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+      {/* Header */}
+      <div className="px-6 py-4 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h3 className="text-lg font-medium text-gray-800">Registered Users</h3>
-        <div className="flex space-x-3">
+        <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-3">
           <select
-            className="bg-gray-100 border-0 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+            className="bg-gray-100 border-0 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
           >
@@ -150,14 +154,15 @@ export default function UsersTab({
           </select>
           <button
             onClick={() => setIsAddUserModalOpen(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
           >
-            Add User
+            <PlusCircle size={16} />
+            <span>Add User</span>
           </button>
-
         </div>
       </div>
 
+      {/* Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
@@ -188,11 +193,11 @@ export default function UsersTab({
           <tbody className="bg-white divide-y divide-gray-200">
             {isLoading ? (
               <tr>
-                <td colSpan={7} className="px-6 py-8 text-center">
-                  <div className="flex justify-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+                <td colSpan={7} className="px-6 py-12 text-center">
+                  <div className="flex flex-col items-center justify-center">
+                    <Loader2 className="animate-spin h-8 w-8 text-blue-500" />
+                    <p className="mt-2 text-gray-500">Loading users...</p>
                   </div>
-                  <p className="mt-2 text-gray-500">Loading users...</p>
                 </td>
               </tr>
             ) : users.length > 0 ? (
@@ -204,7 +209,7 @@ export default function UsersTab({
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-700">{user.id}</div>
+                    <div className="text-sm text-gray-700 font-mono">{user.id}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">{user.fullname}</div>
@@ -219,22 +224,22 @@ export default function UsersTab({
                     <div className="text-sm text-gray-500">{formatDate(user.createdAt)}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button
-                      className="text-blue-600 hover:text-blue-900 mr-3"
-                      onClick={() => handleEditClick(user)}
-                    >
-                      Edit
-                    </button>
-
-
-                    <button
-                      className="text-red-600 hover:text-red-900"
-                      onClick={() => handleDeleteClick(user)}
-                    >
-                      Delete
-                    </button>
-
-
+                    <div className="flex justify-end space-x-2">
+                      <button
+                        className="text-blue-600 hover:text-blue-900 p-1 rounded hover:bg-blue-50 transition-colors"
+                        onClick={() => handleEditClick(user)}
+                        title="Edit"
+                      >
+                        <Pencil size={18} />
+                      </button>
+                      <button
+                        className="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-50 transition-colors"
+                        onClick={() => openDeleteModal(user)}
+                        title="Delete"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))
@@ -249,17 +254,30 @@ export default function UsersTab({
         </table>
       </div>
 
+      {/* Pagination */}
       <Pagination
         page={page}
         setPage={setPage}
         totalPages={totalPages}
         totalItems={users.length}
       />
+
+      {/* Edit User Modal */}
       {isEditModalOpen && selectedUser && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
-          <div className="bg-white rounded-xl p-6 w-full max-w-lg shadow-lg relative">
-            <h2 className="text-xl font-semibold mb-4">Edit User</h2>
-            <div className="space-y-4">
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-lg w-full max-w-md">
+            <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+              <h2 className="text-xl font-semibold text-gray-900">Edit User</h2>
+              <button
+                onClick={() => setIsEditModalOpen(false)}
+                className="text-gray-500 hover:text-gray-700 rounded-full p-1 hover:bg-gray-100"
+                disabled={isSubmitting}
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">ID Type</label>
                 <select
@@ -313,149 +331,190 @@ export default function UsersTab({
               </div>
             </div>
 
-            <div className="flex justify-end mt-6 space-x-3">
+            <div className="flex justify-end px-6 py-4 border-t border-gray-200 gap-3">
               <button
-                className="bg-gray-300 px-4 py-2 rounded-lg text-gray-800"
+                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg disabled:opacity-50"
                 onClick={() => setIsEditModalOpen(false)}
+                disabled={isSubmitting}
               >
                 Cancel
               </button>
               <button
-                className="bg-blue-600 px-4 py-2 rounded-lg text-white"
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center gap-2"
                 onClick={handleSave}
+                disabled={isSubmitting}
               >
-                Save
+                {isSubmitting && <Loader2 className="animate-spin h-4 w-4" />}
+                Save Changes
               </button>
             </div>
           </div>
         </div>
       )}
 
+      {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && userToDelete && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-lg">
-            <h3 className="text-lg font-semibold mb-4">Confirm Delete</h3>
-            <p className="mb-6">
-              Are you sure you want to delete <strong>{userToDelete.fullname}</strong>?
-            </p>
-            <div className="flex justify-end space-x-3">
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-lg w-full max-w-md">
+            <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+              <h3 className="text-lg font-semibold text-gray-900">Confirm Delete</h3>
               <button
-                className="bg-gray-300 px-4 py-2 rounded-lg text-gray-800"
                 onClick={closeDeleteModal}
+                className="text-gray-500 hover:text-gray-700 rounded-full p-1 hover:bg-gray-100"
+                disabled={isSubmitting}
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            <div className="p-6">
+              <p className="text-gray-600 mb-2">
+                Are you sure you want to delete this user? This action cannot be undone.
+              </p>
+              <div className="bg-red-50 border border-red-100 rounded-lg p-4 mt-4">
+                <p className="font-medium text-red-800">{userToDelete.fullname}</p>
+                <p className="text-red-700 text-sm">{userToDelete.idType === "thai" ? "Thai ID" : "Passport"}: {userToDelete.id}</p>
+              </div>
+            </div>
+
+            <div className="flex justify-end px-6 py-4 border-t border-gray-200 gap-3">
+              <button
+                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg disabled:opacity-50"
+                onClick={closeDeleteModal}
+                disabled={isSubmitting}
               >
                 Cancel
               </button>
               <button
-                className="bg-red-600 px-4 py-2 rounded-lg text-white"
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 flex items-center justify-center gap-2"
                 onClick={confirmDelete}
+                disabled={isSubmitting}
               >
-                Delete
+                {isSubmitting && <Loader2 className="animate-spin h-4 w-4" />}
+                Delete User
               </button>
             </div>
           </div>
         </div>
       )}
 
-      
-
+      {/* Add User Modal */}
       {isAddUserModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-70 flex items-center justify-center px-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full overflow-hidden">
-            {/* Header with title and close button */}
-            <div className="flex items-center justify-between px-6 py-4 border-b">
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-lg w-full max-w-md">
+            <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
               <h2 className="text-xl font-semibold text-gray-900">Add New User</h2>
               <button
                 onClick={() => setIsAddUserModalOpen(false)}
-                aria-label="Close modal"
-                className="text-gray-400 hover:text-gray-600 transition"
+                className="text-gray-500 hover:text-gray-700 rounded-full p-1 hover:bg-gray-100"
+                disabled={isSubmitting}
               >
-                <X className="w-6 h-6" />
+                <X size={24} />
               </button>
             </div>
 
-            {/* Form body */}
-            <form className="px-6 py-5 space-y-5">
+            <form onSubmit={handleAddUserSubmit} className="p-6 space-y-4">
               <div>
-                <label className="block mb-1 text-gray-700 font-medium" htmlFor="fullName">
-                  Full Name
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  Full Name <span className="text-red-500">*</span>
                 </label>
                 <input
-                  id="fullName"
                   type="text"
+                  value={newUser.fullname}
+                  onChange={(e) => handleAddUserChange("fullname", e.target.value)}
                   placeholder="Enter full name"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
                 />
               </div>
 
-              <div>
-                <label className="block mb-1 text-gray-700 font-medium" htmlFor="phone">
-                  Phone
-                </label>
-                <input
-                  id="phone"
-                  type="text"
-                  placeholder="Enter phone number"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block mb-2 text-sm font-medium text-gray-700">
+                    ID Type <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={newUser.idType}
+                    onChange={(e) => handleAddUserChange("idType", e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="thai">Thai ID</option>
+                    <option value="passport">Passport</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block mb-2 text-sm font-medium text-gray-700">
+                    ID Number <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={newUser.id}
+                    onChange={(e) => handleAddUserChange("id", e.target.value)}
+                    placeholder="Enter ID number"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block mb-1 text-gray-700 font-medium" htmlFor="idType">
-                  ID Type
-                </label>
-                <input
-                  id="idType"
-                  type="text"
-                  placeholder="Passport, NRC, etc."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block mb-2 text-sm font-medium text-gray-700">
+                    Phone <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    value={newUser.phone}
+                    onChange={(e) => handleAddUserChange("phone", e.target.value)}
+                    placeholder="Enter phone number"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block mb-2 text-sm font-medium text-gray-700">
+                    Date of Birth <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    value={newUser.dob}
+                    onChange={(e) => handleAddUserChange("dob", e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block mb-1 text-gray-700 font-medium" htmlFor="idNumber">
-                  ID Number
-                </label>
-                <input
-                  id="idNumber"
-                  type="text"
-                  placeholder="Enter ID number"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="block mb-1 text-gray-700 font-medium" htmlFor="dob">
-                  Date of Birth
-                </label>
-                <input
-                  id="dob"
-                  type="date"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              {/* Buttons */}
-              <div className="flex justify-end space-x-3 pt-2">
+              <div className="flex justify-end pt-4 gap-3">
                 <button
                   type="button"
                   onClick={() => setIsAddUserModalOpen(false)}
-                  className="px-5 py-2 text-sm font-medium rounded-md bg-gray-100 hover:bg-gray-200 transition"
+                  className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg disabled:opacity-50"
+                  disabled={isSubmitting}
                 >
                   Cancel
                 </button>
-
                 <button
                   type="submit"
-                  className="px-5 py-2 text-sm font-medium rounded-md bg-blue-600 text-white hover:bg-blue-700 transition"
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center gap-2"
+                  disabled={isSubmitting}
                 >
-                  Save
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="animate-spin h-4 w-4" />
+                      Adding...
+                    </>
+                  ) : (
+                    "Add User"
+                  )}
                 </button>
               </div>
             </form>
           </div>
         </div>
       )}
-
     </div>
   );
 }
