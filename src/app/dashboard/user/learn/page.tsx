@@ -274,7 +274,7 @@ export default function Page() {
                     <Link href="/" className="flex items-center gap-2 group">
                         <div className="p-1 flex items-center justify-center w-12 h-12">
                             <Image
-                                src="/logo.svg"
+                                src="/Logo.svg"
                                 alt="Logo"
                                 width={40}
                                 height={40}
