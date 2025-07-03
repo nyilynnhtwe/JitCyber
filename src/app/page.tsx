@@ -5,7 +5,7 @@ import Head from 'next/head';
 import { useLocale } from '@/context/LocalContext';
 import Footer from './components/Footer';
 import LanguageSwitcher from './components/LanguageSwitcher';
-import { Lock, Zap, ChevronRight, Menu, X, UserRoundPen, ShieldCheck, ArrowRight } from 'lucide-react';
+import { Lock, Zap, ChevronRight, Menu, X, UserRoundPen, ShieldCheck } from 'lucide-react';
 
 // Import localization data
 import enData from './data/en.json';
