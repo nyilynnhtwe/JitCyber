@@ -5,7 +5,7 @@ import Head from 'next/head';
 import { useLocale } from '@/context/LocalContext';
 import Footer from './components/Footer';
 import LanguageSwitcher from './components/LanguageSwitcher';
-import { Lock, Zap, ChevronRight, Menu, X, UserRoundPen } from 'lucide-react';
+import { Lock, Zap, ChevronRight, Menu, X, UserRoundPen, ShieldCheck, ArrowRight } from 'lucide-react';
 
 // Import localization data
 import enData from './data/en.json';
@@ -18,7 +18,6 @@ export default function Home() {
 
   // Select the correct localization data
   const t = locale === 'th' ? thData : enData;
-
 
   // Close menu on resize
   useEffect(() => {
@@ -39,6 +38,19 @@ export default function Home() {
         <meta name="description" content={t.hero.subtitle} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
+        <style>{`
+          @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+          }
+          .float-animation { animation: float 4s ease-in-out infinite; }
+          .float-delay { animation: float 4s ease-in-out infinite 1s; }
+          .card-hover { transition: all 0.3s ease; }
+          .card-hover:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.25);
+          }
+        `}</style>
       </Head>
 
       <div className="min-h-screen flex flex-col bg-gradient-to-b from-slate-50 to-slate-100">
@@ -47,7 +59,7 @@ export default function Home() {
           <div className="container mx-auto px-4 flex justify-between items-center">
             <div className="flex items-center">
               <Image width={100} height={100} src="/Logo.svg" alt="Logo" className="w-10 h-10 mr-3" />
-              <div className="text-xl font-bold bg-gradient-to-r from-blue-700 to-blue-900 bg-clip-text text-transparent">
+              <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent">
                 {t.appName}
               </div>
             </div>
@@ -61,7 +73,7 @@ export default function Home() {
                   className="text-slate-700 hover:text-blue-600 transition-colors font-medium flex items-center group relative"
                 >
                   {item}
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-indigo-500 transition-all group-hover:w-full"></span>
                 </a>
               ))}
               <LanguageSwitcher />
@@ -105,49 +117,55 @@ export default function Home() {
         </header>
 
         {/* Hero Section */}
-        <section className="pt-35 pb-12 md:pt-32 md:pb-16">
+        <section className="pt-40 pb-16 md:pt-36 md:pb-24">
           <div className="container mx-auto px-4">
             <div className="flex flex-col md:flex-row items-center">
-              <div className="md:w-1/2 mb-8 md:mb-0">
-                <h1 className="text-3xl md:text-4xl font-bold mb-4 text-slate-800 leading-tight">
+              <div className="md:w-1/2 mb-10 md:mb-0">
+                <h1 className="text-4xl md:text-5xl font-bold mb-5 text-slate-800 leading-tight">
                   {t.hero.title}
                 </h1>
-                <p className="text-lg md:text-xl mb-6 text-slate-600 max-w-2xl">
+                <p className="text-xl md:text-2xl mb-8 text-slate-600 max-w-2xl">
                   {t.hero.subtitle}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Link href="/learn">
-                    <button className="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-6 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-blue-900 transition-all flex items-center justify-center gap-2">
+                    <button className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white px-8 py-4 rounded-xl font-bold shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-indigo-800 transition-all flex items-center justify-center gap-2 group">
                       {t.hero.cta1}
-                      <Zap className="w-4 h-4" />
+                      <Zap className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                    </button>
+                  </Link>
+                  <Link href="/features">
+                    <button className="bg-white border-2 border-blue-100 text-blue-700 px-8 py-4 rounded-xl font-bold shadow-sm hover:shadow-md hover:bg-blue-50 transition-all flex items-center justify-center gap-2 group">
+                      {t.hero.cta2 || 'Explore Features'}
+                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                     </button>
                   </Link>
                 </div>
               </div>
               <div className="md:w-1/2 flex justify-center">
                 <div className="relative">
-                  <div className="w-64 h-64 md:w-80 md:h-80 bg-gradient-to-br from-blue-200 to-blue-400 rounded-full flex items-center justify-center shadow-xl">
-                    <div className="absolute -top-4 -right-4 w-32 h-32 bg-amber-400 rounded-full opacity-80 mix-blend-multiply animate-float"></div>
-                    <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-emerald-400 rounded-full opacity-80 mix-blend-multiply animate-float-delay"></div>
-                    <div className="bg-white rounded-2xl p-6 relative z-10 shadow-xl border border-slate-200">
+                  <div className="w-72 h-72 md:w-96 md:h-96 bg-gradient-to-br from-blue-200 to-indigo-300 rounded-3xl flex items-center justify-center shadow-2xl overflow-hidden">
+                    <div className="absolute -top-4 -right-4 w-32 h-32 bg-amber-300 rounded-full opacity-80 mix-blend-multiply float-animation"></div>
+                    <div className="absolute -bottom-6 -left-6 w-40 h-40 bg-emerald-300 rounded-full opacity-80 mix-blend-multiply float-delay"></div>
+                    <div className="bg-white rounded-2xl p-6 relative z-10 shadow-xl border border-slate-200/80 card-hover">
                       <div className="flex justify-between mb-4">
                         <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                          <ShieldCheck className="w-4 h-4 text-blue-600" />
                         </div>
                         <div className="w-8 h-8 bg-rose-100 rounded-full flex items-center justify-center">
-                          <div className="w-2 h-2 bg-rose-500 rounded-full"></div>
+                          <Lock className="w-4 h-4 text-rose-500" />
                         </div>
                         <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
-                          <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                          <Zap className="w-4 h-4 text-emerald-500" />
                         </div>
                       </div>
                       <div className="text-center">
-                        <div className="flex justify-center mb-2">
-                          <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                            <Lock className="w-6 h-6 text-blue-600" />
+                        <div className="flex justify-center mb-4">
+                          <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center shadow-inner">
+                            <Lock className="w-8 h-8 text-blue-600" />
                           </div>
                         </div>
-                        <h3 className="font-bold text-lg text-slate-800">
+                        <h3 className="font-bold text-xl text-slate-800 mb-1">
                           {locale === 'th' ? 'ปลอดภัย 100%' : '100% Secure'}
                         </h3>
                         <p className="text-sm text-slate-500">
@@ -163,51 +181,41 @@ export default function Home() {
         </section>
 
 
-
-
-
-
         {/* CTA Section */}
-        <section className="relative py-12 md:py-25 bg-gradient-to-r from-blue-600 to-blue-800 text-white overflow-hidden">
+        <section className="relative py-20 md:py-28 bg-gradient-to-r from-blue-600 to-indigo-700 text-white overflow-hidden">
           {/* Background shapes */}
           <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-0 left-0 w-32 h-32 bg-blue-400 rounded-full mix-blend-overlay blur-xl"></div>
-            <div className="absolute bottom-0 right-0 w-64 h-64 bg-blue-300 rounded-full mix-blend-overlay blur-xl"></div>
-            <div className="absolute top-1/4 right-1/4 w-48 h-48 bg-blue-500 rounded-full mix-blend-overlay blur-xl"></div>
-          </div>
-
-          {/* Added Rectangle Grid texture */}
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48cGF0aCBkPSJNMCAwaDQwdjQwSDB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTIwIDB2NDBNMCAyMGg0MCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjEiLz48L3N2Zz4=')]"></div>
+            <div className="absolute top-0 left-0 w-32 h-32 bg-blue-400 rounded-full mix-blend-overlay blur-xl float-animation"></div>
+            <div className="absolute bottom-0 right-0 w-64 h-64 bg-blue-300 rounded-full mix-blend-overlay blur-xl float-delay"></div>
+            <div className="absolute top-1/4 right-1/4 w-48 h-48 bg-blue-500 rounded-full mix-blend-overlay blur-xl float-animation"></div>
           </div>
 
           {/* Content */}
           <div className="container mx-auto px-4 text-center relative z-10">
             <div className="max-w-3xl mx-auto">
-              <h2 className="mt-5 mb-6 text-4xl md:text-4xl font-bold animate-fade-in">
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">
                 {t.cta.title}
               </h2>
-              <p className="text-xl mb-8 max-w-2xl mx-auto text-blue-100">
+              <p className="text-xl mb-10 max-w-2xl mx-auto text-blue-100">
                 {t.cta.subtitle}
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-4">
                 <Link
                   href="/signup"
-                  className="bg-white text-blue-700 px-8 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl hover:bg-slate-300 transition-all text-lg flex items-center justify-center gap-2"
+                  className="bg-white text-blue-700 px-8 py-4 rounded-xl font-bold shadow-lg hover:shadow-xl hover:bg-slate-100 transition-all text-lg flex items-center justify-center gap-2 group"
                 >
                   {t.cta.button1}
-                  <ChevronRight className="w-5 h-5" />
+                  <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                 </Link>
 
                 <Link
                   href="/signin"
-                  className="bg-transparent border-2 border-white/50 px-8 py-3 rounded-lg font-medium hover:border-white hover:bg-white/10 transition-all text-lg flex items-center justify-center gap-2"
+                  className="bg-transparent border-2 border-white/30 px-8 py-4 rounded-xl font-bold hover:border-white hover:bg-white/10 transition-all text-lg flex items-center justify-center gap-2 group"
                 >
                   {t.cta.button2}
-                  <UserRoundPen className="w-5 h-5" />
+                  <UserRoundPen className="w-5 h-5 transition-transform group-hover:translate-x-0.5" />
                 </Link>
               </div>
-
             </div>
           </div>
         </section>

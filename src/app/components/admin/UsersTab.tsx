@@ -134,9 +134,6 @@ export default function UsersTab({
     }
   };
 
-  // Helper function
-  const isValidDate = (dateStr: string) => !isNaN(Date.parse(dateStr));
-
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden">
       {/* Header */}

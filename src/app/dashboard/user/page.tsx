@@ -15,7 +15,7 @@ import { Chatbot } from '@/app/components/Chatbot';
 
 
 export default function LoggedInHome() {
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
     const { locale } = useLocale();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 

@@ -4,7 +4,7 @@ import { COLLECTION_STORIES, DB_NAME } from "@/app/constants";
 
 
 // GET /api/admin/stories
-export async function GET(req: NextRequest) {
+export async function GET() {
     try {
         const client = await connectToDatabase();
         const db = client.db(DB_NAME);
