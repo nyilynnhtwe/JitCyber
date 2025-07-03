@@ -66,16 +66,21 @@ export default function Home() {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex space-x-8 items-center">
-              {Object.values(t.nav).map((item, index) => (
-                <a
-                  key={index}
-                  href={Object.keys(t.nav)[index]}
-                  className="text-slate-700 hover:text-blue-600 transition-colors font-medium flex items-center group relative"
-                >
-                  {item}
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-indigo-500 transition-all group-hover:w-full"></span>
-                </a>
-              ))}
+              {Object.values(t.nav).map((item, index) => {
+                const key = Object.keys(t.nav)[index];
+                const href = key === "home" ? "/" : key;
+
+                return (
+                  <a
+                    key={index}
+                    href={href}
+                    className="text-slate-700 hover:text-blue-600 transition-colors font-medium flex items-center group relative"
+                  >
+                    {item}
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-indigo-500 transition-all group-hover:w-full"></span>
+                  </a>
+                );
+              })}
               <LanguageSwitcher />
             </nav>
 
@@ -128,16 +133,10 @@ export default function Home() {
                   {t.hero.subtitle}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Link href="/learn">
+                  <Link href="/signin">
                     <button className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white px-8 py-4 rounded-xl font-bold shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-indigo-800 transition-all flex items-center justify-center gap-2 group">
                       {t.hero.cta1}
                       <Zap className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-                    </button>
-                  </Link>
-                  <Link href="/features">
-                    <button className="bg-white border-2 border-blue-100 text-blue-700 px-8 py-4 rounded-xl font-bold shadow-sm hover:shadow-md hover:bg-blue-50 transition-all flex items-center justify-center gap-2 group">
-                      {t.hero.cta2 || 'Explore Features'}
-                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                     </button>
                   </Link>
                 </div>
