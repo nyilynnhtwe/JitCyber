@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     siteName: "JitCyber",
     images: [
       {
-        url: "/chibi.svg",
+        url: "https://jit-cyber.vercel.app/chibi.png",
         width: 1200,
         height: 630,
         alt: "JitCyber - แพลตฟอร์มการเรียนรู้ความปลอดภัยไซเบอร์",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "JitCyber - ความปลอดภัยไซเบอร์สำหรับคนไทย",
     description: "เรียนรู้ทักษะการป้องกันไซเบอร์ผ่านภาษาไทยด้วยวิธีง่ายและสนุก",
-    images: ["https://jit-cyber.vercel.app/chibi.svg"],
+    images: ["https://jit-cyber.vercel.app/chibi.png"], // PNG not SVG
     creator: "@jitcyber",
   },
 
