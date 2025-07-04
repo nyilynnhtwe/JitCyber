@@ -5,23 +5,27 @@ declare module "next-auth" {
   interface Session {
     user: {
       id: string;
-      fullName: string;
+      fullname: string;
       phone: string;
       dob: string;
+      scores: Record<string, number>[]; // Adjust type as needed
     };
     expires: string;
   }
 
   interface User {
     id: string;
-    fullName: string;
+    fullname: string;
     phone: string;
     dob: string;
+    scores: Record<string, number>[]; // Adjust type as needed
   }
 
   interface JWT {
     id: string;
-    fullName: string;
+    fullname: string;
     phone: string;
+    dob: string;
+    scores: Record<string, number>[]; // Adjust type as needed
   }
 }

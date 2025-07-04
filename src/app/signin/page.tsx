@@ -95,7 +95,7 @@ const SignInForm = () => {
         return (
             <div className="flex items-center justify-center h-screen">
                 <p className="text-xl text-gray-700">
-                    {session.user?.fullName} is already signed in. Redirecting...
+                    {session.user?.fullname} is already signed in. Redirecting...
                 </p>
             </div>
         );

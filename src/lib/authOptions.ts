@@ -49,14 +49,16 @@ export const authOptions: AuthOptions = {
 
                 return {
                     id: user.id,
-                    fullName: user.fullname,
+                    fullname: user.fullname,
                     phone: user.phone,
                     dob: user.dob,
+                    scores : user.scores || [], // Ensure scores is always an array
                 } as {
                     id: string;
-                    fullName: string;
+                    fullname: string;
                     phone: string;
                     dob: string;
+                    scores: Record<string, number>[]; // Adjust type as needed
                 };
             },
         }),
@@ -65,9 +67,10 @@ export const authOptions: AuthOptions = {
         async jwt({ token, user }) {
             if (user) {
                 token.id = user.id;
-                token.fullName = user.fullName;
+                token.fullname = user.fullname;
                 token.phone = user.phone;
-                token.dob = user.dob; // Include DOB if needed
+                token.dob = user.dob;
+                token.scores = user.scores || []; 
             }
             return token;
         },
@@ -75,9 +78,10 @@ export const authOptions: AuthOptions = {
             if (token) {
                 session.user = {
                     id: token.id as string,
-                    fullName: token.fullName as string,
+                    fullname: token.fullname as string,
                     phone: token.phone as string,
-                    dob: token.dob as string, // Include DOB if needed
+                    dob: token.dob as string,
+                    scores: Array.isArray(token.scores) ? token.scores : [],
                 };
             }
             return session;

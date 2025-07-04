@@ -22,8 +22,6 @@ export default function TopicQuizzesPage() {
         const topicRes = await fetch(`/api/admin/topics/${topicId}`);
         if (!topicRes.ok) throw new Error("Failed to load topic details");
         const topicData = await topicRes.json();
-        console.log("Topic Data:", topicData);
-
         setTopicName(topicData.topic.title);
 
         // Fetch quizzes

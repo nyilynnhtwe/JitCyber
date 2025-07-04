@@ -116,14 +116,14 @@ const SignUpPage = () => {
         idType: Passport === "thai" ? "thai" : "foreign",
         idNumber: ThaiID,
         password: hashedPassword,
-        fullName: fullname,
+        fullname: fullname,
         phoneNumber: phone,
         dob: dob
       };
       const response = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullname: userData.fullName, id: userData.idNumber, password: userData.password, phone: userData.phoneNumber, dob: dob }),
+        body: JSON.stringify({ fullname: userData.fullname, id: userData.idNumber, password: userData.password, phone: userData.phoneNumber, dob: dob, idType: Passport }),
       });
       const data = await response.json();
       if (!response.ok) {

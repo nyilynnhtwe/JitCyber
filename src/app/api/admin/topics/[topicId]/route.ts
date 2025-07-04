@@ -81,3 +81,35 @@ export async function GET(
         return NextResponse.json({ error: "Failed to fetch topic" }, { status: 500 });
     }
 }
+
+
+export async function DELETE(
+    req: Request,
+    { params }: { params: Promise<{ topicId: string }> }
+) {
+  try {
+    console.log(await params);
+    
+    const { topicId } = await params;
+
+    if (!topicId) {
+      return NextResponse.json({ error: "Topic ID is required" }, { status: 400 });
+    }
+
+    const client = await connectToDatabase();
+    const db = client.db(DB_NAME);
+
+    const result = await db
+      .collection(COLLECTION_TOPICS)
+      .deleteOne({ _id: new ObjectId(topicId) });
+
+    if (result.deletedCount === 0) {
+      return NextResponse.json({ error: "Topic not found or already deleted" }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "Topic deleted successfully" }, { status: 200 });
+  } catch (error) {
+    console.error("Error deleting topic:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}

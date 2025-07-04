@@ -11,25 +11,53 @@ import {
     Sparkles,
 } from "lucide-react";
 import Link from "next/link";
+import { Player, RankedPlayer } from "@/types/general";
 
 const LeaderboardPage = () => {
     const [expanded, setExpanded] = React.useState(false);
+    const [players, setPlayers] = React.useState<Player[]>([]);
 
-    const topPlayers = [
-        { id: 1, name: "Albert Einstein", score: 10 },
-        { id: 2, name: "Pann Ei Ko Ko", score: 10 },
-        { id: 3, name: "Harry Kane", score: 9 },
-    ];
+    React.useEffect(() => {
+        const fetchLeaderboard = async () => {
+            try {
+                const res = await fetch('/api/leaderboard');
+                const data = await res.json();
+                setPlayers(data.players || []);
+            } catch (err) {
+                console.error('Failed to fetch leaderboard:', err);
+            }
+        };
+        fetchLeaderboard();
+    }, []);
 
-    const otherPlayers = [
-        { id: 4, name: "Jospeh Joestar", score: 8 },
-        { id: 5, name: "Casey Kim", score: 8 },
-        { id: 6, name: "Adolf Hitler", score: 7 },
-        { id: 7, name: "Charlie Chaplin", score: 5 },
-        { id: 8, name: "David Bowie", score: 3 },
-        { id: 9, name: "Dexter Morgan", score: 3 },
-        { id: 10, name: "Mr Bean", score: 2 },
-    ];
+
+    const { topPlayers, otherPlayers }: {
+        topPlayers: RankedPlayer[];
+        otherPlayers: RankedPlayer[];
+    } = React.useMemo(() => {
+        if (players.length === 0) return { topPlayers: [], otherPlayers: [] };
+
+        const sorted = [...players].sort((a, b) => {
+            if (b.score !== a.score) return b.score - a.score;
+            return a.name.localeCompare(b.name);
+        });
+
+        let currentRank = 1;
+        let prevScore = sorted[0]?.score;
+        const rankedPlayers = sorted.map((player, index) => {
+            if (player.score !== prevScore) {
+                currentRank = index + 1;
+                prevScore = player.score;
+            }
+            return { ...player, rank: currentRank };
+        });
+
+        return {
+            topPlayers: rankedPlayers.slice(0, 3),
+            otherPlayers: rankedPlayers.slice(3),
+        };
+    }, [players]);
+
 
     return (
         <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
@@ -63,10 +91,10 @@ const LeaderboardPage = () => {
                         </div>
                         <div className="bg-white p-4 w-full text-center shadow-lg rounded-b-lg border-t-4 border-gray-300">
                             <h3 className="font-semibold text-gray-800">
-                                {topPlayers[1].name}
+                                {topPlayers[1]?.name || "N/A"}
                             </h3>
                             <p className="text-gray-700 font-medium">
-                                {topPlayers[1].score.toLocaleString()}
+                                {topPlayers[1]?.score.toLocaleString() || "0"}
                             </p>
                         </div>
                     </div>
@@ -82,10 +110,10 @@ const LeaderboardPage = () => {
                         </div>
                         <div className="bg-white p-4 w-full text-center shadow-xl rounded-b-lg border-t-4 border-yellow-400">
                             <h3 className="font-bold text-yellow-800 text-lg">
-                                {topPlayers[0].name}
+                                {topPlayers[0]?.name || "N/A"}
                             </h3>
                             <p className="text-yellow-700 font-bold text-lg">
-                                {topPlayers[0].score.toLocaleString()}
+                                {topPlayers[0]?.score.toLocaleString() || "0"}
                             </p>
                         </div>
                     </div>
@@ -100,10 +128,10 @@ const LeaderboardPage = () => {
                         </div>
                         <div className="bg-white p-4 w-full text-center shadow-lg rounded-b-lg border-t-4 border-orange-700">
                             <h3 className="font-semibold text-orange-800">
-                                {topPlayers[2].name}
+                                {topPlayers[2]?.name || "N/A"}
                             </h3>
                             <p className="text-orange-700 font-medium">
-                                {topPlayers[2].score.toLocaleString()}
+                                {topPlayers[2]?.score.toLocaleString() || "0"}
                             </p>
                         </div>
                     </div>
@@ -122,17 +150,16 @@ const LeaderboardPage = () => {
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center">
                                             <span
-                                                className={`w-8 text-center font-medium ${
-                                                    player.id === 1
-                                                        ? "text-yellow-500"
-                                                        : player.id === 2
+                                                className={`w-8 text-center font-medium ${player.rank === 1
+                                                    ? "text-yellow-500"
+                                                    : player.rank === 2
                                                         ? "text-gray-500"
-                                                        : player.id === 3
-                                                        ? "text-amber-600"
-                                                        : "text-gray-600"
-                                                }`}
+                                                        : player.rank === 3
+                                                            ? "text-amber-600"
+                                                            : "text-gray-600"
+                                                    }`}
                                             >
-                                                {player.id}
+                                                {player.rank}
                                             </span>
                                             <span className="ml-4 font-medium text-gray-800 group-hover:text-gray-700 transition-colors">
                                                 {player.name}
@@ -148,22 +175,24 @@ const LeaderboardPage = () => {
                             ))}
                     </div>
 
-                    <button
-                        onClick={() => setExpanded(!expanded)}
-                        className="w-full py-3 bg-gray-50 hover:bg-gray-100 text-gray-700 font-medium flex items-center justify-center transition-all group border-t border-gray-200"
-                    >
-                        {expanded ? (
-                            <>
-                                <ChevronUp className="mr-2 group-hover:-translate-y-0.5 transition-transform" size={18} />
-                                Show Less
-                            </>
-                        ) : (
-                            <>
-                                <ChevronDown className="mr-2 group-hover:translate-y-0.5 transition-transform" size={18} />
-                                See More Competitors
-                            </>
-                        )}
-                    </button>
+                    {otherPlayers.length > 3 && (
+                        <button
+                            onClick={() => setExpanded(!expanded)}
+                            className="w-full py-3 bg-gray-50 hover:bg-gray-100 text-gray-700 font-medium flex items-center justify-center transition-all group border-t border-gray-200"
+                        >
+                            {expanded ? (
+                                <>
+                                    <ChevronUp className="mr-2 group-hover:-translate-y-0.5 transition-transform" size={18} />
+                                    Show Less
+                                </>
+                            ) : (
+                                <>
+                                    <ChevronDown className="mr-2 group-hover:translate-y-0.5 transition-transform" size={18} />
+                                    See More Competitors
+                                </>
+                            )}
+                        </button>
+                    )}
                 </div>
 
                 {/* Footer */}

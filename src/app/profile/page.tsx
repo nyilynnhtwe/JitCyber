@@ -32,7 +32,7 @@ export default function ProfilePage() {
         <div className="text-center mb-6">
           <UserCircle className="mx-auto h-16 w-16 text-blue-600 mb-2" />
           <h1 className="text-2xl font-bold text-slate-800">
-            Hello, {session?.user?.fullName || "User"} 👋
+            Hello, {session?.user?.fullname || "User"} 👋
           </h1>
           <p className="text-sm text-slate-500">Profile Overview</p>
         </div>
@@ -47,7 +47,7 @@ export default function ProfilePage() {
           <div className="flex items-center gap-3">
             <UserCircle className="w-5 h-5 text-blue-500" />
             <p>
-              <span className="font-semibold">Full Name:</span> {session?.user?.fullName}
+              <span className="font-semibold">Full Name:</span> {session?.user?.fullname}
             </p>
           </div>
           <div className="flex items-center gap-3">

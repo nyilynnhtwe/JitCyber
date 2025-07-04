@@ -244,7 +244,7 @@ const QuizPage = () => {
 
                             <div className="flex flex-col sm:flex-row justify-center gap-4 pt-6">
                                 <Link
-                                    href="../learn"
+                                    href="/dashboard/user/learn"
                                     className="flex items-center justify-center px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-all duration-200"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
@@ -253,7 +253,7 @@ const QuizPage = () => {
                                     Back to Learning
                                 </Link>
                                 <Link
-                                    href="../leaderboard"
+                                    href="/dashboard/user/leaderboard"
                                     className="flex items-center justify-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-all duration-200"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">

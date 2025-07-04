@@ -2,32 +2,51 @@ import { COLLECTION_USERS, DB_NAME } from "@/app/constants";
 import { connectToDatabase } from "@/lib/db";
 
 export async function POST(req: Request) {
-    const { id, fullname, password, phone, dob } = await req.json();
+  try {
+    const { id, fullname, password, phone, dob, idType } = await req.json();
+
+    if (!id || !fullname || !password || !phone || !dob || !idType) {
+      return new Response(
+        JSON.stringify({ message: "Missing required fields." }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
 
     const client = await connectToDatabase();
     const db = client.db(DB_NAME);
+
     const existingUser = await db.collection(COLLECTION_USERS).findOne({ id });
 
     if (existingUser) {
-        client.close();
-        return new Response(JSON.stringify({ data: 'User already exists' }), {
-            status: 409,
-            headers: { "Content-Type": "application/json" },
-        });
+      client.close();
+      return new Response(JSON.stringify({ message: "User already exists." }), {
+        status: 409,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
-    await db.collection(COLLECTION_USERS).insertOne({
-        id,
-        fullname,
-        phone,
-        password,
-        dob,
-        createdAt: new Date(),
-    });
+    const newUser = {
+      id,
+      idType,
+      fullname,
+      phone,
+      dob,
+      password,
+      createdAt: new Date(),
+    };
 
+    await db.collection(COLLECTION_USERS).insertOne(newUser);
     client.close();
-    return new Response(JSON.stringify({ data: "User has been registered successfully." }), {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-    });
+
+    return new Response(
+      JSON.stringify({ message: "User registered successfully." }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
+    );
+  } catch (error) {
+    console.error("Signup API Error:", error);
+    return new Response(
+      JSON.stringify({ message: "Internal server error." }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
 }

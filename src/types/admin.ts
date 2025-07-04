@@ -16,6 +16,8 @@ export interface Quiz {
 }
 
 export type UserUpdatePayload = {
+  id?: string;
+  idType?: "thai" | "foreign";
   fullname?: string;
   phone?: string;
   dob?: string;

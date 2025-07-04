@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Pagination from "./Pagination";
 import { toast } from "react-toastify";
-import { X, Pencil, Trash2, PlusCircle, Loader2 } from "lucide-react";
+import { X, Pencil, Trash2, PlusCircle, Loader2, EyeOff, Eye } from "lucide-react";
 
 interface User {
   _id: string;
@@ -36,13 +36,16 @@ export default function UsersTab({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [newUser, setNewUser] = useState({
+    fullname: "",
     idType: "thai",
     id: "",
-    fullname: "",
     phone: "",
     dob: "",
+    password: "",
   });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Handle edit user
@@ -62,10 +65,64 @@ export default function UsersTab({
 
     setIsSubmitting(true);
 
-    // Validation logic remains the same...
+    try {
+      // ✅ Basic validation
+      if (
+        !selectedUser.fullname.trim() ||
+        !selectedUser.id.trim() ||
+        !selectedUser.phone.trim() ||
+        !selectedUser.dob.trim()
+      ) {
+        toast.error("Please fill in all required fields.");
+        return;
+      }
 
-    setIsSubmitting(false);
+      const res = await fetch("/api/admin/users/update", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: selectedUser.id,
+          fullname: selectedUser.fullname,
+          phone: selectedUser.phone,
+          dob: selectedUser.dob,
+          idType: selectedUser.idType,
+          // Optional: password if editable
+        }),
+      });
+
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to update user");
+      }
+
+      // ✅ Update local state
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user._id === selectedUser._id ? data.updatedUser : user
+        )
+      );
+
+      toast.success("User updated successfully!");
+      setIsEditModalOpen(false);
+    }
+    catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error("Error updating user:", err);
+        toast.error(err.message || "Something went wrong.");
+      } else {
+        console.error("Unknown error:", err);
+        toast.error("Something went wrong.");
+      }
+    }
+    finally {
+      setIsSubmitting(false);
+    }
   };
+
 
   // Handle delete user
   const openDeleteModal = (user: User) => {
@@ -88,10 +145,10 @@ export default function UsersTab({
     setIsSubmitting(false);
   };
 
-  // Handle add new user
-  const handleAddUserChange = (field: keyof typeof newUser, value: string) => {
-    setNewUser(prev => ({ ...prev, [field]: value }));
+  const handleAddUserChange = (field: string, value: string) => {
+    setNewUser((prev) => ({ ...prev, [field]: value }));
   };
+
 
   const handleAddUserSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -125,6 +182,7 @@ export default function UsersTab({
         fullname: "",
         phone: "",
         dob: "",
+        password: "",
       });
     } catch (error) {
       console.error("Add user error:", error);
@@ -133,6 +191,12 @@ export default function UsersTab({
       setIsSubmitting(false);
     }
   };
+
+  const filteredUsers =
+    filter === "all"
+      ? users
+      : users.filter((user) => user.idType === filter);
+
 
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden">
@@ -147,7 +211,7 @@ export default function UsersTab({
           >
             <option value="all">All users</option>
             <option value="thai">Thai ID</option>
-            <option value="passport">Passport</option>
+            <option value="foreign">Passport</option>
           </select>
           <button
             onClick={() => setIsAddUserModalOpen(true)}
@@ -197,8 +261,8 @@ export default function UsersTab({
                   </div>
                 </td>
               </tr>
-            ) : users.length > 0 ? (
-              users.map((user) => (
+            ) : filteredUsers.length > 0 ? (
+              filteredUsers.map((user) => (
                 <tr key={user._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">
@@ -482,6 +546,35 @@ export default function UsersTab({
                     required
                   />
                 </div>
+
+                <div>
+                  <label className="block mb-2 text-sm font-medium text-gray-700">
+                    Password <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      value={newUser.password}
+                      onChange={(e) => handleAddUserChange("password", e.target.value)}
+                      placeholder="Enter password"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
+                      required
+                      minLength={8}
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 hover:text-gray-700"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOff size={18} aria-label="Hide password" />
+                      ) : (
+                        <Eye size={18} aria-label="Show password" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
               </div>
 
               <div className="flex justify-end pt-4 gap-3">

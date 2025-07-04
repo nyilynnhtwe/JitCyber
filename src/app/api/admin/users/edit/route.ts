@@ -2,9 +2,10 @@ import { COLLECTION_USERS, DB_NAME } from "@/app/constants";
 import { connectToDatabase } from "@/lib/db";
 import { UserUpdatePayload } from "@/types/admin";
 
+
 export async function PUT(req: Request) {
   try {
-    const { id, fullname, phone, dob, password } = await req.json();
+    const { id, fullname, phone, dob, password, idType } = await req.json();
 
     if (!id) {
       return new Response(JSON.stringify({ error: "User ID is required" }), {
@@ -20,10 +21,11 @@ export async function PUT(req: Request) {
     if (fullname) updateFields.fullname = fullname;
     if (phone) updateFields.phone = phone;
     if (dob) updateFields.dob = dob;
-    if (password) updateFields.password = password; // Optional: hash if needed
+    if (password) updateFields.password = password; // hash if needed
+    if (idType) updateFields.idType = idType;
 
     const result = await db.collection(COLLECTION_USERS).updateOne(
-      { id }, // Find user by ID
+      { id },
       { $set: updateFields }
     );
 
@@ -48,3 +50,4 @@ export async function PUT(req: Request) {
     });
   }
 }
+
