@@ -14,6 +14,7 @@ export async function GET() {
         { scores: { $exists: true, $ne: [] } },
         {
           projection: {
+            id: 1,
             fullname: 1,
             scores: 1,
           },
@@ -24,6 +25,7 @@ export async function GET() {
     const leaderboardData = users.map((user) => {
       const totalScore = user.scores.reduce((sum, s) => sum + s.score, 0);
       return {
+        userId: user.id.toString(),
         id: user._id.toString(),
         name: user.fullname,
         score: totalScore,

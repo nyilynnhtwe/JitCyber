@@ -1,14 +1,11 @@
 "use client";
 import MobileMenu from "@/app/components/admin/MobileMenu";
-import Sidebar from "@/app/components/admin/SideBar";
 import Topbar from "@/app/components/admin/TopBar";
 import Footer from "@/app/components/Footer";
 import { useLocale } from "@/context/LocalContext";
-
 import enData from "@/app/data/en.json";
 import thData from "@/app/data/th.json";
 import { useState } from "react";
-
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { locale } = useLocale();
@@ -17,31 +14,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      <div className="flex flex-1">
-        {/* Sidebar */}
-        <Sidebar />
+      <Topbar setMobileMenuOpen={setMobileMenuOpen} />
 
-        {/* Main content area */}
-        <div className="flex-1 flex flex-col">
-          <Topbar setMobileMenuOpen={setMobileMenuOpen} activeTab={""} />
+      {mobileMenuOpen && (
+        <MobileMenu setMobileMenuOpen={setMobileMenuOpen} />
+      )}
 
-          {/* Mobile menu */}
-          {mobileMenuOpen && (
-            <MobileMenu
-              setMobileMenuOpen={setMobileMenuOpen}
-              activeTab={""}
-              setActiveTab={() => {}}
-            />
-          )}
-
-          {/* Scrollable content */}
-          <main className="flex-1 overflow-y-auto p-6 bg-gray-100">
-            {children}
-          </main>
+      <main className="flex-1 overflow-y-auto py-6 px-4 sm:px-6 max-w-7xl mx-auto w-full">
+        <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+          {children}
         </div>
-      </div>
-      
-      {/* Fixed footer at bottom */}
+      </main>
+
       <Footer t={t} locale={locale} />
     </div>
   );

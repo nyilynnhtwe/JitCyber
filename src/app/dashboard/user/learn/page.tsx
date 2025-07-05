@@ -137,12 +137,25 @@ function CourseCard({
             <AnimatePresence>
                 {isSelected && (
                     <motion.div
-                        className="flex gap-3"
+                        className="flex flex-col gap-4" // Changed to column layout
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ type: "spring", stiffness: 300 }}
                     >
+                        {/* NEW: Learning requirement note */}
+                        {
+                            !hasTaken &&
+                            (<div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start">
+                                <Sparkles className="flex-shrink-0 mt-1 mr-3 w-5 h-5 text-blue-500" />
+                                <p className="text-blue-700 text-sm">
+                                    {isThai
+                                        ? "กรุณาอ่านเนื้อหาให้ครบก่อนเริ่มทำแบบทดสอบ"
+                                        : "Please read all learning material before taking the quiz"}
+                                </p>
+                            </div>)
+                        }
+
                         {hasTaken ? (
                             <motion.div
                                 className="flex-1 px-5 py-3 border-2 border-green-500 rounded-xl bg-green-50 text-green-800 text-base font-semibold flex items-center justify-center gap-2"
@@ -154,27 +167,38 @@ function CourseCard({
                                 }
                             </motion.div>
                         ) : (
-                            <>
+                            <div className="flex flex-col sm:flex-row gap-3">
+                                {/* Changed order: Learn First comes first */}
                                 <motion.button
                                     className="flex-1 px-5 py-3 border-2 border-blue-500 rounded-xl bg-blue-500 text-white text-base font-semibold hover:bg-blue-600 transition-colors shadow-sm flex items-center justify-center gap-2"
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
-                                    onClick={() => router.push(`/dashboard/user/learn/${id}/quiz`)}
+                                    onClick={() => router.push(`/dashboard/user/learn/${id}/story`)}
                                 >
-                                    <Award className="w-5 h-5" />
-                                    {isThai ? "เริ่มแบบทดสอบ" : "Start Quiz"}
+                                    <BookOpen className="w-5 h-5" />
+                                    {isThai ? "เรียนรู้เนื้อหา" : "Learn First"}
                                 </motion.button>
 
                                 <motion.button
-                                    className="flex-1 px-5 py-3 border-2 border-gray-200 rounded-xl bg-white text-gray-800 text-base font-semibold hover:bg-gray-50 transition-colors shadow-sm flex items-center justify-center gap-2"
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    onClick={() => router.push(`/readguide/${id}`)}
+                                    onClick={() => router.push(`/dashboard/user/learn/${id}/quiz`)}
+                                    className={`flex-1 px-5 py-3 border-2 rounded-xl text-base font-semibold flex items-center justify-center gap-2 shadow-sm transition-all ${!hasTaken
+                                        ? "bg-green-100 border-green-500 text-green-700 hover:bg-green-200"
+                                        : "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed"
+                                        }`}
+                                    disabled={hasTaken}
+                                    title={
+                                        !hasTaken
+                                            ? isThai
+                                                ? "กรุณาอ่านเนื้อหาก่อน"
+                                                : "Please read learning material first"
+                                            : ""
+                                    }
                                 >
-                                    <BookOpen className="w-5 h-5" />
-                                    {isThai ? "เรียนรู้ก่อน" : "Learn First"}
+                                    <Award className="w-5 h-5" />
+                                    {isThai ? "แบบทดสอบ" : "Start Quiz"}
                                 </motion.button>
-                            </>
+
+                            </div>
                         )}
                     </motion.div>
                 )}
@@ -330,6 +354,7 @@ export default function Page() {
                                 </button>
 
                                 {/* Profile Dropdown Menu */}
+                                {/* Profile Dropdown Menu */}
                                 <AnimatePresence>
                                     {isProfileOpen && (
                                         <motion.div
@@ -338,6 +363,18 @@ export default function Page() {
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, y: -10 }}
                                         >
+                                            {/* Add Profile Button Here */}
+                                            <button
+                                                className="w-full flex items-center gap-2 px-4 py-2 text-gray-600 hover:bg-gray-100 text-left"
+                                                onClick={() => {
+                                                    router.push('/profile');
+                                                    setIsProfileOpen(false);
+                                                }}
+                                            >
+                                                <User className="w-4 h-4 text-gray-500" />
+                                                {isThai ? "โปรไฟล์" : "Profile"}
+                                            </button>
+
                                             <button
                                                 className="w-full flex items-center gap-2 px-4 py-2 text-gray-600 hover:bg-gray-100 text-left"
                                                 onClick={() => signOut({ callbackUrl: "/" })}
@@ -529,7 +566,6 @@ export default function Page() {
                             ) : (
                                 topics.map((topic, index) => {
                                     const userScore = userScores.find(s => s.topicId === topic._id);
-                                    console.log(userScore);
                                     const hasTaken = !!userScore;
 
                                     return (

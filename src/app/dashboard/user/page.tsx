@@ -5,12 +5,13 @@ import Head from 'next/head';
 import { useLocale } from '@/context/LocalContext';
 import Footer from '@/app/components/Footer';
 import LanguageSwitcher from '@/app/components/LanguageSwitcher';
-import { Menu, X, LogOut, BookOpen, ClipboardList, Mail, Key, Trophy, ChevronRight, User, HelpCircle } from 'lucide-react';
+import { Menu, X, LogOut, BookOpen, ClipboardList, Mail, Key, Trophy, ChevronRight, User, HelpCircle, Home } from 'lucide-react';
 import enData from '../../data/en.json';
 import thData from '../../data/th.json';
 import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
 import { Chatbot } from '@/app/components/Chatbot';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export default function LoggedInHome() {
     const { data: session, status } = useSession();
@@ -19,6 +20,11 @@ export default function LoggedInHome() {
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
     const [activeFeature, setActiveFeature] = useState<string | null>(null);
     const menuRef = useRef<HTMLDivElement>(null);
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const profileRef = useRef<HTMLDivElement>(null);
+    const [score, setScore] = useState<number>(0);
+    const [rank, setRank] = useState<number>(0);
 
     const t = locale === 'th' ? thData : enData;
 
@@ -43,6 +49,27 @@ export default function LoggedInHome() {
     };
 
     useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 20);
+        };
+
+        // Handle clicks outside profile dropdown
+        const handleClickOutside = (event: MouseEvent) => {
+            if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+                setIsProfileOpen(false);
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth >= 768) {
                 setIsMenuOpen(false);
@@ -51,12 +78,36 @@ export default function LoggedInHome() {
 
         window.addEventListener('resize', handleResize);
         document.addEventListener('mousedown', handleClickOutside);
-        
+
         return () => {
             window.removeEventListener('resize', handleResize);
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+
+    useEffect(() => {
+        const fetchLeaderboard = async () => {
+            if (!session?.user?.id) return;
+
+            try {
+                const res = await fetch('/api/leaderboard');
+                if (!res.ok) throw new Error('Failed to fetch leaderboard');
+
+                const data = await res.json();
+                const players = data.players;
+                const userIndex = players.findIndex(p => p.userId === session.user.id);
+                if (userIndex !== -1) {
+                    setScore(players[userIndex].score);
+                    setRank(userIndex + 1); // rank is index + 1
+                }
+            } catch (err) {
+                console.error('Error fetching leaderboard:', err);
+            }
+        };
+
+        fetchLeaderboard();
+    }, [session?.user?.id]);
+
 
     // Dashboard features data
     const features = [
@@ -111,47 +162,96 @@ export default function LoggedInHome() {
             </Head>
 
             <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 to-slate-100">
-                {/* Header */}
-                <header className="sticky top-0 w-full z-50 bg-white/90 backdrop-blur-md shadow-sm py-3 border-b border-slate-200">
+
+                <motion.header
+                    className={`sticky top-0 w-full z-50 transition-all duration-300 ${isScrolled
+                        ? "bg-white/90 backdrop-blur-md py-3 shadow-md"
+                        : "bg-white py-5"
+                        }`}
+                    initial={{ y: -100 }}
+                    animate={{ y: 0 }}
+                    transition={{ duration: 0.5 }}
+                >
                     <div className="container mx-auto px-4 flex justify-between items-center">
-                        <div className="flex items-center">
-                            <Image 
-                                src="/Logo.svg" 
-                                width={40} 
-                                height={40} 
-                                alt="Logo" 
-                                className="mr-2"
-                                priority
-                            />
-                            <div className="text-xl font-bold bg-gradient-to-r from-blue-700 to-blue-900 bg-clip-text text-transparent">
-                                {t.appName}
+                        <Link href="/" className="flex items-center gap-2 group">
+                            <div className="p-1 flex items-center justify-center w-12 h-12">
+                                <Image
+                                    src="/Logo.svg"
+                                    width={40}
+                                    height={40}
+                                    alt="Logo"
+                                    className="w-10 h-10 object-contain"
+                                />
                             </div>
-                        </div>
+                            <motion.span
+                                className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent"
+                                whileHover={{ scale: 1.05 }}
+                            >
+                                {t.appName}
+                            </motion.span>
+                        </Link>
 
                         {/* Desktop Navigation */}
-                        <nav className="hidden md:flex items-center space-x-6">
-                            <Link href="/dashboard/user" className="text-slate-700 hover:text-blue-600 font-medium transition-colors duration-200">
-                                {locale === 'th' ? 'แดชบอร์ด' : 'Dashboard'}
-                            </Link>
-                            <Link href="/profile" className="text-slate-700 hover:text-blue-600 font-medium transition-colors duration-200">
-                                {locale === 'th' ? 'โปรไฟล์' : 'Profile'}
-                            </Link>
-                            <Link 
-                                href="/logout" 
-                                onClick={handleLogoutClick}
-                                className="text-red-500 hover:text-red-600 font-medium flex items-center gap-1 transition-colors duration-200"
+                        <div className="hidden md:flex items-center gap-6">
+                            <Link
+                                href="/dashboard/user"
+                                className="text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-2"
                             >
-                                <LogOut className="w-4 h-4" />
-                                {locale === 'th' ? 'ออกจากระบบ' : 'Logout'}
+                                <Home className="w-5 h-5" />
+                                <span>{locale === 'th' ? "แดชบอร์ด" : "Dashboard"}</span>
                             </Link>
+
+                            {/* Profile Dropdown */}
+                            <div className="relative" ref={profileRef}>
+                                <button
+                                    className="flex items-center gap-2 group"
+                                    onClick={() => setIsProfileOpen(!isProfileOpen)}
+                                >
+                                    <div className="bg-blue-100 rounded-full p-1 group-hover:bg-blue-200 transition-colors">
+                                        <User className="w-4 h-4 text-blue-600" />
+                                    </div>
+                                    <span className="text-gray-600 group-hover:text-blue-600 transition-colors">
+                                        {session?.user?.fullname || "User"}
+                                    </span>
+                                </button>
+
+                                {/* Profile Dropdown Menu */}
+                                <AnimatePresence>
+                                    {isProfileOpen && (
+                                        <motion.div
+                                            className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 border border-gray-200 z-50"
+                                            initial={{ opacity: 0, y: -10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -10 }}
+                                        >
+                                            <Link
+                                                href="/profile"
+                                                className="w-full flex items-center gap-2 px-4 py-2 text-gray-600 hover:bg-gray-100 text-left"
+                                                onClick={() => setIsProfileOpen(false)}
+                                            >
+                                                <User className="w-4 h-4 text-gray-500" />
+                                                {locale === 'th' ? "โปรไฟล์" : "Profile"}
+                                            </Link>
+                                            <button
+                                                className="w-full flex items-center gap-2 px-4 py-2 text-gray-600 hover:bg-gray-100 text-left"
+                                                onClick={handleLogoutClick}
+                                            >
+                                                <LogOut className="w-4 h-4 text-gray-500" />
+                                                {locale === 'th' ? "ออกจากระบบ" : "Logout"}
+                                            </button>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+
                             <LanguageSwitcher />
-                        </nav>
+                        </div>
 
                         {/* Mobile Navigation */}
                         <div className="md:hidden flex items-center gap-4">
                             <LanguageSwitcher />
-                            <button 
-                                onClick={() => setIsMenuOpen(!isMenuOpen)} 
+                            <button
+                                onClick={() => setIsMenuOpen(!isMenuOpen)}
                                 aria-label="Menu"
                                 className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
                             >
@@ -159,11 +259,10 @@ export default function LoggedInHome() {
                             </button>
                         </div>
                     </div>
-                </header>
-
+                </motion.header>
                 {/* Mobile Menu */}
                 {isMenuOpen && (
-                    <div 
+                    <div
                         ref={menuRef}
                         className="md:hidden fixed top-16 right-0 bg-white w-64 h-full z-40 shadow-xl animate-slide-in-right"
                     >
@@ -177,34 +276,34 @@ export default function LoggedInHome() {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <nav className="flex flex-col py-2">
-                                <Link 
-                                    href="/dashboard/user" 
+                                <Link
+                                    href="/dashboard/user"
                                     onClick={() => setIsMenuOpen(false)}
                                     className="px-6 py-3 flex items-center text-slate-700 hover:bg-slate-50"
                                 >
                                     <ChevronRight className="w-4 h-4 mr-3 text-slate-400" />
                                     {locale === 'th' ? 'แดชบอร์ด' : 'Dashboard'}
                                 </Link>
-                                <Link 
-                                    href="/profile" 
+                                <Link
+                                    href="/profile"
                                     onClick={() => setIsMenuOpen(false)}
                                     className="px-6 py-3 flex items-center text-slate-700 hover:bg-slate-50"
                                 >
                                     <User className="w-4 h-4 mr-3 text-slate-400" />
                                     {locale === 'th' ? 'โปรไฟล์' : 'Profile'}
                                 </Link>
-                                <Link 
-                                    href="/help" 
+                                <Link
+                                    href="/help"
                                     onClick={() => setIsMenuOpen(false)}
                                     className="px-6 py-3 flex items-center text-slate-700 hover:bg-slate-50"
                                 >
                                     <HelpCircle className="w-4 h-4 mr-3 text-slate-400" />
                                     {locale === 'th' ? 'ช่วยเหลือ' : 'Help'}
                                 </Link>
-                                <Link 
-                                    href="/logout" 
+                                <Link
+                                    href="/logout"
                                     onClick={handleLogoutClick}
                                     className="px-6 py-3 flex items-center text-red-500 hover:bg-red-50"
                                 >
@@ -224,18 +323,18 @@ export default function LoggedInHome() {
                                 {locale === 'th' ? 'ยืนยันการออกจากระบบ' : 'Confirm Logout'}
                             </h3>
                             <p className="text-slate-600 mb-6">
-                                {locale === 'th' 
-                                    ? 'คุณแน่ใจหรือไม่ว่าต้องการออกจากระบบ?' 
+                                {locale === 'th'
+                                    ? 'คุณแน่ใจหรือไม่ว่าต้องการออกจากระบบ?'
                                     : 'Are you sure you want to logout?'}
                             </p>
                             <div className="flex justify-end space-x-3">
-                                <button 
+                                <button
                                     onClick={handleCancelLogout}
                                     className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 transition-colors"
                                 >
                                     {locale === 'th' ? 'ยกเลิก' : 'Cancel'}
                                 </button>
-                                <button 
+                                <button
                                     onClick={handleLogout}
                                     className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors"
                                 >
@@ -257,8 +356,8 @@ export default function LoggedInHome() {
                                         {locale === 'th' ? 'ยินดีต้อนรับกลับ!' : 'Welcome back!'}, {session?.user?.fullname || 'User'}
                                     </h1>
                                     <p className="text-blue-100">
-                                        {locale === 'th' 
-                                            ? 'เริ่มต้นการเดินทางสู่ความปลอดภัยทางไซเบอร์ของคุณวันนี้' 
+                                        {locale === 'th'
+                                            ? 'เริ่มต้นการเดินทางสู่ความปลอดภัยทางไซเบอร์ของคุณวันนี้'
                                             : 'Start your cybersecurity journey today'}
                                     </p>
                                 </div>
@@ -269,20 +368,12 @@ export default function LoggedInHome() {
                         {/* Quick Stats */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
                             <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-                                <p className="text-sm text-slate-500 mb-1">{locale === 'th' ? 'บทเรียนที่เสร็จ' : 'Lessons'}</p>
-                                <p className="text-xl font-bold">8</p>
-                            </div>
-                            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-                                <p className="text-sm text-slate-500 mb-1">{locale === 'th' ? 'คะแนน' : 'Points'}</p>
-                                <p className="text-xl font-bold">1,240</p>
+                                <p className="text-sm text-slate-500 mb-1">{locale === 'th' ? 'คะแนน' : 'Scores'}</p>
+                                <p className="text-xl font-bold">{score}</p>
                             </div>
                             <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                                 <p className="text-sm text-slate-500 mb-1">{locale === 'th' ? 'อันดับ' : 'Rank'}</p>
-                                <p className="text-xl font-bold">#42</p>
-                            </div>
-                            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-                                <p className="text-sm text-slate-500 mb-1">{locale === 'th' ? 'ความสำเร็จ' : 'Achievements'}</p>
-                                <p className="text-xl font-bold">5</p>
+                                <p className="text-xl font-bold">#{rank}</p>
                             </div>
                         </div>
 
@@ -293,7 +384,7 @@ export default function LoggedInHome() {
                             </h2>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                                 {features.map((feature) => (
-                                    <Link 
+                                    <Link
                                         key={feature.id}
                                         href={`/dashboard/user/${feature.id}`}
                                         className={`bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-slate-200 hover:border-blue-200 relative overflow-hidden group`}
@@ -377,7 +468,7 @@ export default function LoggedInHome() {
                 <footer className="bg-white border-t border-slate-200 py-6">
                     <Footer t={t} locale={locale} />
                 </footer>
-                
+
                 {/* Chatbot component */}
                 <Chatbot />
             </div>
