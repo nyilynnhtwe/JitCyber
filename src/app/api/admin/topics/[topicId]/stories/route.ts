@@ -3,14 +3,19 @@ import { connectToDatabase } from "@/lib/db";
 import { COLLECTION_STORIES, DB_NAME } from "@/app/constants";
 
 
-// GET /api/admin/stories
-export async function GET() {
+
+export async function GET(
+    req: NextRequest,
+    { params }: { params: Promise<{ topicId: string }> }
+) {
     try {
+        const { topicId } = await params;
+
         const client = await connectToDatabase();
         const db = client.db(DB_NAME);
         const stories = await db
             .collection(COLLECTION_STORIES)
-            .find({})
+            .find({ topicId })
             .toArray();
 
         return NextResponse.json({ stories }, { status: 200 });
@@ -19,6 +24,8 @@ export async function GET() {
         return NextResponse.json({ error: "Failed to fetch stories" }, { status: 500 });
     }
 }
+
+
 
 export async function POST(req: NextRequest,
     { params }: { params: Promise<{ topicId: string }> }) {
