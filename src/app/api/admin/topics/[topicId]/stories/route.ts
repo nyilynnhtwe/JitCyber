@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import { COLLECTION_STORIES, DB_NAME } from "@/app/constants";
-import { ObjectId } from "mongodb";
 
 
 // GET /api/admin/stories
@@ -21,9 +20,10 @@ export async function GET() {
     }
 }
 
-export async function POST(req: NextRequest, { params }: { params: { topicId: string } }) {
+export async function POST(req: NextRequest,
+    { params }: { params: Promise<{ topicId: string }> }) {
     try {
-        const { topicId } = params;
+        const { topicId } = await params;
         const body = await req.json();
         const { title, subtitle, content, lessons = [], createdAt, updatedAt } = body;
 

@@ -12,6 +12,7 @@ export default function Footer({ t, locale }: FooterProps) {
     <footer className="bg-gray-800 text-gray-300 py-12">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Column 1: Logo & Slogan */}
           <div>
             <div className="flex items-center mb-4">
               <Image
@@ -26,7 +27,8 @@ export default function Footer({ t, locale }: FooterProps) {
             <p className="mb-4">{t.footer.slogan}</p>
           </div>
 
-          <div>
+          {/* Column 2: Resources (commented out) */}
+          {/* <div>
             <h3 className="text-lg font-semibold text-white mb-4">{t.footer.resources}</h3>
             <ul className="space-y-2">
               {t.footer.links.map((item, index) => (
@@ -37,9 +39,10 @@ export default function Footer({ t, locale }: FooterProps) {
                 </li>
               ))}
             </ul>
-          </div>
+          </div> */}
 
-          <div>
+          {/* Column 3: Legal (commented out) */}
+          {/* <div>
             <h3 className="text-lg font-semibold text-white mb-4">{t.footer.legal}</h3>
             <ul className="space-y-2">
               {t.footer.legalLinks.map((item, index) => (
@@ -50,9 +53,10 @@ export default function Footer({ t, locale }: FooterProps) {
                 </li>
               ))}
             </ul>
-          </div>
+          </div> */}
 
-          <div>
+          {/* Column 4: Contact (moved to the last position) */}
+          <div className="md:col-start-4">
             <h3 className="text-lg font-semibold text-white mb-4">{t.footer.contact}</h3>
             <ul className="space-y-2">
               <li>{t.footer.email}</li>

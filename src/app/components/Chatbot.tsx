@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import {
     MessageCircle,
@@ -10,19 +10,23 @@ import {
     ChevronDown,
     ShieldCheck,
 } from 'lucide-react';
+import { useLocale } from '@/context/LocalContext';
 
-// If you see this message, it means the code is being run in dashboard user page. When implementing ai apis, make sure the ai is supported for both thai and english languages with a opening message options for the user to choose from after the introduction of course. Thx yah
+const cleanBotResponse = (text: string) => {
+    return text
+        .replace(/\*\*(.*?)\*\*/g, '$1') // remove bold markdown
+        .replace(/\n{2,}/g, '\n') // reduce multiple newlines to single newline
+        .replace(/^\d+\.\s+/gm, '- ') // turn numbered bullets into dash bullets (optional)
+        .trim();
+};
+
 
 export const Chatbot = () => {
     const [isChatOpen, setIsChatOpen] = useState(false);
+    const { locale } = useLocale();
     const [messages, setMessages] = useState<
         Array<{ text: string; sender: 'user' | 'bot'; image?: string }>
-    >([
-        {
-            text: "Hello! I'm JitCyber AI Assistant. How can I help you with cybersecurity today?",
-            sender: 'bot',
-        },
-    ]);
+    >([]); // Start with empty messages
     const [inputMessage, setInputMessage] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -33,29 +37,28 @@ export const Chatbot = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-    // Can delete this just fine if you are implementing real AI responses with an API
-    const getMockResponse = (message: string) => {
-        const lowerMsg = message.toLowerCase();
-        if (lowerMsg.includes('password')) {
-            return (
-                "Our password checker evaluates:\n- Length (minimum 12 chars)\n- Character diversity\n- Common pattern avoidance\n- Dictionary word checks"
-            );
-        } else if (lowerMsg.includes('email')) {
-            return (
-                "Our email checker verifies:\n- DNS records\n- SPF/DKIM/DMARC configuration\n- Known breach involvement\n- Phishing risk indicators"
-            );
-        } else if (lowerMsg.includes('quiz')) {
-            return (
-                "Our cybersecurity quizzes cover:\n1. Basic security principles\n2. Phishing identification\n3. Password best practices\n4. Network security fundamentals"
-            );
-        } else {
-            return (
-                "I'm the JitCyber AI assistant. I can help with:\n- Password security checks\n- Email security analysis\n- Cybersecurity quizzes\n- General advice"
-            );
-        }
-    };
 
-    const handleSendMessage = () => {
+    const resetChatbot = useCallback(() => {
+        setMessages([
+            {
+                text: locale === 'th'
+                    ? 'สวัสดี! ฉันคือผู้ช่วย JitCyber AI คุณต้องการความช่วยเหลือเรื่องความปลอดภัยไซเบอร์ในเรื่องใด?'
+                    : "Hello! I'm JitCyber AI Assistant. How can I help you with cybersecurity today?",
+                sender: 'bot',
+            },
+        ]);
+        setInputMessage('');
+        setPreviewImage(null);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+    }, [locale]);
+
+    useEffect(() => {
+        resetChatbot();
+    }, [resetChatbot]);
+
+
+
+    const handleSendMessage = async () => {
         if (!inputMessage.trim() && !previewImage) return;
 
         const userMessage = {
@@ -69,17 +72,45 @@ export const Chatbot = () => {
         setPreviewImage(null);
         setIsTyping(true);
 
-        setTimeout(() => {
+        try {
+            const response = await fetch('/api/user/chatbot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ prompt: inputMessage }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Something went wrong');
+            }
+
             setMessages((prev) => [
                 ...prev,
                 {
-                    text: getMockResponse(inputMessage),
+                    text: cleanBotResponse(data.data),
                     sender: 'bot' as const,
                 },
             ]);
+        } catch (error) {
+            console.error('Chatbot error:', error);
+            setMessages((prev) => [
+                ...prev,
+                {
+                    text:
+                        locale === 'th'
+                            ? 'ขออภัย เกิดข้อผิดพลาดในการตอบกลับ กรุณาลองใหม่'
+                            : 'Sorry, something went wrong while generating a response. Please try again.',
+                    sender: 'bot' as const,
+                },
+            ]);
+        } finally {
             setIsTyping(false);
-        }, 1000 + Math.random() * 500);
+        }
     };
+
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -153,16 +184,14 @@ export const Chatbot = () => {
                         {messages.map((msg, index) => (
                             <div
                                 key={index}
-                                className={`mb-4 flex ${
-                                    msg.sender === 'user' ? 'justify-end' : 'justify-start'
-                                }`}
+                                className={`mb-4 flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'
+                                    }`}
                             >
                                 <div
-                                    className={`max-w-xs lg:max-w-md rounded-lg px-4 py-2 transition-all duration-200 ${
-                                        msg.sender === 'user'
-                                            ? 'bg-blue-500 text-white'
-                                            : 'bg-gray-200 text-gray-800'
-                                    } ${index === messages.length - 1 ? 'animate-message-in' : ''}`}
+                                    className={`max-w-xs lg:max-w-md rounded-lg px-4 py-2 transition-all duration-200 ${msg.sender === 'user'
+                                        ? 'bg-blue-500 text-white'
+                                        : 'bg-gray-200 text-gray-800'
+                                        } ${index === messages.length - 1 ? 'animate-message-in' : ''}`}
                                 >
                                     {msg.image && (
                                         <div className="mb-2 overflow-hidden rounded">
@@ -250,11 +279,10 @@ export const Chatbot = () => {
                                 disabled={
                                     (!inputMessage.trim() && !previewImage) || isTyping
                                 }
-                                className={`p-2 rounded-full transition-colors ${
-                                    (!inputMessage.trim() && !previewImage) || isTyping
-                                        ? 'text-gray-400 cursor-not-allowed'
-                                        : 'text-blue-600 hover:bg-blue-50 hover:text-blue-700'
-                                }`}
+                                className={`p-2 rounded-full transition-colors ${(!inputMessage.trim() && !previewImage) || isTyping
+                                    ? 'text-gray-400 cursor-not-allowed'
+                                    : 'text-blue-600 hover:bg-blue-50 hover:text-blue-700'
+                                    }`}
                                 aria-label="Send message"
                             >
                                 <Send className="h-5 w-5" />

@@ -6,9 +6,9 @@ import { ObjectId } from "mongodb";
 // PUT /api/admin/stories/:storyId
 export async function PUT(
     req: Request,
-    { params }: { params: { storyId: string } }
+    { params }: { params: Promise<{ storyId: string }> }
 ) {
-    const { storyId } = params;
+    const { storyId } = await params;
 
     if (!ObjectId.isValid(storyId)) {
         return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
@@ -65,9 +65,9 @@ export async function PUT(
 // DELETE /api/admin/stories/:storyId
 export async function DELETE(
     req: Request,
-    { params }: { params: { storyId: string } }
+    { params }: { params: Promise<{ storyId: string }> }
 ) {
-    const { storyId } = params;
+    const { storyId } = await params;
 
     if (!ObjectId.isValid(storyId)) {
         return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
@@ -122,9 +122,9 @@ export async function DELETE(
 // GET /api/admin/stories/:storyId
 export async function GET(
     req: Request,
-    { params }: { params: { storyId: string } }
+    { params }: { params: Promise<{ storyId: string }> }
 ) {
-    const { storyId } = params;
+    const { storyId } = await params;
 
     if (!ObjectId.isValid(storyId)) {
         return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });

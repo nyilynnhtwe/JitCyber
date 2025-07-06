@@ -108,12 +108,15 @@ export default function StoryViewer() {
 
   // Reset auto-play when component unmounts
   useEffect(() => {
+    const interval = progressInterval.current; // capture current ref value here
+
     return () => {
-      if (progressInterval.current) {
-        clearInterval(progressInterval.current);
+      if (interval) {
+        clearInterval(interval);
       }
     };
   }, []);
+
 
   if (loading) {
     return (
