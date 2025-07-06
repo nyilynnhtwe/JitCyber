@@ -9,10 +9,10 @@ export async function GET(
     req: NextRequest,
     { params }: { params: Promise<{ topicId: string }> }
 ) {
+    let client;
     try {
         const { topicId } = await params;
-
-        const client = await connectToDatabase();
+        client = await connectToDatabase();
         const db = client.db(DB_NAME);
         const stories = await db
             .collection(COLLECTION_STORIES)
@@ -24,6 +24,11 @@ export async function GET(
         console.error("Error fetching stories:", err);
         return NextResponse.json({ error: "Failed to fetch stories" }, { status: 500 });
     }
+    finally {
+        if (client) {
+            await client.close();
+        }
+    }
 }
 
 
@@ -32,6 +37,7 @@ export async function POST(
     req: NextRequest,
     { params }: { params: Promise<{ topicId: string }> }
 ) {
+    let client;
     try {
         const { topicId } = await params;
         if (!ObjectId.isValid(topicId)) {
@@ -92,5 +98,10 @@ export async function POST(
     } catch (err) {
         console.error("Error creating story:", err);
         return NextResponse.json({ error: "Failed to create story" }, { status: 500 });
+    }
+    finally {
+        if (client) {
+            await client.close();
+        }
     }
 }

@@ -4,15 +4,22 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { useLocale } from '@/context/LocalContext';
+
+interface LocalizedField {
+  en: string;
+  th: string;
+}
 
 interface QuizQuestion {
   _id: string;
-  question: string;
-  answers: string[];
+  question: LocalizedField;
+  answers: LocalizedField[];
   correctAnswerIndex: number;
-  explanation: string;
+  explanation: LocalizedField;
   topicId: string;
 }
+
 
 interface Question {
   id: string;
@@ -23,6 +30,7 @@ interface Question {
 }
 
 const QuizPage = () => {
+  const { locale } = useLocale();
   const { data: session } = useSession();
   const router = useRouter();
   const { topicId } = useParams();
@@ -86,16 +94,18 @@ const QuizPage = () => {
         const response = await fetch(`/api/admin/topics/${topicId}/quizzes`);
         const fetchedData = await response.json();
         const quizzData: QuizQuestion[] = fetchedData.quizzes;
-
         const transformedQuestions: Question[] = quizzData.map(q => ({
           id: q._id,
-          text: q.question,
-          options: q.answers,
+          text: locale === 'th' ? q.question.th : q.question.en,
+          options: q.answers.map(ans => locale === 'th' ? ans.th : ans.en),
           correctAnswer: q.correctAnswerIndex,
-          explanation: q.explanation
+          explanation: locale === 'th' ? q.explanation.th : q.explanation.en,
         }));
-
         setQuizQuestions(transformedQuestions);
+        console.log(locale);
+
+        console.log(quizQuestions);
+
         // Initialize userAnswers array with -1 for each question
         setUserAnswers(new Array(transformedQuestions.length).fill(-1));
       } catch (error) {
@@ -108,7 +118,7 @@ const QuizPage = () => {
     if (topicId) {
       fetchQuizQuestions();
     }
-  }, [topicId]);
+  }, [topicId, quizQuestions]);
 
   useEffect(() => {
     if (!hasStarted || showResult) return;

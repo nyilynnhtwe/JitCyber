@@ -23,6 +23,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { ScoreEntry, Topic } from "@/types/user";
+import { useLocale } from "@/context/LocalContext";
 
 interface CourseCardProps {
     id: string;
@@ -208,10 +209,10 @@ function CourseCard({
 }
 
 export default function Page() {
+    const { locale, changeLocale } = useLocale();
     const router = useRouter();
     const { data: session, status } = useSession();
     const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
-    const [isThai, setIsThai] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
@@ -341,7 +342,7 @@ export default function Page() {
                                 className="text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-2"
                             >
                                 <Home className="w-5 h-5" />
-                                <span>{isThai ? "แดชบอร์ด" : "Dashboard"}</span>
+                                <span>{locale === "th" ? "แดชบอร์ด" : "Dashboard"}</span>
                             </Link>
 
                             {/* Profile Dropdown */}
@@ -377,7 +378,7 @@ export default function Page() {
                                                 }}
                                             >
                                                 <User className="w-4 h-4 text-gray-500" />
-                                                {isThai ? "โปรไฟล์" : "Profile"}
+                                                {locale === "th" ? "โปรไฟล์" : "Profile"}
                                             </button>
 
                                             <button
@@ -385,7 +386,7 @@ export default function Page() {
                                                 onClick={() => signOut({ callbackUrl: "/" })}
                                             >
                                                 <LogOut className="w-4 h-4 text-gray-500" />
-                                                {isThai ? "ออกจากระบบ" : "Logout"}
+                                                {locale === "th" ? "ออกจากระบบ" : "Logout"}
                                             </button>
                                         </motion.div>
                                     )}
@@ -393,21 +394,21 @@ export default function Page() {
                             </div>
 
                             <button
-                                onClick={() => setIsThai(!isThai)}
+                                onClick={() => changeLocale(locale === "th" ? "en" : "th")}
                                 className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
                             >
                                 <Globe className="w-5 h-5 text-blue-600" />
-                                <span className="text-sm font-medium">{isThai ? "EN" : "ไทย"}</span>
+                                <span className="text-sm font-medium">{locale === "th" ? "EN" : "ไทย"}</span>
                             </button>
                         </div>
 
                         <div className="md:hidden flex items-center gap-4">
                             <button
-                                onClick={() => setIsThai(!isThai)}
+                                onClick={() => changeLocale(locale === "th" ? "en" : "th")}
                                 className="flex items-center gap-1 px-3 py-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
                             >
                                 <Globe className="w-5 h-5 text-blue-600" />
-                                <span className="text-sm font-medium">{isThai ? "EN" : "ไทย"}</span>
+                                <span className="text-sm font-medium">{locale === "th" ? "EN" : "ไทย"}</span>
                             </button>
 
                             <button
@@ -446,7 +447,7 @@ export default function Page() {
                                     onClick={() => setIsMenuOpen(false)}
                                 >
                                     <Home className="w-6 h-6 text-gray-600" />
-                                    <span className="text-gray-900">{isThai ? "แดชบอร์ด" : "Dashboard"}</span>
+                                    <span className="text-gray-900">{locale === "th" ? "แดชบอร์ด" : "Dashboard"}</span>
                                 </Link>
 
                                 <Link
@@ -455,14 +456,14 @@ export default function Page() {
                                     onClick={() => setIsMenuOpen(false)}
                                 >
                                     <User className="w-6 h-6 text-gray-600" />
-                                    <span className="text-gray-900">{isThai ? "โปรไฟล์" : "Profile"}</span>
+                                    <span className="text-gray-900">{locale === "th" ? "โปรไฟล์" : "Profile"}</span>
                                 </Link>
 
                                 <button
                                     className="text-xl flex items-center justify-center gap-3 py-3 px-8 rounded-xl bg-red-100 text-red-600 w-64"
                                     onClick={() => signOut({ callbackUrl: "/" })}
                                 >
-                                    {isThai ? "ออกจากระบบ" : "Logout"}
+                                    {locale === "th" ? "ออกจากระบบ" : "Logout"}
                                 </button>
                             </div>
                         </motion.div>
@@ -491,7 +492,7 @@ export default function Page() {
                                         >
                                             <Sparkles className="w-5 h-5 text-blue-500" />
                                         </motion.div>
-                                        {isThai ? "ทดสอบความรู้ของคุณ" : "Test Your Knowledge"}
+                                        {locale === "th" ? "ทดสอบความรู้ของคุณ" : "Test Your Knowledge"}
                                     </div>
                                 </motion.div>
 
@@ -501,9 +502,9 @@ export default function Page() {
                                     animate={{ y: 0, opacity: 1 }}
                                     transition={{ delay: 0.3 }}
                                 >
-                                    {isThai ? "แบบทดสอบ" : "Learn"}{" "}
+                                    {locale === "th" ? "แบบทดสอบ" : "Learn"}{" "}
                                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800">
-                                        {isThai ? "ความปลอดภัยไซเบอร์" : "Cybersecurity"}
+                                        {locale === "th" ? "ความปลอดภัยไซเบอร์" : "Cybersecurity"}
                                     </span>
                                 </motion.h1>
 
@@ -513,7 +514,7 @@ export default function Page() {
                                     animate={{ y: 0, opacity: 1 }}
                                     transition={{ delay: 0.4 }}
                                 >
-                                    {isThai
+                                    {locale === "th"
                                         ? "ท้าทายตัวเองด้วยแบบทดสอบแบบโต้ตอบและเรียนรู้แนวคิดด้านความปลอดภัยที่สำคัญ"
                                         : "Challenge yourself with interactive quizzes and master essential security concepts."}
                                 </motion.p>
@@ -551,10 +552,10 @@ export default function Page() {
                             transition={{ delay: 0.7 }}
                         >
                             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
-                                {isThai ? "โมดูลการเรียนรู้" : "Learning Topics"}
+                                {locale === "th" ? "โมดูลการเรียนรู้" : "Learning Topics"}
                             </h2>
                             <p className="text-gray-600 max-w-2xl mx-auto">
-                                {isThai
+                                {locale === "th"
                                     ? "เลือกหัวข้อด้านล่างเพื่อเริ่มการเรียนรู้"
                                     : "Select a topic below to begin your learning journey"}
                             </p>
@@ -567,7 +568,7 @@ export default function Page() {
                             transition={{ delay: 0.8 }}
                         >
                             {loadingTopics ? (
-                                <p className="text-center text-gray-500">{isThai ? "กำลังโหลด..." : "Loading topics..."}</p>
+                                <p className="text-center text-gray-500">{locale === "th" ? "กำลังโหลด..." : "Loading topics..."}</p>
                             ) : (
                                 topics.map((topic, index) => {
                                     const userScore = userScores.find(s => s.topicId === topic._id);
@@ -588,7 +589,7 @@ export default function Page() {
                                             onSelect={handleCourseSelect}
                                             color={["bg-blue-100", "bg-green-100", "bg-purple-100", "bg-amber-100"][index % 4]}
                                             accent={["text-blue-600", "text-green-600", "text-purple-600", "text-amber-600"][index % 4]}
-                                            isThai={isThai}
+                                            isThai={locale === "th"}
                                             quizzesCount={topic.quizzesCount}
                                         />
                                     );
@@ -619,24 +620,24 @@ export default function Page() {
                                     </span>
                                 </div>
                                 <p className="text-gray-600">
-                                    {isThai
+                                    {locale === "th"
                                         ? "ทำให้การเรียนรู้ด้านความปลอดภัยไซเบอร์เข้าถึงได้สำหรับทุกคน"
                                         : "Making cybersecurity learning accessible for everyone"}
                                 </p>
                             </div>
 
                             <div>
-                                <h4 className="text-lg font-bold mb-4 text-gray-900">{isThai ? "ลิงก์ด่วน" : "Quick Links"}</h4>
+                                <h4 className="text-lg font-bold mb-4 text-gray-900">{locale === "th" ? "ลิงก์ด่วน" : "Quick Links"}</h4>
                                 <ul className="space-y-2">
-                                    <li><Link href="/dashboard/user" className="text-gray-600 hover:text-blue-600 transition-colors">{isThai ? "แดชบอร์ด" : "Dashboard"}</Link></li>
-                                    <li><Link href="/courses" className="text-gray-600 hover:text-blue-600 transition-colors">{isThai ? "คอร์สเรียน" : "Courses"}</Link></li>
-                                    <li><Link href="/resources" className="text-gray-600 hover:text-blue-600 transition-colors">{isThai ? "แหล่งข้อมูล" : "Resources"}</Link></li>
-                                    <li><Link href="/about" className="text-gray-600 hover:text-blue-600 transition-colors">{isThai ? "เกี่ยวกับเรา" : "About Us"}</Link></li>
+                                    <li><Link href="/dashboard/user" className="text-gray-600 hover:text-blue-600 transition-colors">{locale === "th" ? "แดชบอร์ด" : "Dashboard"}</Link></li>
+                                    <li><Link href="/courses" className="text-gray-600 hover:text-blue-600 transition-colors">{locale === "th" ? "คอร์สเรียน" : "Courses"}</Link></li>
+                                    <li><Link href="/resources" className="text-gray-600 hover:text-blue-600 transition-colors">{locale === "th" ? "แหล่งข้อมูล" : "Resources"}</Link></li>
+                                    <li><Link href="/about" className="text-gray-600 hover:text-blue-600 transition-colors">{locale === "th" ? "เกี่ยวกับเรา" : "About Us"}</Link></li>
                                 </ul>
                             </div>
 
                             <div>
-                                <h4 className="text-lg font-bold mb-4 text-gray-900">{isThai ? "ติดต่อเรา" : "Contact Us"}</h4>
+                                <h4 className="text-lg font-bold mb-4 text-gray-900">{locale === "th" ? "ติดต่อเรา" : "Contact Us"}</h4>
                                 <ul className="space-y-2">
                                     <li className="text-gray-600">Email: contact@jitcyber.com</li>
                                     <li className="text-gray-600">Twitter: @jitcyber</li>
@@ -645,22 +646,22 @@ export default function Page() {
                             </div>
 
                             <div>
-                                <h4 className="text-lg font-bold mb-4 text-gray-900">{isThai ? "รับข่าวสาร" : "Newsletter"}</h4>
+                                <h4 className="text-lg font-bold mb-4 text-gray-900">{locale === "th" ? "รับข่าวสาร" : "Newsletter"}</h4>
                                 <div className="flex">
                                     <input
                                         type="email"
-                                        placeholder={isThai ? "อีเมลของคุณ" : "Your email"}
+                                        placeholder={locale === "th" ? "อีเมลของคุณ" : "Your email"}
                                         className="px-4 py-2 bg-white border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                                     />
                                     <button className="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-r-lg hover:from-blue-700 hover:to-blue-900 transition-all">
-                                        {isThai ? "ส่ง" : "Send"}
+                                        {locale === "th" ? "ส่ง" : "Send"}
                                     </button>
                                 </div>
                             </div>
                         </div>
 
                         <div className="border-t border-gray-200 mt-8 pt-8 text-center text-gray-500">
-                            <p>© {new Date().getFullYear()} Jitcyber. {isThai ? "สงวนลิขสิทธิ์" : "All rights reserved"}</p>
+                            <p>© {new Date().getFullYear()} Jitcyber. {locale === "th" ? "สงวนลิขสิทธิ์" : "All rights reserved"}</p>
                         </div>
                     </div>
                 </footer>

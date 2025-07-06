@@ -5,11 +5,10 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const page = parseInt(searchParams.get("page") || "1", 10);
   const limit = parseInt(searchParams.get("limit") || "10", 10);
-
-  const client = await connectToDatabase();
-  const db = client.db(DB_NAME);
-
+  let client;
   try {
+    client = await connectToDatabase();
+    const db = client.db(DB_NAME);
     const skip = (page - 1) * limit;
 
     const topicsCollection = db.collection(COLLECTION_TOPICS);
@@ -46,7 +45,9 @@ export async function GET(req: Request) {
       }
     );
   } finally {
-    client.close();
+    if (client) {
+      await client.close();
+    }
   }
 }
 

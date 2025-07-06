@@ -7,7 +7,7 @@ import { useLocale } from "@/context/LocalContext";
 
 export default function StoryViewer() {
   const { locale } = useLocale();
-  const language = locale === 'en' ? 'en' : 'th';
+  let language = "";
   const [currentIndex, setCurrentIndex] = useState(0);
   const { topicId } = useParams();
   const [loading, setLoading] = useState(true);
@@ -21,6 +21,7 @@ export default function StoryViewer() {
   const storyContainerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const currentStory = stories[currentIndex];
+
 
   // Reset progress when story changes
   useEffect(() => {
@@ -99,7 +100,7 @@ export default function StoryViewer() {
         const response = await fetch(`/api/admin/topics/${topicId}/stories`);
         const data = await response.json();
         const storyData: Story[] = data.stories || [];
-
+        language = locale === 'th' ? 'th' : 'en';
         const transformed = storyData.map(s => ({
           title: s.title,
           subtitle: s.subtitle || "",
@@ -222,15 +223,15 @@ export default function StoryViewer() {
         <div className="p-6">
           <div className="mb-6 text-center">
             <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 mb-2">
-              {typeof currentStory?.title === 'string'
-                ? currentStory.title
-                : currentStory?.title?.[language]}
+              {language === 'en'
+                ? currentStory.title.en
+                : currentStory?.title?.th}
             </h1>
             {currentStory?.subtitle && (
               <p className="text-gray-600 text-lg font-light">
-                {typeof currentStory.subtitle === 'string'
-                  ? currentStory.subtitle
-                  : currentStory?.subtitle?.[language]}
+                {language === 'en'
+                  ? currentStory.subtitle.en
+                  : currentStory?.subtitle?.th}
               </p>
             )}
           </div>
@@ -238,9 +239,9 @@ export default function StoryViewer() {
           <div className="mb-8">
             <div className="relative bg-indigo-50 rounded-xl p-6 shadow-inner">
               <p className="text-gray-700 text-lg leading-relaxed relative z-10 pl-6">
-                {typeof currentStory?.content === 'string'
-                  ? currentStory.content
-                  : currentStory?.content?.[language]}
+                {language === 'en'
+                  ? currentStory.content.en
+                  : currentStory?.content?.th}
               </p>
             </div>
           </div>
@@ -251,9 +252,9 @@ export default function StoryViewer() {
               {currentStory?.lessons?.map((lesson, i) => (
                 <div key={i}>
                   <p className="text-gray-700">
-                    {typeof lesson.content === 'string'
-                      ? lesson.content
-                      : lesson.content?.[language]}
+                    {language === 'en'
+                      ? lesson.content.en
+                      : lesson.content?.th}
                   </p>
                 </div>
               ))}

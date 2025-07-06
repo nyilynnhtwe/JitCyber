@@ -4,6 +4,7 @@ import { hash } from "bcryptjs";
 import { COLLECTION_USERS, DB_NAME } from "@/app/constants";
 
 export async function POST(req: NextRequest) {
+    let client;
     try {
         const body = await req.json();
         const { fullname, idType, id, phone, dob, password } = body;
@@ -12,7 +13,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "All fields are required." }, { status: 400 });
         }
 
-        const client = await connectToDatabase();
+        client = await connectToDatabase();
         const db = client.db(DB_NAME);
 
         // Check for existing user
@@ -52,5 +53,9 @@ export async function POST(req: NextRequest) {
     } catch (err) {
         console.error("API Add User Error:", err);
         return NextResponse.json({ error: "Internal server error." }, { status: 500 });
+    } finally {
+        if (client) {
+            await client.close();
+        }
     }
 }

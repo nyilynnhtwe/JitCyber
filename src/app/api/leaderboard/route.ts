@@ -4,8 +4,8 @@ import { connectToDatabase } from '@/lib/db';
 import { DB_NAME } from '@/app/constants';
 
 export async function GET() {
+  const client = await connectToDatabase();
   try {
-    const client = await connectToDatabase();
     const db = client.db(DB_NAME);
 
     const users = await db
@@ -30,7 +30,7 @@ export async function GET() {
         id: user._id.toString(),
         name: user.fullname,
         score: totalScore,
-        phone : user.phone || '', // Optional phone number
+        phone: user.phone || '', // Optional phone number
       };
     });
 
@@ -41,5 +41,7 @@ export async function GET() {
   } catch (error) {
     console.error('Leaderboard fetch error:', error);
     return new NextResponse('Failed to fetch leaderboard', { status: 500 });
+  } finally {
+    await client.close();
   }
 }

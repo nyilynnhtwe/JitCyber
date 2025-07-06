@@ -12,9 +12,9 @@ export async function GET(
   if (!topicId) {
     return NextResponse.json({ error: "Topic ID is required" }, { status: 400 });
   }
-
+  let client;
   try {
-    const client = await connectToDatabase();
+    client = await connectToDatabase();
     const db = client.db(DB_NAME);
     const quizzesCollection = db.collection(COLLECTION_QUIZZES);
 
@@ -31,6 +31,10 @@ export async function GET(
   } catch (err) {
     console.error("Error fetching quizzes for topic:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  } finally {
+    if (client) {
+      await client.close();
+    }
   }
 }
 
@@ -42,8 +46,9 @@ export async function POST(
   if (!topicId) {
     return NextResponse.json({ error: "Topic ID is required" }, { status: 400 });
   }
+  let client;
   try {
-    const client = await connectToDatabase();
+    client = await connectToDatabase();
     const db = client.db(DB_NAME);
     const body = await req.json();
 
@@ -94,5 +99,9 @@ export async function POST(
   } catch (err) {
     console.error("Error creating quiz:", err);
     return NextResponse.json({ error: "Failed to create quiz" }, { status: 500 });
+  } finally {
+    if (client) {
+      await client.close();
+    }
   }
 }

@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
-import { 
-  Users, 
-  BookOpen, 
+import {
+  Users,
+  BookOpen,
   BarChart2,
   MessageSquare,
   ArrowUpRight,
@@ -49,36 +49,36 @@ export default function AdminHomePage() {
     <div className="space-y-6">
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatsCard 
-          title="Total Users" 
-          value={stats.users} 
+        <StatsCard
+          title="Total Users"
+          value={stats.users}
           change="+12%"
           icon={<Users className="w-6 h-6 text-indigo-600" />}
           color="bg-indigo-100"
         />
-        <StatsCard 
-          title="Topics" 
-          value={stats.topics} 
+        <StatsCard
+          title="Topics"
+          value={stats.topics}
           change="+5"
           icon={<BookOpen className="w-6 h-6 text-green-600" />}
           color="bg-green-100"
         />
-        <StatsCard 
-          title="Sessions" 
-          value={stats.sessions} 
+        <StatsCard
+          title="Sessions"
+          value={stats.sessions}
           change="+24%"
           icon={<BarChart2 className="w-6 h-6 text-amber-600" />}
           color="bg-amber-100"
         />
-        <StatsCard 
-          title="Messages" 
-          value={stats.messages} 
+        <StatsCard
+          title="Messages"
+          value={stats.messages}
           change="+18"
           icon={<MessageSquare className="w-6 h-6 text-rose-600" />}
           color="bg-rose-100"
         />
       </div>
-      
+
       {/* Charts and Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 p-5">
@@ -86,7 +86,7 @@ export default function AdminHomePage() {
             <h3 className="text-lg font-semibold">Analytics Overview</h3>
             <div className="text-sm text-gray-500">Last 30 days</div>
           </div>
-          
+
           <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg border border-gray-200">
             <div className="text-center text-gray-500">
               <BarChart2 className="w-12 h-12 mx-auto text-gray-300 mb-2" />
@@ -94,7 +94,7 @@ export default function AdminHomePage() {
             </div>
           </div>
         </div>
-        
+
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-lg font-semibold">Recent Activity</h3>
@@ -102,7 +102,7 @@ export default function AdminHomePage() {
               View all
             </Link>
           </div>
-          
+
           <div className="space-y-4">
             {activities.map((activity, index) => (
               <div key={index} className="flex items-start">
@@ -122,7 +122,7 @@ export default function AdminHomePage() {
           </div>
         </div>
       </div>
-      
+
       {/* Quick Reports */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white rounded-xl border border-gray-200 p-5">
@@ -132,7 +132,7 @@ export default function AdminHomePage() {
               Generate report <ArrowUpRight className="w-4 h-4 ml-1" />
             </button>
           </div>
-          
+
           <div className="flex items-center justify-center h-32 bg-gray-50 rounded-lg border border-gray-200">
             <div className="text-center text-gray-500">
               <FileText className="w-10 h-10 mx-auto text-gray-300 mb-2" />
@@ -140,7 +140,7 @@ export default function AdminHomePage() {
             </div>
           </div>
         </div>
-        
+
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-lg font-semibold">System Status</h3>
@@ -149,7 +149,7 @@ export default function AdminHomePage() {
               All systems operational
             </div>
           </div>
-          
+
           <div className="space-y-3">
             <StatusItem title="API Service" status="operational" />
             <StatusItem title="Database" status="operational" />
@@ -163,9 +163,9 @@ export default function AdminHomePage() {
 }
 
 // Helper components
-function StatsCard({ title, value, change, icon, color }: { 
-  title: string; 
-  value: number; 
+function StatsCard({ title, value, change, icon, color }: {
+  title: string;
+  value: number;
   change: string;
   icon: React.ReactNode;
   color: string;

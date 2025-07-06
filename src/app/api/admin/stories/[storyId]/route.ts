@@ -14,8 +14,9 @@ export async function PUT(
         return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
     }
 
+    let client;
     try {
-        const client = await connectToDatabase();
+        client = await connectToDatabase();
         const db = client.db(DB_NAME);
         const body = await req.json();
 
@@ -72,6 +73,11 @@ export async function PUT(
             { status: 500 }
         );
     }
+    finally {
+        if (client) {
+            await client.close();
+        }
+    }
 }
 
 // DELETE /api/admin/stories/:storyId
@@ -84,9 +90,9 @@ export async function DELETE(
     if (!ObjectId.isValid(storyId)) {
         return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
     }
-
+    let client;
     try {
-        const client = await connectToDatabase();
+        client = await connectToDatabase();
         const db = client.db(DB_NAME);
 
         // First get the story to retrieve topicId
@@ -129,6 +135,11 @@ export async function DELETE(
             { status: 500 }
         );
     }
+    finally {
+        if (client) {
+            await client.close();
+        }
+    }
 }
 
 // GET /api/admin/stories/:storyId
@@ -141,9 +152,9 @@ export async function GET(
     if (!ObjectId.isValid(storyId)) {
         return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
     }
-
+    let client;
     try {
-        const client = await connectToDatabase();
+        client = await connectToDatabase();
         const db = client.db(DB_NAME);
 
         const story = await db.collection(COLLECTION_STORIES).findOne({
@@ -168,5 +179,10 @@ export async function GET(
             { error: "Internal server error" },
             { status: 500 }
         );
+    }
+    finally {
+        if (client) {
+            await client.close();
+        }
     }
 }

@@ -13,9 +13,9 @@ export async function GET(
   if (!ObjectId.isValid(topicId) || !ObjectId.isValid(quizId)) {
     return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
   }
-
+  let client;
   try {
-    const client = await connectToDatabase();
+    client = await connectToDatabase();
     const db = client.db(DB_NAME);
 
     const quiz = await db.collection(COLLECTION_QUIZZES).findOne({
@@ -31,6 +31,10 @@ export async function GET(
   } catch (err) {
     console.error("Error fetching quiz:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  } finally {
+    if (client) {
+      await client.close();
+    }
   }
 }
 
@@ -44,9 +48,9 @@ export async function PUT(
   if (!ObjectId.isValid(topicId) || !ObjectId.isValid(quizId)) {
     return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
   }
-
+  let client;
   try {
-    const client = await connectToDatabase();
+    client = await connectToDatabase();
     const db = client.db(DB_NAME);
     const body = await req.json();
 
@@ -84,6 +88,10 @@ export async function PUT(
   } catch (err) {
     console.error("Error updating quiz:", err);
     return NextResponse.json({ error: "Failed to update quiz" }, { status: 500 });
+  } finally {
+    if (client) {
+      await client.close();
+    }
   }
 }
 
@@ -97,9 +105,9 @@ export async function DELETE(
   if (!ObjectId.isValid(topicId) || !ObjectId.isValid(quizId)) {
     return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
   }
-
+  let client;
   try {
-    const client = await connectToDatabase();
+    client = await connectToDatabase();
     const db = client.db(DB_NAME);
 
     const result = await db.collection(COLLECTION_QUIZZES).deleteOne({
@@ -123,5 +131,9 @@ export async function DELETE(
   } catch (err) {
     console.error("Error deleting quiz:", err);
     return NextResponse.json({ error: "Failed to delete quiz" }, { status: 500 });
+  } finally {
+    if (client) {
+      await client.close();
+    }
   }
 }
