@@ -11,25 +11,36 @@ export default function EditQuizPage() {
   const quizId = params.quizId as string;
   const router = useRouter();
 
-  const [question, setQuestion] = useState("");
-  const [answers, setAnswers] = useState<string[]>(["", "", "", ""]);
+  // Updated states for bilingual content
+  const [question, setQuestion] = useState({ th: "", en: "" });
+  const [answers, setAnswers] = useState<{ th: string; en: string }[]>([
+    { th: "", en: "" },
+    { th: "", en: "" },
+    { th: "", en: "" },
+    { th: "", en: "" }
+  ]);
   const [correctAnswerIndex, setCorrectAnswerIndex] = useState<number>(0);
-  const [explanation, setExplanation] = useState("");
+  const [explanation, setExplanation] = useState({ th: "", en: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
-        console.log(`/api/admin/topics/${topicId}/quizzes/${quizId}`);
-        
         const res = await fetch(`/api/admin/topics/${topicId}/quizzes/${quizId}`);
         if (!res.ok) throw new Error("Failed to fetch quiz");
         const data = await res.json();
-        setQuestion(data.question || "");
-        setAnswers(data.answers || ["", "", "", ""]);
+        
+        // Set bilingual data from API
+        setQuestion(data.question || { th: "", en: "" });
+        setAnswers(data.answers || [
+          { th: "", en: "" },
+          { th: "", en: "" },
+          { th: "", en: "" },
+          { th: "", en: "" }
+        ]);
         setCorrectAnswerIndex(data.correctAnswerIndex ?? 0);
-        setExplanation(data.explanation || "");
+        setExplanation(data.explanation || { th: "", en: "" });
       } catch (err) {
         console.error(err);
         toast.error("Failed to load quiz.");
@@ -41,26 +52,24 @@ export default function EditQuizPage() {
     fetchQuiz();
   }, [topicId, quizId]);
 
-  const handleAnswerChange = (index: number, value: string) => {
+  const handleAnswerChange = (index: number, lang: 'th' | 'en', value: string) => {
     const newAnswers = [...answers];
-    newAnswers[index] = value;
+    newAnswers[index] = { ...newAnswers[index], [lang]: value };
     setAnswers(newAnswers);
-
-    if (value.trim() && newAnswers.filter(a => a.trim()).length === 1) {
-      setCorrectAnswerIndex(index);
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!question.trim()) {
-      toast.error("Please enter the question.");
+    // Validate at least one language exists for question
+    if (!question.th.trim() && !question.en.trim()) {
+      toast.error("Please enter the question in at least one language.");
       return;
     }
 
-    if (answers.some((a) => !a.trim())) {
-      toast.error("All answer fields are required.");
+    // Validate answers - each must have at least one language
+    if (answers.some(a => !a.th.trim() && !a.en.trim())) {
+      toast.error("All answer fields must have content in at least one language.");
       return;
     }
 
@@ -98,7 +107,7 @@ export default function EditQuizPage() {
 
   const addAnotherAnswer = () => {
     if (answers.length < 6) {
-      setAnswers([...answers, ""]);
+      setAnswers([...answers, { th: "", en: "" }]);
     } else {
       toast.info("Maximum of 6 answers allowed");
     }
@@ -155,25 +164,48 @@ export default function EditQuizPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="p-6">
-          {/* Question */}
+          {/* Question - Bilingual */}
           <div className="mb-8">
             <label className="block mb-2 font-medium text-gray-700">
               Question <span className="text-red-500">*</span>
+              <span className="text-sm text-gray-500 font-normal ml-2">(At least one language required)</span>
             </label>
-            <textarea
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              rows={3}
-              className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition"
-              required
-            />
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <div className="flex items-center mb-1">
+                  <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded">THAI</span>
+                </div>
+                <textarea
+                  value={question.th}
+                  onChange={(e) => setQuestion({...question, th: e.target.value})}
+                  rows={3}
+                  className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition"
+                  placeholder="คำถาม (Thai)..."
+                />
+              </div>
+              
+              <div>
+                <div className="flex items-center mb-1">
+                  <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded">ENGLISH</span>
+                </div>
+                <textarea
+                  value={question.en}
+                  onChange={(e) => setQuestion({...question, en: e.target.value})}
+                  rows={3}
+                  className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition"
+                  placeholder="Question (English)..."
+                />
+              </div>
+            </div>
           </div>
 
-          {/* Answers */}
+          {/* Answer Options - Bilingual */}
           <div className="mb-8">
             <div className="flex justify-between items-center mb-4">
               <label className="block font-medium text-gray-700">
                 Answer Options <span className="text-red-500">*</span>
+                <span className="text-sm text-gray-500 font-normal ml-2">(At least one language per answer)</span>
               </label>
               <button
                 type="button"
@@ -184,66 +216,105 @@ export default function EditQuizPage() {
                 Add Answer
               </button>
             </div>
-
-            <div className="space-y-4">
+            
+            <div className="space-y-6">
               {answers.map((answer, i) => (
-                <div key={i} className="flex items-start gap-3 group">
-                  <div className="flex items-center h-full pt-3">
-                    <input
-                      type="radio"
-                      name="correctAnswer"
-                      checked={correctAnswerIndex === i}
-                      onChange={() => setCorrectAnswerIndex(i)}
-                      className="h-5 w-5 text-blue-600 focus:ring-blue-500"
-                    />
-                  </div>
-
-                  <div className="flex-1">
-                    <div className="flex">
-                      <span className="bg-gray-100 text-gray-800 font-medium rounded-l-lg border border-r-0 border-gray-300 px-3 py-2">
-                        {String.fromCharCode(65 + i)}
-                      </span>
+                <div key={i} className="flex flex-col gap-3 group p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div className="flex items-start gap-3">
+                    <div className="flex items-center h-full pt-3">
                       <input
-                        type="text"
-                        value={answer}
-                        onChange={(e) => handleAnswerChange(i, e.target.value)}
-                        className="flex-1 min-w-0 rounded-r-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition"
-                        required
+                        type="radio"
+                        name="correctAnswer"
+                        checked={correctAnswerIndex === i}
+                        onChange={() => setCorrectAnswerIndex(i)}
+                        className="h-5 w-5 text-blue-600 focus:ring-blue-500"
                       />
                     </div>
+                    
+                    <div className="flex-1">
+                      <div className="flex flex-col gap-2">
+                        <div className="flex">
+                          <span className="bg-gray-100 text-gray-800 font-medium rounded-l-lg border border-r-0 border-gray-300 px-3 py-2">
+                            {String.fromCharCode(65 + i)}
+                          </span>
+                          <input
+                            type="text"
+                            value={answer.th}
+                            onChange={(e) => handleAnswerChange(i, 'th', e.target.value)}
+                            placeholder={`ตัวเลือก ${i + 1} (ไทย)...`}
+                            className="flex-1 min-w-0 rounded-r-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition"
+                          />
+                        </div>
+                        
+                        <div className="flex">
+                          <span className="bg-gray-100 text-gray-800 font-medium rounded-l-lg border border-r-0 border-gray-300 px-3 py-2 opacity-60">
+                            {String.fromCharCode(65 + i)}
+                          </span>
+                          <input
+                            type="text"
+                            value={answer.en}
+                            onChange={(e) => handleAnswerChange(i, 'en', e.target.value)}
+                            placeholder={`Option ${i + 1} (English)...`}
+                            className="flex-1 min-w-0 rounded-r-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {answers.length > 2 && (
+                      <button
+                        type="button"
+                        onClick={() => removeAnswer(i)}
+                        className="text-gray-400 hover:text-red-500 p-2 rounded-full hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100 self-start mt-1"
+                        title="Remove answer"
+                      >
+                        <X size={18} />
+                      </button>
+                    )}
                   </div>
-
-                  {answers.length > 2 && (
-                    <button
-                      type="button"
-                      onClick={() => removeAnswer(i)}
-                      className="text-gray-400 hover:text-red-500 p-2 rounded-full hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100"
-                      title="Remove answer"
-                    >
-                      <X size={18} />
-                    </button>
-                  )}
+                  
+                  <div className="flex items-center text-xs text-gray-500 ml-9">
+                    <CheckCircle size={14} className="mr-1.5 text-green-500" />
+                    <span>Click the radio button to mark the correct answer</span>
+                  </div>
                 </div>
               ))}
             </div>
-
-            <div className="mt-3 flex items-center text-sm text-gray-500">
-              <CheckCircle size={16} className="mr-1.5 text-green-500" />
-              <span>Click the radio button to mark the correct answer</span>
-            </div>
           </div>
 
-          {/* Explanation */}
+          {/* Explanation - Bilingual */}
           <div className="mb-8">
             <label className="block mb-2 font-medium text-gray-700">
               Explanation (Optional)
             </label>
-            <textarea
-              value={explanation}
-              onChange={(e) => setExplanation(e.target.value)}
-              rows={2}
-              className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition"
-            />
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <div className="flex items-center mb-1">
+                  <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded">THAI</span>
+                </div>
+                <textarea
+                  value={explanation.th}
+                  onChange={(e) => setExplanation({...explanation, th: e.target.value})}
+                  rows={2}
+                  className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition"
+                  placeholder="คำอธิบาย (ไทย)..."
+                />
+              </div>
+              
+              <div>
+                <div className="flex items-center mb-1">
+                  <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded">ENGLISH</span>
+                </div>
+                <textarea
+                  value={explanation.en}
+                  onChange={(e) => setExplanation({...explanation, en: e.target.value})}
+                  rows={2}
+                  className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition"
+                  placeholder="Explanation (English)..."
+                />
+              </div>
+            </div>
           </div>
 
           {/* Buttons */}

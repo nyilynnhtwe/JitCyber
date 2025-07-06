@@ -19,33 +19,45 @@ export async function PUT(
         const db = client.db(DB_NAME);
         const body = await req.json();
 
-        const { title, subtitle, description, content, lessons, topicId } = body;
+        const { title, subtitle, content, lessons } = body;
 
-        // Validate required fields
-        if (!title || !content || !Array.isArray(lessons) || lessons.length === 0) {
+        // Validate multilingual title/content/subtitle
+        if (
+            !title?.en?.trim() ||
+            !title?.th?.trim() ||
+            !content?.en?.trim() ||
+            !content?.th?.trim()
+        ) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
-        // Validate each lesson
-        for (const lesson of lessons) {
-            if (!lesson.content || typeof lesson.content !== "string") {
-                return NextResponse.json({ error: "Invalid lesson format" }, { status: 400 });
+        if (!Array.isArray(lessons) || lessons.length === 0) {
+            return NextResponse.json({ error: "At least one lesson is required" }, { status: 400 });
+        }
+
+        for (const [index, lesson] of lessons.entries()) {
+            if (
+                !lesson?.content?.en?.trim() ||
+                !lesson?.content?.th?.trim()
+            ) {
+                return NextResponse.json(
+                    { error: `Lesson ${index + 1} is missing required content` },
+                    { status: 400 }
+                );
             }
         }
 
+        const updateData = {
+            title,
+            subtitle: subtitle || { en: "", th: "" },
+            content,
+            lessons,
+            updatedAt: new Date()
+        };
+
         const result = await db.collection(COLLECTION_STORIES).updateOne(
             { _id: new ObjectId(storyId) },
-            {
-                $set: {
-                    title,
-                    subtitle: subtitle || "",
-                    description: description || "",
-                    content,
-                    lessons,
-                    topicId: new ObjectId(topicId),
-                    updatedAt: new Date(),
-                },
-            }
+            { $set: updateData }
         );
 
         if (result.matchedCount === 0) {

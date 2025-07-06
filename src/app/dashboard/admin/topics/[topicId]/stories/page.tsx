@@ -88,7 +88,7 @@ export default function AdminStoriesPage() {
             <p className="text-gray-600 mt-2">Create, edit, and manage your learning stories</p>
           </div>
 
-          <div className="w-24"></div> {/* Spacer for alignment */}
+          <div className="w-24"></div>
         </div>
 
         {/* Action Bar */}
@@ -133,10 +133,10 @@ export default function AdminStoriesPage() {
                         </div>
                         <div>
                           <h2 className="text-xl font-bold text-gray-800">
-                            {story.title}
+                            {story.title?.en || "Untitled"}
                           </h2>
-                          <p className="text-gray-600 mt-1 line-clamp-2">
-                            {story.content}
+                          <p className="text-gray-600 mt-1 line-clamp-2 whitespace-pre-line">
+                            {story.content?.en || "No content"}
                           </p>
                         </div>
                       </div>
@@ -197,7 +197,7 @@ export default function AdminStoriesPage() {
                 Delete Story?
               </h3>
               <p className="text-gray-600 text-center mb-6">
-                Are you sure you want to delete <span className="font-semibold">{storyToDelete.title}</span>? This action cannot be undone.
+                Are you sure you want to delete <span className="font-semibold">{storyToDelete?.title?.en}</span>? This action cannot be undone.
               </p>
 
               <div className="flex justify-center space-x-4">

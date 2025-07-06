@@ -10,11 +10,11 @@ export interface LearningTopic {
 
 export interface Quiz {
   _id: string;
-  question: string;
-  answers: string[];
-  correctAnswer: string;
+  question: { en?: string; th?: string };
+  answers: Array<{ en?: string; th?: string }>;
+  correctAnswer: { en?: string; th?: string };
   correctAnswerIndex: number;
-  explanation?: string;
+  explanation: { en?: string; th?: string };
 }
 
 export type UserUpdatePayload = {

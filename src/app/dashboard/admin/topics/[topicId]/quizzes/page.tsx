@@ -94,10 +94,21 @@ export default function TopicQuizzesPage() {
                           {index + 1}
                         </div>
                         <div className="flex-1">
-                          <h2 className="text-lg font-semibold text-gray-800">
-                            {quiz.question}
-                          </h2>
+                          {/* Bilingual Question */}
+                          <div className="mb-2">
+                            {quiz.question.th && (
+                              <h2 className="text-lg font-semibold text-gray-800">
+                                {quiz.question.th}
+                              </h2>
+                            )}
+                            {quiz.question.en && (
+                              <h2 className="text-lg font-medium text-gray-700 mt-1">
+                                {quiz.question.en}
+                              </h2>
+                            )}
+                          </div>
 
+                          {/* Bilingual Answers */}
                           <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
                             {quiz.answers.map((ans, i) => (
                               <div
@@ -111,18 +122,30 @@ export default function TopicQuizzesPage() {
                                   <span className={`font-bold mr-2 ${i === quiz.correctAnswerIndex ? "text-green-700" : "text-gray-700"}`}>
                                     {String.fromCharCode(65 + i)}.
                                   </span>
-                                  <span>{ans}</span>
+                                  <div>
+                                    {ans.th && <div className="font-medium">{ans.th}</div>}
+                                    {ans.en && <div className="text-gray-600 mt-1">{ans.en}</div>}
+                                  </div>
                                 </div>
                               </div>
                             ))}
                           </div>
 
-                          {quiz.explanation && (
+                          {/* Bilingual Explanation */}
+                          {(quiz.explanation.th || quiz.explanation.en) && (
                             <div className="mt-4 p-3 bg-blue-50 rounded-xl border border-blue-100">
-                              <p className="text-sm text-blue-700 flex items-start">
-                                <span className="mr-2">💡</span>
-                                {quiz.explanation}
-                              </p>
+                              {quiz.explanation.th && (
+                                <p className="text-sm text-blue-700 flex items-start">
+                                  <span className="mr-2">💡</span>
+                                  {quiz.explanation.th}
+                                </p>
+                              )}
+                              {quiz.explanation.en && (
+                                <p className="text-sm text-blue-700 flex items-start mt-2">
+                                  <span className="mr-2">💡</span>
+                                  {quiz.explanation.en}
+                                </p>
+                              )}
                             </div>
                           )}
                         </div>

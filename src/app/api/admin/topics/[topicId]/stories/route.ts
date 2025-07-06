@@ -34,25 +34,52 @@ export async function POST(
 ) {
     try {
         const { topicId } = await params;
-        const body = await req.json();
-        const { title, subtitle, content, lessons = [], createdAt, updatedAt } = body;
+        if (!ObjectId.isValid(topicId)) {
+            return NextResponse.json({ error: "Invalid topicId format" }, { status: 400 });
+        }
 
-        if (!title || !subtitle || !content || !Array.isArray(lessons)) {
-            return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+        const body = await req.json();
+        const { title, subtitle = { en: "", th: "" }, content, lessons = [] } = body;
+
+        // Validate multilingual required fields
+        if (
+            !title?.en?.trim() ||
+            !title?.th?.trim() ||
+            !content?.en?.trim() ||
+            !content?.th?.trim()
+        ) {
+            return NextResponse.json({ error: "Missing required multilingual fields" }, { status: 400 });
+        }
+
+        if (!Array.isArray(lessons) || lessons.length === 0) {
+            return NextResponse.json({ error: "At least one lesson is required" }, { status: 400 });
+        }
+
+        for (const [index, lesson] of lessons.entries()) {
+            if (
+                !lesson?.content?.en?.trim() ||
+                !lesson?.content?.th?.trim()
+            ) {
+                return NextResponse.json(
+                    { error: `Lesson ${index + 1} is missing required content` },
+                    { status: 400 }
+                );
+            }
         }
 
         const client = await connectToDatabase();
         const db = client.db(DB_NAME);
 
         // Insert story
+        const now = new Date();
         const result = await db.collection(COLLECTION_STORIES).insertOne({
             title,
             subtitle,
             content,
             topicId: new ObjectId(topicId),
             lessons,
-            createdAt: createdAt || new Date().toISOString(),
-            updatedAt: updatedAt || new Date().toISOString(),
+            createdAt: now.toISOString(),
+            updatedAt: now.toISOString(),
         });
 
         // Increment storiesCount in topics collection

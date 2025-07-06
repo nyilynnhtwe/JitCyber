@@ -14,14 +14,14 @@ export interface RankedPlayer extends Player {
 export interface Lesson {
   // _id is optional
   _id?: string;
-  content: string;
+  content: { en: string; th: string };
 };
 
 export interface Story {
   _id?: string;
-  title: string;
-  subtitle: string;
-  content: string;
+  title: { en: string; th: string };
+  subtitle: { en: string; th: string };
+  content: { en: string; th: string };
   lessons: Lesson[];
   imageUrl?: string;
 };
