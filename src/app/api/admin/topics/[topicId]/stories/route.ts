@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import { COLLECTION_STORIES, DB_NAME } from "@/app/constants";
+import { ObjectId } from "mongodb";
 
 
 
@@ -27,8 +28,10 @@ export async function GET(
 
 
 
-export async function POST(req: NextRequest,
-    { params }: { params: Promise<{ topicId: string }> }) {
+export async function POST(
+    req: NextRequest,
+    { params }: { params: Promise<{ topicId: string }> }
+) {
     try {
         const { topicId } = await params;
         const body = await req.json();
@@ -41,15 +44,22 @@ export async function POST(req: NextRequest,
         const client = await connectToDatabase();
         const db = client.db(DB_NAME);
 
+        // Insert story
         const result = await db.collection(COLLECTION_STORIES).insertOne({
             title,
             subtitle,
-            content, // Assuming content is the same as description
-            topicId: topicId, // Ensure topicId is stored as ObjectId
+            content,
+            topicId: new ObjectId(topicId),
             lessons,
             createdAt: createdAt || new Date().toISOString(),
             updatedAt: updatedAt || new Date().toISOString(),
         });
+
+        // Increment storiesCount in topics collection
+        await db.collection("topics").updateOne(
+            { _id: new ObjectId(topicId) },
+            { $inc: { storiesCount: 1 } }
+        );
 
         return NextResponse.json({ insertedId: result.insertedId }, { status: 201 });
     } catch (err) {

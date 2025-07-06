@@ -9,62 +9,86 @@ export interface EditTopicModalProps {
   isOpen: boolean;
   onClose: () => void;
   topic: LearningTopic | null;
-  onEditTopic: (topic: { _id: string; title: string; description: string }) => void;
+  onEditTopic: (topic: {
+    _id: string;
+    title: string;
+    description: string;
+    titleInThai: string;
+    descInThai: string;
+  }) => void;
 }
 
-export const EditTopicModal = ({ isOpen, onClose, topic, onEditTopic }: EditTopicModalProps) => {
+export const EditTopicModal = ({
+  isOpen,
+  onClose,
+  topic,
+  onEditTopic,
+}: EditTopicModalProps) => {
   const [editedTopic, setEditedTopic] = useState({
     title: "",
-    description: ""
+    description: "",
+    titleInThai: "",
+    descInThai: "",
   });
 
   useEffect(() => {
     if (topic) {
       setEditedTopic({
         title: topic.title,
-        description: topic.description
+        description: topic.description,
+        titleInThai: topic.titleInThai || "",
+        descInThai: topic.descInThai || "",
       });
     }
   }, [topic]);
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  if (!editedTopic.title.trim() || !editedTopic.description.trim()) {
-    toast.error("Please fill in all required fields.");
-    return;
-  }
+    const { title, description, titleInThai, descInThai } = editedTopic;
 
-  if (!topic) return;
-
-  try {
-    const res = await fetch(`/api/admin/topics/${topic._id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(editedTopic),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      toast.error(data.error || "Failed to update topic");
+    if (
+      !title.trim() ||
+      !description.trim() ||
+      !titleInThai.trim() ||
+      !descInThai.trim()
+    ) {
+      toast.error("Please fill in all required fields.");
       return;
     }
 
-    toast.success("Topic updated successfully!");
-    onEditTopic({ _id: topic._id, ...editedTopic }); // Optionally update state in parent
-    handleClose();
-  } catch (error) {
-    console.error("Error editing topic:", error);
-    toast.error("Something went wrong.");
-  }
-};
+    if (!topic) return;
 
+    try {
+      const res = await fetch(`/api/admin/topics/${topic._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editedTopic),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.error || "Failed to update topic");
+        return;
+      }
+
+      toast.success("Topic updated successfully!");
+      onEditTopic({ _id: topic._id, ...editedTopic });
+      handleClose();
+    } catch (error) {
+      console.error("Error editing topic:", error);
+      toast.error("Something went wrong.");
+    }
+  };
 
   const handleClose = () => {
-    setEditedTopic({ title: "", description: "" });
+    setEditedTopic({
+      title: "",
+      description: "",
+      titleInThai: "",
+      descInThai: "",
+    });
     onClose();
   };
 
@@ -84,38 +108,76 @@ const handleSubmit = async (e: React.FormEvent) => {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6">
-          <div className="mb-6">
+        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          <div>
             <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-              Title *
+              Title (EN) *
             </label>
             <input
               id="title"
               type="text"
               value={editedTopic.title}
-              onChange={(e) => setEditedTopic({ ...editedTopic, title: e.target.value })}
+              onChange={(e) =>
+                setEditedTopic({ ...editedTopic, title: e.target.value })
+              }
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter topic title"
+              placeholder="Enter topic title in English"
               required
             />
           </div>
 
-          <div className="mb-8">
+          <div>
+            <label htmlFor="titleInThai" className="block text-sm font-medium text-gray-700 mb-2">
+              Title (TH) *
+            </label>
+            <input
+              id="titleInThai"
+              type="text"
+              value={editedTopic.titleInThai}
+              onChange={(e) =>
+                setEditedTopic({ ...editedTopic, titleInThai: e.target.value })
+              }
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="ใส่ชื่อหัวข้อเป็นภาษาไทย"
+              required
+            />
+          </div>
+
+          <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-              Description *
+              Description (EN) *
             </label>
             <textarea
               id="description"
               value={editedTopic.description}
-              onChange={(e) => setEditedTopic({ ...editedTopic, description: e.target.value })}
+              onChange={(e) =>
+                setEditedTopic({ ...editedTopic, description: e.target.value })
+              }
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter topic description"
-              rows={4}
+              placeholder="Enter topic description in English"
+              rows={3}
               required
             />
           </div>
 
-          <div className="flex justify-end space-x-3">
+          <div>
+            <label htmlFor="descInThai" className="block text-sm font-medium text-gray-700 mb-2">
+              Description (TH) *
+            </label>
+            <textarea
+              id="descInThai"
+              value={editedTopic.descInThai}
+              onChange={(e) =>
+                setEditedTopic({ ...editedTopic, descInThai: e.target.value })
+              }
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="ใส่คำอธิบายหัวข้อเป็นภาษาไทย"
+              rows={3}
+              required
+            />
+          </div>
+
+          <div className="flex justify-end space-x-3 pt-2">
             <button
               type="button"
               onClick={handleClose}

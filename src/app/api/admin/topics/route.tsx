@@ -52,46 +52,52 @@ export async function GET(req: Request) {
 
 
 
-
 export async function POST(req: Request) {
   const client = await connectToDatabase();
   const db = client.db(DB_NAME);
 
   try {
     const body = await req.json();
-    const { title, description } = body;
+    const { title, description, titleInThai, descInThai } = body;
 
-    if (!title || !description) {
-      return new Response(JSON.stringify({ error: "Title and description are required" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" }
-      });
+    if (!title || !description || !titleInThai || !descInThai) {
+      return new Response(
+        JSON.stringify({ error: "All fields are required." }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
     }
 
     const newTopic = {
       title,
       description,
+      titleInThai,
+      descInThai,
       quizzesCount: 0,
       storiesCount: 0,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
-    await db.collection(COLLECTION_TOPICS).insertOne(newTopic);
+    const result = await db.collection(COLLECTION_TOPICS).insertOne(newTopic);
 
-    return new Response(JSON.stringify({
-      message: "Topic added successfully",
-      topic: newTopic
-    }), {
-      status: 201,
-      headers: { "Content-Type": "application/json" }
-    });
-
+    return new Response(
+      JSON.stringify({
+        message: "Topic added successfully",
+        topic: { ...newTopic, _id: result.insertedId },
+      }),
+      {
+        status: 201,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   } catch (error) {
     console.error("Error creating topic:", error);
     return new Response(JSON.stringify({ error: "Internal server error" }), {
       status: 500,
-      headers: { "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/json" },
     });
   } finally {
     client.close();

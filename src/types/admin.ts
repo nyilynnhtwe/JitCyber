@@ -2,6 +2,8 @@ export interface LearningTopic {
   _id: string;
   title: string;
   description: string;
+  titleInThai?: string;
+  descInThai?: string;
   quizzesCount?: number;
   storiesCount?: number;
 }

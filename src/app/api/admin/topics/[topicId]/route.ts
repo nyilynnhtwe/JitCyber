@@ -9,18 +9,29 @@ export async function PUT(
 ) {
     try {
         const { topicId } = await params;
-        const { title, description } = await req.json();
+        const { title, description, titleInThai, descInThai } = await req.json();
 
-        if (!title || !description) {
-            return NextResponse.json({ error: "Missing title or description" }, { status: 400 });
+        if (!title || !description || !titleInThai || !descInThai) {
+            return NextResponse.json(
+                { error: "Missing required fields" },
+                { status: 400 }
+            );
         }
 
         const client = await connectToDatabase();
         const db = client.db(DB_NAME);
 
-        const result = await db
-            .collection(COLLECTION_TOPICS)
-            .updateOne({ _id: new ObjectId(topicId) }, { $set: { title, description } });
+        const result = await db.collection(COLLECTION_TOPICS).updateOne(
+            { _id: new ObjectId(topicId) },
+            {
+                $set: {
+                    title,
+                    description,
+                    titleInThai,
+                    descInThai,
+                },
+            }
+        );
 
         if (result.matchedCount === 0) {
             return NextResponse.json({ error: "Topic not found" }, { status: 404 });
@@ -39,13 +50,18 @@ export async function PUT(
                 _id: topicId,
                 title,
                 description,
+                titleInThai,
+                descInThai,
                 quizzesCount,
                 storiesCount,
             },
         });
     } catch (error) {
         console.error("Error updating topic:", error);
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+        return NextResponse.json(
+            { error: "Internal server error" },
+            { status: 500 }
+        );
     }
 }
 

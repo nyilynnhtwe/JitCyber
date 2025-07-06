@@ -3,26 +3,32 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { X } from "lucide-react";
-import { LearningTopic } from "@/types/admin";
-
-
 
 export interface AddTopicModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddTopic: (topic: Omit<LearningTopic, "_id" | "quizzesCount" | "storiesCount">) => void;
+  onAddTopic: (topic: {
+    title: string;
+    description: string;
+    titleInThai: string;
+    descInThai: string;
+  }) => void;
 }
 
 export const AddTopicModal = ({ isOpen, onClose, onAddTopic }: AddTopicModalProps) => {
   const [newTopic, setNewTopic] = useState({
     title: "",
-    description: ""
+    description: "",
+    titleInThai: "",
+    descInThai: ""
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!newTopic.title.trim() || !newTopic.description.trim()) {
+    const { title, description, titleInThai, descInThai } = newTopic;
+
+    if (!title.trim() || !description.trim() || !titleInThai.trim() || !descInThai.trim()) {
       toast.error("Please fill in all required fields.");
       return;
     }
@@ -33,7 +39,7 @@ export const AddTopicModal = ({ isOpen, onClose, onAddTopic }: AddTopicModalProp
   };
 
   const handleClose = () => {
-    setNewTopic({ title: "", description: "" });
+    setNewTopic({ title: "", description: "", titleInThai: "", descInThai: "" });
     onClose();
   };
 
@@ -53,10 +59,10 @@ export const AddTopicModal = ({ isOpen, onClose, onAddTopic }: AddTopicModalProp
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6">
-          <div className="mb-6">
+        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          <div>
             <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-              Title *
+              Title (EN) *
             </label>
             <input
               id="title"
@@ -64,27 +70,57 @@ export const AddTopicModal = ({ isOpen, onClose, onAddTopic }: AddTopicModalProp
               value={newTopic.title}
               onChange={(e) => setNewTopic({ ...newTopic, title: e.target.value })}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter topic title"
+              placeholder="Enter topic title in English"
               required
             />
           </div>
 
-          <div className="mb-8">
+          <div>
+            <label htmlFor="titleInThai" className="block text-sm font-medium text-gray-700 mb-2">
+              Title (TH) *
+            </label>
+            <input
+              id="titleInThai"
+              type="text"
+              value={newTopic.titleInThai}
+              onChange={(e) => setNewTopic({ ...newTopic, titleInThai: e.target.value })}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="ใส่ชื่อหัวข้อเป็นภาษาไทย"
+              required
+            />
+          </div>
+
+          <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-              Description *
+              Description (EN) *
             </label>
             <textarea
               id="description"
               value={newTopic.description}
               onChange={(e) => setNewTopic({ ...newTopic, description: e.target.value })}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter topic description"
-              rows={4}
+              placeholder="Enter topic description in English"
+              rows={3}
               required
             />
           </div>
 
-          <div className="flex justify-end space-x-3">
+          <div>
+            <label htmlFor="descInThai" className="block text-sm font-medium text-gray-700 mb-2">
+              Description (TH) *
+            </label>
+            <textarea
+              id="descInThai"
+              value={newTopic.descInThai}
+              onChange={(e) => setNewTopic({ ...newTopic, descInThai: e.target.value })}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="ใส่คำอธิบายหัวข้อเป็นภาษาไทย"
+              rows={3}
+              required
+            />
+          </div>
+
+          <div className="flex justify-end space-x-3 pt-2">
             <button
               type="button"
               onClick={handleClose}

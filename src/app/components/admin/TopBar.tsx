@@ -22,6 +22,7 @@ export default function Topbar({
     { href: "/dashboard/admin", label: "Dashboard" },
     { href: "/dashboard/admin/users", label: "Users" },
     { href: "/dashboard/admin/topics", label: "Topics" },
+    { href: "/dashboard/admin/leaderboard", label: "Leaderboard" },
   ];
 
   useEffect(() => {

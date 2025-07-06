@@ -2,6 +2,7 @@ export interface Player {
   id: string;
   name: string;
   score: number;
+  phone?: string; // Optional, can be used for contact
 }
 
 export interface RankedPlayer extends Player {

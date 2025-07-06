@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 import LearningTopicsTab from "@/app/components/admin/LearningTopicsTab";
 import { AddTopicModal } from "@/app/components/admin/AddLearningTopicModal";
-import { LearningTopic } from "@/types/admin";
 import { EditTopicModal } from "@/app/components/admin/EditLearningTopicModal";
-import { toast } from "react-toastify";
 import ConfirmModal from "@/app/components/admin/ConfirmModal";
+import { LearningTopic } from "@/types/admin";
+import { toast } from "react-toastify";
 
 export default function TopicsPage() {
   const [topics, setTopics] = useState<LearningTopic[]>([]);
@@ -16,7 +16,6 @@ export default function TopicsPage() {
   const [isAddTopicModalOpen, setIsAddTopicModalOpen] = useState(false);
   const [editingTopic, setEditingTopic] = useState<LearningTopic | null>(null);
   const [deleteTopicId, setDeleteTopicId] = useState<string | null>(null);
-
 
   const limit = 10;
 
@@ -37,9 +36,12 @@ export default function TopicsPage() {
     fetchTopics();
   }, [page]);
 
-
-
-  const handleAddTopic = async (newTopic: { title: string; description: string }) => {
+  const handleAddTopic = async (newTopic: {
+    title: string;
+    description: string;
+    titleInThai: string;
+    descInThai: string;
+  }) => {
     try {
       const res = await fetch("/api/admin/topics", {
         method: "POST",
@@ -51,17 +53,30 @@ export default function TopicsPage() {
 
       const saved = await res.json();
       setTopics((prev) => [saved.topic, ...prev]); // Prepend the new topic
+      toast.success("Topic added successfully");
     } catch (error) {
       console.error("Add topic failed:", error);
+      toast.error("Failed to add topic.");
     }
   };
 
-  const handleEditTopic = async (updated: { _id: string; title: string; description: string }) => {
+  const handleEditTopic = async (updated: {
+    _id: string;
+    title: string;
+    description: string;
+    titleInThai: string;
+    descInThai: string;
+  }) => {
     try {
       const res = await fetch(`/api/admin/topics/${updated._id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: updated.title, description: updated.description }),
+        body: JSON.stringify({
+          title: updated.title,
+          description: updated.description,
+          titleInThai: updated.titleInThai,
+          descInThai: updated.descInThai,
+        }),
       });
 
       if (!res.ok) throw new Error("Update failed");
@@ -71,8 +86,11 @@ export default function TopicsPage() {
       setTopics((prev) =>
         prev.map((t) => (t._id === updatedTopic.topic._id ? updatedTopic.topic : t))
       );
+
+      toast.success("Topic updated successfully");
     } catch (error) {
       console.error("Edit topic failed:", error);
+      toast.error("Failed to update topic.");
     }
   };
 
@@ -106,7 +124,6 @@ export default function TopicsPage() {
         setIsAddTopicModalOpen={setIsAddTopicModalOpen}
         onEditTopicClick={setEditingTopic}
         onDeleteTopicClick={(id) => setDeleteTopicId(id)}
-
       />
 
       <AddTopicModal
@@ -130,7 +147,6 @@ export default function TopicsPage() {
         message="This will permanently remove the topic and its related data."
         confirmText="Delete"
       />
-
     </>
   );
 }

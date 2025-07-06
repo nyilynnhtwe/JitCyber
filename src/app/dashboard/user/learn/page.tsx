@@ -241,9 +241,14 @@ export default function Page() {
             try {
                 const res = await fetch(`/api/admin/topics?page=1&limit=100`);
                 const data = await res.json();
-                console.log("Fetched topics:", data);
-
-                setTopics(data.topics || []);
+                setTopics(data.topics.map(t => ({
+                    _id: t._id,
+                    title: t.title,
+                    titleThai: t.titleInThai,
+                    description: t.description,
+                    descriptionThai: t.descInThai,
+                    quizzesCount: t.quizzesCount,
+                })))
             } catch (error) {
                 console.error("Failed to fetch topics:", error);
             } finally {

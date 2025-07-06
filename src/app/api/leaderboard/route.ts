@@ -17,6 +17,7 @@ export async function GET() {
             id: 1,
             fullname: 1,
             scores: 1,
+            phone: 1,
           },
         }
       )
@@ -29,6 +30,7 @@ export async function GET() {
         id: user._id.toString(),
         name: user.fullname,
         score: totalScore,
+        phone : user.phone || '', // Optional phone number
       };
     });
 
